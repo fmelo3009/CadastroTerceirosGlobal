@@ -1,6 +1,5 @@
 const express = require('express');
 const session = require('express-session');
-const SQLiteStore = require('connect-sqlite3')(session);
 const path = require('path');
 const config = require('./config');
 const { injetarUsuario } = require('./lib/auth');
@@ -19,7 +18,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
   session({
-    store: new SQLiteStore({ dir: path.join(__dirname, 'data'), db: 'sessions.sqlite' }),
     secret: config.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
