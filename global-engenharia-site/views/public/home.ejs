@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/header') %>
+
+<!-- SEÇÃO 1 — HERO (Grupo Global) -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div>
+      <div class="eyebrow">Grupo Global</div>
+      <h1>Um dos principais grupos de geração de energia do país</h1>
+      <p class="lead">
+        O Grupo Global iniciou sua história há mais de vinte anos na prestação de serviços de
+        manutenção e montagens industriais. Hoje também atua na geração de energia elétrica — e a
+        Global Engenharia é responsável pela montagem e manutenção técnica que sustenta a operação
+        dos empreendimentos do grupo.
+      </p>
+      <div class="hero-ctas">
+        <a href="<%= linkGPE %>" target="_blank" rel="noopener" class="btn btn-primary">Saiba mais sobre o Grupo</a>
+        <a href="/cadastro" class="btn btn-outline-dark">Cadastre-se como Terceirizado</a>
+      </div>
+    </div>
+    <div class="hero-media">
+      <img src="/img/hero-empreendimento.jpg" alt="Vista aérea de empreendimento de geração de energia do Grupo Global" />
+    </div>
+  </div>
+</section>
+
+<!-- SEÇÃO 2 — EMPREENDIMENTOS (GPE) -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center;display:flex;">Empreendimentos</div>
+      <h2>A GPE e seus empreendimentos</h2>
+      <p>
+        Atuando na geração de energia desde 2001, o Grupo Global — através da Global Participações
+        em Energia S.A. (GPE) — controla empreendimentos de geração termoelétrica e PCH nas regiões
+        N/NE do Brasil. A Global Engenharia presta serviços de montagem e manutenção nesses
+        empreendimentos, e cada um mantém seu próprio cadastro de terceirizados.
+      </p>
+    </div>
+    <div class="grid-emp" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+      <% empreendimentos.forEach(function(emp) { %>
+        <div class="card-emp">
+          <div class="foto">
+            <img src="<%= emp.imagem %>" alt="<%= emp.nome %>" />
+            <span class="tag"><%= emp.tipo %></span>
+          </div>
+          <div class="corpo">
+            <h3><%= emp.nome %></h3>
+            <p><%= emp.descricao %></p>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+              <% if (emp.linkExterno) { %>
+                <a href="<%= emp.linkExterno %>" target="_blank" rel="noopener" class="link">Saiba mais →</a>
+              <% } else { %>
+                <span class="link" style="color:var(--concrete-600);">Saiba mais em breve</span>
+              <% } %>
+              <a href="/cadastro/<%= emp.slug %>" class="btn btn-outline-dark" style="padding:8px 14px;font-size:12.5px;">Cadastre-se</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <style>@media (max-width:900px){.grid-emp{grid-template-columns:repeat(2,1fr) !important;}} @media (max-width:620px){.grid-emp{grid-template-columns:1fr !important;}}</style>
+  </div>
+</section>
+
+<!-- SEÇÃO — FOCO REAL DO SITE -->
+<section class="foco-real">
+  <div class="container foco-grid">
+    <div>
+      <div class="eyebrow">O que este site realmente faz</div>
+      <h2>Um banco de dados de terceirizados para o Grupo Global</h2>
+      <p>
+        A apresentação institucional acima é a porta de entrada. O centro do site é o cadastro de
+        empresas e profissionais terceirizados — organizado por empreendimento — para consulta
+        exclusiva da equipe interna no momento de contratar.
+      </p>
+      <div class="foco-ctas">
+        <a href="/cadastro" class="btn btn-accent">Cadastre-se como Terceirizado</a>
+        <a href="/interno/login" class="btn btn-outline">Acesso administrativo →</a>
+      </div>
+    </div>
+    <div class="foco-list">
+      <div class="foco-item"><span class="n">01</span><span>Empresas e profissionais se cadastram vinculados a um empreendimento específico (ou de forma geral).</span></div>
+      <div class="foco-item"><span class="n">02</span><span>As informações ficam organizadas e pesquisáveis no banco de dados interno.</span></div>
+      <div class="foco-item"><span class="n">03</span><span>Ao surgir uma necessidade de contratação, o administrador consulta os cadastros pelo painel interno.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SEÇÃO — QUEM SOMOS -->
+<section class="section">
+  <div class="container split">
+    <div>
+      <div class="eyebrow">Quem somos</div>
+      <h2>Presença técnica em cada etapa da operação</h2>
+      <p>
+        A <%= empresa.nome %> reúne equipes e parceiros especializados para atender os
+        empreendimentos de geração de energia do Grupo Global em serviços de montagem, manutenção e
+        apoio técnico. Nosso trabalho é guiado por processos organizados, segurança do trabalho e
+        atenção aos detalhes que garantem continuidade operacional.
+      </p>
+      <p><em>Texto institucional provisório — a ser revisado com informações oficiais da empresa.</em></p>
+      <a href="/sobre" class="btn btn-outline-dark">Saiba mais</a>
+    </div>
+    <div class="split-media reticle">
+      <img src="https://images.unsplash.com/photo-1581094651181-35942459ef62?auto=format&fit=crop&w=900&q=60" alt="Equipe técnica em ambiente industrial" />
+    </div>
+  </div>
+</section>
+
+<!-- SEÇÃO — ÁREAS DE ATUAÇÃO -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head center" style="margin-left:auto;margin-right:auto;">
+      <div class="eyebrow" style="justify-content:center;display:flex;">Áreas de atuação</div>
+      <h2>Onde a Global Engenharia atua</h2>
+      <p>Um recorte da nossa frente de serviços — o catálogo completo está disponível na página de serviços.</p>
+    </div>
+    <div class="grid grid-4">
+      <% servicos.slice(0, 8).forEach(function(s, i) { %>
+        <div class="card">
+          <div class="card-tag">SRV-<%= String(i+1).padStart(2, '0') %></div>
+          <div class="card-icon">GE</div>
+          <h3><%= s.nome %></h3>
+          <p>Equipes técnicas preparadas para atender esta frente com segurança e qualidade.</p>
+        </div>
+      <% }) %>
+    </div>
+    <div class="section-foot-action">
+      <a href="/servicos" class="btn btn-outline-dark">Ver todos os serviços</a>
+    </div>
+  </div>
+</section>
+
+<!-- SEÇÃO — DIFERENCIAIS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Diferenciais</div>
+      <h2>O que sustenta o nosso trabalho</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card"><div class="card-icon">01</div><h3>Excelência técnica</h3><p>Times qualificados e processos revisados a cada etapa de execução.</p></div>
+      <div class="card"><div class="card-icon">02</div><h3>Segurança</h3><p>Segurança do trabalho como condição não negociável em qualquer serviço.</p></div>
+      <div class="card"><div class="card-icon">03</div><h3>Qualidade</h3><p>Padrões de qualidade acompanhados do planejamento à entrega.</p></div>
+      <div class="card"><div class="card-icon">04</div><h3>Compromisso</h3><p>Cumprimento de prazos e transparência com clientes e parceiros.</p></div>
+      <div class="card"><div class="card-icon">05</div><h3>Experiência</h3><p>Conhecimento prático em rotinas industriais e operações de manutenção.</p></div>
+      <div class="card"><div class="card-icon">06</div><h3>Atendimento personalizado</h3><p>Proximidade com o cliente para entender cada demanda com precisão.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SEÇÃO — CONTATO -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Contato</div>
+      <h2>Fale com a Global Engenharia</h2>
+    </div>
+    <div class="contact-strip">
+      <div class="contact-item"><div class="eyebrow">Telefone</div><strong><%= empresa.telefone %></strong></div>
+      <div class="contact-item"><div class="eyebrow">E-mail</div><strong><%= empresa.email %></strong></div>
+      <div class="contact-item"><div class="eyebrow">Endereço</div><strong><%= empresa.endereco %></strong></div>
+    </div>
+    <div class="section-foot-action">
+      <a href="/contato" class="btn btn-outline-dark">Ir para a página de contato</a>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+</body>
+</html>
