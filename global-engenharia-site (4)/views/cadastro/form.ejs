@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/header') %>
+
+<%
+  var servicosSelecionados = [].concat(valores['servicos_ids[]'] || valores.servicos_ids || []).map(String);
+  var acaoForm = empreendimentoAtual ? ('/cadastro/' + empreendimentoAtual.slug) : '/cadastro';
+%>
+
+<div class="page-banner">
+  <div class="container">
+    <div class="breadcrumb"><a href="/">Início</a> / Cadastro de Terceirizados<% if (empreendimentoAtual) { %> / <%= empreendimentoAtual.nome %><% } %></div>
+    <h1>Cadastro de Terceirizados<% if (empreendimentoAtual) { %> · <%= empreendimentoAtual.nome %><% } %></h1>
+    <p>
+      <% if (empreendimentoAtual) { %>
+        Este cadastro é vinculado especificamente ao empreendimento <strong><%= empreendimentoAtual.nome %></strong>.
+      <% } else { %>
+        Preencha as etapas abaixo para fazer parte da nossa rede de empresas e profissionais parceiros.
+      <% } %>
+    </p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container" style="max-width:840px;">
+
+    <% if (erros && erros.length) { %>
+      <div class="alert-erro">
+        <strong>Verifique os campos abaixo:</strong>
+        <ul>
+          <% erros.forEach(function(e) { %><li><%= e.msg %></li><% }) %>
+        </ul>
+      </div>
+    <% } %>
+
+    <div class="form-card">
+      <form action="<%= acaoForm %>" method="POST" enctype="multipart/form-data" data-wizard novalidate>
+
+        <div class="wizard-progress">
+          <button type="button" class="wizard-step ativo" data-step-btn><span class="num">1</span>Dados cadastrais</button>
+          <button type="button" class="wizard-step" data-step-btn><span class="num">2</span>Serviços</button>
+          <button type="button" class="wizard-step" data-step-btn><span class="num">3</span>Experiência</button>
+          <button type="button" class="wizard-step" data-step-btn><span class="num">4</span>Documentos</button>
+          <button type="button" class="wizard-step" data-step-btn><span class="num">5</span>Revisão</button>
+        </div>
+
+        <!-- ETAPA 1 — DADOS CADASTRAIS -->
+        <fieldset class="wizard-fieldset ativo">
+
+          <% if (!empreendimentoAtual) { %>
+            <div class="field">
+              <label for="empreendimento">Empreendimento <span class="opt">(se souber para qual empreendimento é o cadastro)</span></label>
+              <select id="empreendimento" name="empreendimento">
+                <option value="">Cadastro geral (não vinculado a um empreendimento específico)</option>
+                <% empreendimentos.forEach(function(emp) { %>
+                  <option value="<%= emp.slug %>" <%= valores.empreendimento === emp.slug ? 'selected' : '' %>><%= emp.nome %></option>
+                <% }) %>
+              </select>
+            </div>
+          <% } %>
+
+          <div class="field">
+            <label>Tipo de cadastro</label>
+            <div class="check-grid">
+              <label class="check-item">
+                <input type="radio" name="tipo" value="PJ" <%= (valores.tipo || 'PJ') === 'PJ' ? 'checked' : '' %> required />
+                Pessoa Jurídica (empresa)
+              </label>
+              <label class="check-item">
+                <input type="radio" name="tipo" value="PF" <%= valores.tipo === 'PF' ? 'checked' : '' %> />
+                Pessoa Física (profissional autônomo)
+              </label>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="razao_social">Nome / Razão social</label>
+              <input type="text" id="razao_social" name="razao_social" value="<%= valores.razao_social || '' %>" required />
+            </div>
+            <div class="field">
+              <label for="nome_fantasia">Nome fantasia <span class="opt">(opcional, PJ)</span></label>
+              <input type="text" id="nome_fantasia" name="nome_fantasia" value="<%= valores.nome_fantasia || '' %>" />
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="cpf_cnpj">CPF / CNPJ</label>
+              <input type="text" id="cpf_cnpj" name="cpf_cnpj" value="<%= valores.cpf_cnpj || '' %>" required />
+            </div>
+            <div class="field">
+              <label for="cep">CEP <span class="opt">(opcional)</span></label>
+              <input type="text" id="cep" name="cep" value="<%= valores.cep || '' %>" />
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="inscricao_estadual">Inscrição estadual <span class="opt">(PJ, opcional)</span></label>
+              <input type="text" id="inscricao_estadual" name="inscricao_estadual" value="<%= valores.inscricao_estadual || '' %>" />
+            </div>
+            <div class="field">
+              <label for="inscricao_municipal">Inscrição municipal <span class="opt">(PJ, opcional)</span></label>
+              <input type="text" id="inscricao_municipal" name="inscricao_municipal" value="<%= valores.inscricao_municipal || '' %>" />
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="telefone">Telefone</label>
+              <input type="tel" id="telefone" name="telefone" value="<%= valores.telefone || '' %>" />
+            </div>
+            <div class="field">
+              <label for="whatsapp">Telefone <span class="opt">(segunda opção)</span></label>
+              <input type="tel" id="whatsapp" name="whatsapp" value="<%= valores.whatsapp || '' %>" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" value="<%= valores.email || '' %>" />
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="endereco">Endereço completo <span class="opt">(opcional)</span></label>
+              <input type="text" id="endereco" name="endereco" value="<%= valores.endereco || '' %>" />
+            </div>
+            <div class="field">
+              <label for="complemento">Complemento <span class="opt">(opcional)</span></label>
+              <input type="text" id="complemento" name="complemento" value="<%= valores.complemento || '' %>" />
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="cidade">Cidade</label>
+              <input type="text" id="cidade" name="cidade" value="<%= valores.cidade || '' %>" required />
+            </div>
+            <div class="field">
+              <label for="estado">Estado</label>
+              <select id="estado" name="estado" required>
+                <option value="">Selecione...</option>
+                <% estados.forEach(function(uf) { %>
+                  <option value="<%= uf %>" <%= valores.estado === uf ? 'selected' : '' %>><%= uf %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="setor_atividade">Setor da atividade <span class="opt">(opcional)</span></label>
+            <input type="text" id="setor_atividade" name="setor_atividade" value="<%= valores.setor_atividade || '' %>" placeholder="Ex: Manutenção industrial, Logística, TI..." />
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="contato_nome">Nome do contato <span class="opt">(opcional)</span></label>
+              <input type="text" id="contato_nome" name="contato_nome" value="<%= valores.contato_nome || '' %>" />
+            </div>
+            <div class="field">
+              <label for="contato_telefone">Telefone do contato <span class="opt">(opcional)</span></label>
+              <input type="tel" id="contato_telefone" name="contato_telefone" value="<%= valores.contato_telefone || '' %>" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="observacoes">Observações <span class="opt">(opcional)</span></label>
+            <textarea id="observacoes" name="observacoes"><%= valores.observacoes || '' %></textarea>
+          </div>
+
+          <div class="wizard-nav">
+            <span></span>
+            <button type="button" class="btn btn-primary" data-next>Próxima etapa</button>
+          </div>
+        </fieldset>
+
+        <!-- ETAPA 2 — SERVIÇOS OFERECIDOS (PRODUTO OU SERVIÇO) -->
+        <fieldset class="wizard-fieldset">
+          <div class="field">
+            <label>Produto ou serviço — selecione o que sua empresa/você oferece</label>
+            <div class="check-grid">
+              <% servicos.forEach(function(s) { %>
+                <label class="check-item">
+                  <input type="checkbox" name="servicos_ids[]" value="<%= s.id %>" <%= servicosSelecionados.indexOf(String(s.id)) > -1 ? 'checked' : '' %> />
+                  <%= s.nome %>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+          <div class="field">
+            <label for="outros_servicos">Outros <span class="opt">(escreva livremente qualquer outro serviço ou produto que pode oferecer, separado por vírgula)</span></label>
+            <input type="text" id="outros_servicos" name="outros_servicos" value="<%= valores.outros_servicos || '' %>" placeholder="Ex: Marcenaria industrial, Jateamento" />
+          </div>
+
+          <div class="wizard-nav">
+            <button type="button" class="btn btn-outline-dark" data-prev>Etapa anterior</button>
+            <button type="button" class="btn btn-primary" data-next>Próxima etapa</button>
+          </div>
+        </fieldset>
+
+        <!-- ETAPA 3 — EXPERIÊNCIA PROFISSIONAL -->
+        <fieldset class="wizard-fieldset">
+          <div class="field">
+            <label for="tempo_experiencia">Tempo de experiência</label>
+            <select id="tempo_experiencia" name="tempo_experiencia">
+              <option value="">Selecione...</option>
+              <% ['Menos de 1 ano','1 a 3 anos','3 a 5 anos','5 a 10 anos','Mais de 10 anos'].forEach(function(t) { %>
+                <option value="<%= t %>" <%= valores.tempo_experiencia === t ? 'selected' : '' %>><%= t %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="field">
+            <label for="area_atuacao">Área de atuação</label>
+            <input type="text" id="area_atuacao" name="area_atuacao" value="<%= valores.area_atuacao || '' %>" />
+          </div>
+          <div class="field">
+            <label for="principais_atividades">Principais atividades já realizadas</label>
+            <textarea id="principais_atividades" name="principais_atividades"><%= valores.principais_atividades || '' %></textarea>
+          </div>
+          <div class="field">
+            <label for="empresas_projetos_anteriores">Empresas / projetos anteriores <span class="opt">(opcional)</span></label>
+            <textarea id="empresas_projetos_anteriores" name="empresas_projetos_anteriores"><%= valores.empresas_projetos_anteriores || '' %></textarea>
+          </div>
+          <div class="field">
+            <label for="principais_competencias">Principais competências</label>
+            <textarea id="principais_competencias" name="principais_competencias"><%= valores.principais_competencias || '' %></textarea>
+          </div>
+          <div class="field">
+            <label for="certificacoes">Certificações <span class="opt">(opcional)</span></label>
+            <textarea id="certificacoes" name="certificacoes"><%= valores.certificacoes || '' %></textarea>
+          </div>
+
+          <div class="wizard-nav">
+            <button type="button" class="btn btn-outline-dark" data-prev>Etapa anterior</button>
+            <button type="button" class="btn btn-primary" data-next>Próxima etapa</button>
+          </div>
+        </fieldset>
+
+        <!-- ETAPA 4 — DOCUMENTOS -->
+        <fieldset class="wizard-fieldset">
+          <div class="field">
+            <label>Documentos <span class="opt">(anexe o que já tiver disponível — o restante pode ser enviado depois)</span></label>
+            <div data-doc-lista></div>
+            <button type="button" class="btn-add-doc" data-doc-add>+ Adicionar documento</button>
+          </div>
+          <input type="hidden" name="documentos_meta" value="[]" />
+
+          <div class="wizard-nav">
+            <button type="button" class="btn btn-outline-dark" data-prev>Etapa anterior</button>
+            <button type="button" class="btn btn-primary" data-next>Próxima etapa</button>
+          </div>
+        </fieldset>
+
+        <!-- ETAPA 5 — REVISÃO E ENVIO -->
+        <fieldset class="wizard-fieldset">
+          <div class="field">
+            <label>Revise as informações antes de enviar</label>
+            <div data-revisao></div>
+          </div>
+          <div class="wizard-nav">
+            <button type="button" class="btn btn-outline-dark" data-prev>Etapa anterior</button>
+            <button type="submit" class="btn btn-primary">Enviar cadastro</button>
+          </div>
+        </fieldset>
+
+      </form>
+    </div>
+  </div>
+</section>
+
+<script id="tipos-documento-json" type="application/json"><%- JSON.stringify(tiposDocumento) %></script>
+
+<%- include('../partials/footer') %>
+</body>
+</html>
