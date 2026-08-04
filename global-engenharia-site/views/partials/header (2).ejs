@@ -1,0 +1,35 @@
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="brand">
+      <img src="/img/logo-gpe.png" alt="Grupo Global · GPE" style="height:34px;width:auto;" />
+      <span class="brand-text">
+        Global Engenharia
+        <small>Cadastro de Terceirizados</small>
+      </span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Navegação principal">
+      <a href="/" class="<%= caminhoAtual === '/' ? 'ativo' : '' %>">Início</a>
+      <a href="/sobre" class="<%= caminhoAtual === '/sobre' ? 'ativo' : '' %>">Sobre</a>
+      <a href="/servicos" class="<%= caminhoAtual === '/servicos' ? 'ativo' : '' %>">Serviços</a>
+      <a href="/contato" class="<%= caminhoAtual === '/contato' ? 'ativo' : '' %>">Contato</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="/interno/login" class="btn btn-outline">Acesso administrativo</a>
+      <a href="/cadastro" class="btn btn-primary">Cadastre-se como Terceirizado</a>
+      <button class="hamburger" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="nav-mobile" aria-label="Navegação mobile">
+    <a href="/">Início</a>
+    <a href="/sobre">Sobre</a>
+    <a href="/servicos">Serviços</a>
+    <a href="/contato">Contato</a>
+    <a href="/interno/login" class="btn btn-outline btn-block" style="margin-top:16px;">Acesso administrativo</a>
+    <a href="/cadastro" class="btn btn-primary btn-block">Cadastre-se como Terceirizado</a>
+  </nav>
+</header>
