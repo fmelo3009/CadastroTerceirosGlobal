@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><%- include('../partials/head') %></head>
+<body>
+<%- include('../partials/header') %>
+
+<div class="page-banner">
+  <div class="container">
+    <div class="breadcrumb"><a href="/">Início</a> / Serviços</div>
+    <h1>Serviços e atuação</h1>
+    <p>Catálogo de frentes técnicas em que a Global Engenharia atua junto a clientes e parceiros.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="servicos-toolbar">
+      <div class="eyebrow" style="margin-bottom:0;">Catálogo completo</div>
+      <span class="count"><%= servicos.length %> serviços cadastrados</span>
+    </div>
+    <div class="grid grid-3">
+      <% servicos.forEach(function(s, i) { %>
+        <div class="card">
+          <div class="card-tag">SRV-<%= String(i+1).padStart(2, '0') %></div>
+          <div class="card-icon">GE</div>
+          <h3><%= s.nome %></h3>
+          <p>Descrição detalhada em breve — espaço reservado para explicar esta frente de serviço, com fotos e casos reais.</p>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="cta-banner">
+  <div class="container cta-banner-inner">
+    <div>
+      <div class="eyebrow">Atende ou executa algum destes serviços?</div>
+      <h2>Cadastre-se como terceirizado</h2>
+      <p>Empresas e profissionais autônomos podem se cadastrar para futuras oportunidades.</p>
+    </div>
+    <a href="/cadastro" class="btn btn-primary">Cadastre-se</a>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
+</body>
+</html>
