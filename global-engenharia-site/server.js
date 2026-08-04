@@ -1,12 +1,14 @@
 const express = require('express');
 const session = require('express-session');
-const SQLiteStore = require('connect-sqlite3')(session);
 const path = require('path');
 const config = require('./config');
 const { injetarUsuario } = require('./lib/auth');
 
-// Garante que o banco exista/seja criado (lib/db.js cria as tabelas ao ser importado)
+// Garante que o banco e as tabelas existam
 require('./lib/db');
+
+// Cria os serviços e o usuário administrador caso ainda não existam
+require('./lib/seed');
 
 const app = express();
 
@@ -19,7 +21,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
   session({
-    store: new SQLiteStore({ dir: path.join(__dirname, 'data'), db: 'sessions.sqlite' }),
     secret: config.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -27,12 +28,13 @@ app.use(
       maxAge: 8 * 60 * 60 * 1000, // 8 horas
       httpOnly: true,
       sameSite: 'lax',
-      // secure: true, // habilitar quando servir via HTTPS em produção
+      secure: process.env.NODE_ENV === 'production',
     },
   })
 );
 
 app.use(injetarUsuario);
+
 app.use((req, res, next) => {
   res.locals.empresa = config.EMPRESA;
   res.locals.caminhoAtual = req.path;
@@ -41,27 +43,36 @@ app.use((req, res, next) => {
   next();
 });
 
-// ---------------------------------------------------------------------------
 // Rotas
-// ---------------------------------------------------------------------------
 app.use('/', require('./routes/public'));
 app.use('/cadastro', require('./routes/cadastro'));
 app.use('/interno', require('./routes/interno'));
 
-// 404
+// Página não encontrada
 app.use((req, res) => {
-  res.status(404).render('erro', { titulo: 'Página não encontrada', mensagem: 'A página que você procura não existe ou foi movida.' });
+  res.status(404).render('erro', {
+    titulo: 'Página não encontrada',
+    mensagem: 'A página que você procura não existe ou foi movida.',
+  });
 });
 
-// Tratamento de erros (inclui erros do Multer, ex: arquivo muito grande)
+// Tratamento de erros
 app.use((err, req, res, next) => {
   console.error(err);
-  const mensagem = err.message && err.message.includes('File too large')
-    ? `O arquivo enviado excede o limite de ${config.MAX_UPLOAD_SIZE_MB}MB.`
-    : err.message || 'Ocorreu um erro inesperado.';
-  res.status(500).render('erro', { titulo: 'Erro', mensagem });
+
+  const mensagem =
+    err.message && err.message.includes('File too large')
+      ? `O arquivo enviado excede o limite de ${config.MAX_UPLOAD_SIZE_MB}MB.`
+      : err.message || 'Ocorreu um erro inesperado.';
+
+  res.status(500).render('erro', {
+    titulo: 'Erro',
+    mensagem,
+  });
 });
 
-app.listen(config.PORT, () => {
-  console.log(`Global Engenharia - servidor rodando em http://localhost:${config.PORT}`);
+const PORT = process.env.PORT || config.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Global Engenharia - servidor rodando na porta ${PORT}`);
 });
