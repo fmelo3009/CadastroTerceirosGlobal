@@ -7,6 +7,10 @@ const { injetarUsuario } = require('./lib/auth');
 // Garante que o banco exista/seja criado (lib/db.js cria as tabelas ao ser importado)
 require('./lib/db');
 
+// Executa o seed automaticamente.
+// Se o administrador já existir, nada será alterado.
+require('./lib/seed');
+
 const app = express();
 
 app.set('view engine', 'ejs');
