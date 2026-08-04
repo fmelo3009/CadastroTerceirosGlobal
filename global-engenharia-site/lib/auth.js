@@ -1,27 +1,36 @@
-// Middlewares de autenticação/autorização para a área restrita (interna)
+router.post('/login', (req, res) => {
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const senha = req.body.senha || '';
 
-function exigirLogin(req, res, next) {
-  if (req.session && req.session.usuario) {
-    return next();
-  }
-  req.session.avisoLogin = 'Faça login para acessar a área interna.';
-  return res.redirect('/interno/login');
-}
+  const usuario = db
+    .prepare('SELECT * FROM usuarios WHERE LOWER(email) = ? AND ativo = 1')
+    .get(email);
 
-function exigirAdmin(req, res, next) {
-  if (req.session && req.session.usuario && req.session.usuario.papel === 'admin') {
-    return next();
+  if (!usuario || !bcrypt.compareSync(senha, usuario.senha_hash)) {
+    return res.status(401).render('interno/login', {
+      titulo: 'Área interna',
+      aviso: null,
+      erro: 'E-mail ou senha inválidos.',
+    });
   }
-  return res.status(403).render('erro', {
-    titulo: 'Acesso negado',
-    mensagem: 'Você não tem permissão de administrador para acessar esta página.',
+
+  req.session.usuario = {
+    id: usuario.id,
+    nome: usuario.nome,
+    papel: usuario.papel,
+  };
+
+  req.session.save((erro) => {
+    if (erro) {
+      console.error('Erro ao salvar a sessão:', erro);
+
+      return res.status(500).render('interno/login', {
+        titulo: 'Área interna',
+        aviso: null,
+        erro: 'Não foi possível iniciar a sessão. Tente novamente.',
+      });
+    }
+
+    return res.redirect('/interno');
   });
-}
-
-// Disponibiliza o usuário logado (ou null) para todas as views automaticamente
-function injetarUsuario(req, res, next) {
-  res.locals.usuarioLogado = (req.session && req.session.usuario) || null;
-  next();
-}
-
-module.exports = { exigirLogin, exigirAdmin, injetarUsuario };
+});
