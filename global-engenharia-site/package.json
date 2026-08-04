@@ -19,7 +19,7 @@
     "dotenv": "^16.4.5",
     "connect-sqlite3": "^0.9.15"
   },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+ "engines": {
+  "node": "20.x"
+}
 }
