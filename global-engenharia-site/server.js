@@ -12,6 +12,9 @@ require('./lib/seed');
 
 const app = express();
 
+// IMPORTANTE PARA O RENDER
+app.set('trust proxy', 1);
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -25,11 +28,11 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 8 * 60 * 60 * 1000, // 8 horas
+      maxAge: 8 * 60 * 60 * 1000,
       httpOnly: true,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-    },
+      secure: false
+    }
   })
 );
 
@@ -43,20 +46,17 @@ app.use((req, res, next) => {
   next();
 });
 
-// Rotas
 app.use('/', require('./routes/public'));
 app.use('/cadastro', require('./routes/cadastro'));
 app.use('/interno', require('./routes/interno'));
 
-// Página não encontrada
 app.use((req, res) => {
   res.status(404).render('erro', {
     titulo: 'Página não encontrada',
-    mensagem: 'A página que você procura não existe ou foi movida.',
+    mensagem: 'A página que você procura não existe ou foi movida.'
   });
 });
 
-// Tratamento de erros
 app.use((err, req, res, next) => {
   console.error(err);
 
@@ -67,7 +67,7 @@ app.use((err, req, res, next) => {
 
   res.status(500).render('erro', {
     titulo: 'Erro',
-    mensagem,
+    mensagem
   });
 });
 
