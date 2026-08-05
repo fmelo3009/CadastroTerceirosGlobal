@@ -474,7 +474,7 @@ p { margin: 0 0 1em; }
 .foco-real h1,
 .foco-real h2 {
   color: var(--white);
-  font-size: clamp(32px, 4vw, 50px);
+  font-size: clamp(25px, 4vw, 50px);
   line-height: 1.18;
   margin-bottom: 24px;
   max-width: 720px;
