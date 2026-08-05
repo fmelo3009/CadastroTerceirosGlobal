@@ -13,17 +13,24 @@ router.get('/', (req, res) => {
   });
 });
 
+// Redireciona a página "Sobre" para o site oficial da Global
 router.get('/sobre', (req, res) => {
-  res.render('public/sobre', { titulo: 'Sobre a empresa' });
+  res.redirect('https://globalparticipacoesenergia.com.br/');
 });
 
 router.get('/servicos', (req, res) => {
   const servicos = db.prepare('SELECT * FROM servicos ORDER BY nome').all();
-  res.render('public/servicos', { titulo: 'Serviços e Atuação', servicos });
+  res.render('public/servicos', {
+    titulo: 'Serviços e Atuação',
+    servicos,
+  });
 });
 
 router.get('/contato', (req, res) => {
-  res.render('public/contato', { titulo: 'Contato', empresa: config.EMPRESA });
+  res.render('public/contato', {
+    titulo: 'Contato',
+    empresa: config.EMPRESA,
+  });
 });
 
 module.exports = router;
