@@ -1,78 +1,40 @@
 const express = require('express');
-const session = require('express-session');
-const path = require('path');
-const config = require('./config');
-const { injetarUsuario } = require('./lib/auth');
+const router = express.Router();
+const config = require('../config');
+const db = require('../lib/db');
 
-// Garante que o banco e as tabelas existam
-require('./lib/db');
+router.get('/', (req, res) => {
+  const servicos = db
+    .prepare('SELECT * FROM servicos ORDER BY id LIMIT 8')
+    .all();
 
-// Cria os serviços e o usuário administrador caso ainda não existam
-require('./lib/seed');
-
-const app = express();
-
-// IMPORTANTE PARA O RENDER
-app.set('trust proxy', 1);
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(
-  session({
-    secret: config.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 8 * 60 * 60 * 1000,
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: false
-    }
-  })
-);
-
-app.use(injetarUsuario);
-
-app.use((req, res, next) => {
-  res.locals.empresa = config.EMPRESA;
-  res.locals.caminhoAtual = req.path;
-  res.locals.linkGPE = config.LINK_GPE;
-  res.locals.empreendimentosFooter = config.EMPREENDIMENTOS;
-  next();
-});
-
-app.use('/', require('./routes/public'));
-app.use('/cadastro', require('./routes/cadastro'));
-app.use('/interno', require('./routes/interno'));
-
-app.use((req, res) => {
-  res.status(404).render('erro', {
-    titulo: 'Página não encontrada',
-    mensagem: 'A página que você procura não existe ou foi movida.'
+  res.render('public/home', {
+    titulo: 'Início',
+    servicos,
+    empreendimentos: config.EMPREENDIMENTOS,
+    linkGPE: config.LINK_GPE,
   });
 });
 
-app.use((err, req, res, next) => {
-  console.error(err);
+router.get('/sobre', (req, res) => {
+  return res.redirect('https://globalparticipacoesenergia.com.br/');
+});
 
-  const mensagem =
-    err.message && err.message.includes('File too large')
-      ? `O arquivo enviado excede o limite de ${config.MAX_UPLOAD_SIZE_MB}MB.`
-      : err.message || 'Ocorreu um erro inesperado.';
+router.get('/servicos', (req, res) => {
+  const servicos = db
+    .prepare('SELECT * FROM servicos ORDER BY nome')
+    .all();
 
-  res.status(500).render('erro', {
-    titulo: 'Erro',
-    mensagem
+  res.render('public/servicos', {
+    titulo: 'Serviços e Atuação',
+    servicos,
   });
 });
 
-const PORT = process.env.PORT || config.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Global Engenharia - servidor rodando na porta ${PORT}`);
+router.get('/contato', (req, res) => {
+  return res.redirect(
+    'https://globalparticipacoesenergia.com.br/contato/'
+  );
 });
+
+module.exports = router;
