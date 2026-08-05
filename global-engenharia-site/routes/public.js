@@ -27,10 +27,8 @@ router.get('/servicos', (req, res) => {
 });
 
 router.get('/contato', (req, res) => {
-  res.render('public/contato', {
-    titulo: 'Contato',
-    empresa: config.EMPRESA,
-  });
+  return res.redirect('https://globalparticipacoesenergia.com.br/contato/');
+});
 });
 
 module.exports = router;
