@@ -443,44 +443,137 @@ p { margin: 0 0 1em; }
 .cta-banner .btn-primary { background: var(--safety-500); color: #20200a; }
 .cta-banner .btn-primary:hover { background: var(--safety-600); }
 
-/* --- Bloco "foco real do site" --- */
+/* --- Bloco "foco real do site" --- *//* --- Bloco "Cadastro de Terceirizados" da página inicial --- */
 .foco-real {
   background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
-  color: #fff;
+  color: var(--white);
+
+  /* Aumenta o fundo azul e afasta o conteúdo das bordas */
+  padding: 72px 0 82px;
+
+  /* Cria um respiro antes da próxima parte branca */
+  margin-bottom: 44px;
 }
+
 .foco-grid {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 48px;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 64px;
   align-items: center;
 }
-@media (max-width: 900px) { .foco-grid { grid-template-columns: 1fr; } }
-.foco-real .eyebrow { color: var(--safety-500); }
-.foco-real h2 { color: #fff; font-size: clamp(24px, 3vw, 34px); }
-.foco-real p { color: #cddbf2; max-width: 520px; }
-.foco-list { display: grid; gap: 14px; }
+
+.foco-grid > div,
+.foco-list {
+  min-width: 0;
+}
+
+.foco-real .eyebrow {
+  color: var(--safety-500);
+}
+
+.foco-real h1,
+.foco-real h2 {
+  color: var(--white);
+  font-size: clamp(32px, 4vw, 50px);
+  line-height: 1.18;
+  margin-bottom: 24px;
+  max-width: 720px;
+}
+
+.foco-real p {
+  color: rgba(255, 255, 255, 0.94);
+  max-width: 650px;
+  font-size: 17px;
+  line-height: 1.8;
+  margin-bottom: 0;
+}
+
+.foco-list {
+  display: grid;
+  gap: 18px;
+}
+
 .foco-item {
   display: flex;
-  gap: 12px;
   align-items: flex-start;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: var(--radius);
-  padding: 16px 18px;
+  gap: 16px;
   min-width: 0;
+  padding: 22px 24px;
+
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
 }
-.foco-item .n { font-weight: 800; color: var(--safety-500); font-size: 14px; flex-shrink: 0; }
-.foco-item span {
-  font-size: 14.5px;
-  color: #e7edf8;
+
+.foco-item .n {
+  flex-shrink: 0;
+  color: var(--safety-500);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.7;
+}
+
+.foco-item span:not(.n) {
   min-width: 0;
   flex: 1 1 auto;
+  color: var(--white);
+  font-size: 15.5px;
+  line-height: 1.7;
+  font-weight: 500;
   overflow-wrap: break-word;
-  word-break: break-word;
+  word-break: normal;
 }
-.foco-list { min-width: 0; }
-.foco-grid > div { min-width: 0; }
-.foco-ctas { margin-top: 26px; display: flex; gap: 14px; flex-wrap: wrap; }
+
+.foco-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 32px;
+
+  /* Evita que os botões encostem no final da faixa azul */
+  padding-bottom: 6px;
+}
+
+@media (max-width: 900px) {
+  .foco-real {
+    padding: 56px 0 66px;
+    margin-bottom: 32px;
+  }
+
+  .foco-grid {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+
+  .foco-real h1,
+  .foco-real h2 {
+    font-size: clamp(30px, 7vw, 42px);
+  }
+}
+
+@media (max-width: 620px) {
+  .foco-real {
+    padding: 46px 0 56px;
+    margin-bottom: 24px;
+  }
+
+  .foco-real p {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .foco-item {
+    padding: 18px;
+  }
+
+  .foco-ctas {
+    flex-direction: column;
+  }
+
+  .foco-ctas .btn {
+    width: 100%;
+  }
+}
 
 /* --- Contato resumido na home --- */
 .contact-strip {
