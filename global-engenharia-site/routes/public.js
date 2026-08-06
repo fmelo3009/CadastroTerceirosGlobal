@@ -4,7 +4,10 @@ const config = require('../config');
 const db = require('../lib/db');
 
 router.get('/', (req, res) => {
-  const servicos = db.prepare('SELECT * FROM servicos ORDER BY id LIMIT 8').all();
+  const servicos = db
+    .prepare('SELECT * FROM servicos ORDER BY id LIMIT 8')
+    .all();
+
   res.render('public/home', {
     titulo: 'Início',
     servicos,
@@ -13,13 +16,15 @@ router.get('/', (req, res) => {
   });
 });
 
-// Redireciona a página "Sobre" para o site oficial da Global
 router.get('/sobre', (req, res) => {
   res.redirect('https://globalparticipacoesenergia.com.br/');
 });
 
 router.get('/servicos', (req, res) => {
-  const servicos = db.prepare('SELECT * FROM servicos ORDER BY nome').all();
+  const servicos = db
+    .prepare('SELECT * FROM servicos ORDER BY nome')
+    .all();
+
   res.render('public/servicos', {
     titulo: 'Serviços e Atuação',
     servicos,
@@ -27,8 +32,9 @@ router.get('/servicos', (req, res) => {
 });
 
 router.get('/contato', (req, res) => {
-  return res.redirect('https://globalparticipacoesenergia.com.br/contato/');
-});
+  return res.redirect(
+    'https://globalparticipacoesenergia.com.br/contato/'
+  );
 });
 
 module.exports = router;
