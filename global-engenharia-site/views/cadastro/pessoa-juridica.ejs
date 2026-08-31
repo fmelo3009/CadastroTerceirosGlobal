@@ -1,0 +1,1088 @@
+<%- include('../partials/head', { titulo }) %>
+
+<%- include('../partials/header') %>
+
+<main class="cadastro-page">
+
+  <section class="cadastro-hero">
+    <div class="container">
+
+      <span class="cadastro-tag">
+        UTE Tupã Fase I
+      </span>
+
+      <h1>Cadastro de Pessoa Jurídica</h1>
+
+      <p>
+        Cadastre sua empresa para oportunidades de fornecimento,
+        prestação de serviços e participação nas demandas relacionadas
+        à UTE Tupã Fase I.
+      </p>
+
+    </div>
+  </section>
+
+
+  <section class="cadastro-section">
+
+    <div class="container">
+
+      <div class="cadastro-box">
+
+        <div class="cadastro-box-header">
+
+          <h2>Dados da empresa</h2>
+
+          <p>
+            Preencha as informações abaixo para inclusão da empresa
+            no banco de fornecedores e prestadores de serviços da UTE Tupã Fase I.
+          </p>
+
+        </div>
+
+
+        <% if (erros && erros.length > 0) { %>
+
+          <div class="alert alert-error">
+
+            <strong>
+              Verifique as informações abaixo:
+            </strong>
+
+            <ul>
+              <% erros.forEach(function(erro) { %>
+                <li><%= erro.msg %></li>
+              <% }) %>
+            </ul>
+
+          </div>
+
+        <% } %>
+
+
+        <form
+          action="/cadastro/pessoa-juridica"
+          method="POST"
+          enctype="multipart/form-data"
+          class="cadastro-form"
+        >
+
+
+          <!-- LOCALIZAÇÃO -->
+
+          <div class="form-section">
+
+            <h3>Localização</h3>
+
+            <div class="form-grid">
+
+              <div class="form-group">
+
+                <label for="municipio">
+                  Município *
+                </label>
+
+                <select
+                  id="municipio"
+                  name="municipio"
+                  required
+                >
+
+                  <option value="">
+                    Selecione
+                  </option>
+
+                  <option value="Macaé">
+                    Macaé
+                  </option>
+
+                  <option value="Rio das Ostras">
+                    Rio das Ostras
+                  </option>
+
+                  <option value="Carapebus">
+                    Carapebus
+                  </option>
+
+                  <option value="Conceição de Macabu">
+                    Conceição de Macabu
+                  </option>
+
+                  <option value="Casimiro de Abreu">
+                    Casimiro de Abreu
+                  </option>
+
+                  <option value="Outro">
+                    Outro município
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div
+                class="form-group"
+                id="municipio-outro-container"
+                style="display:none;"
+              >
+
+                <label for="municipio_outro">
+                  Informe o município *
+                </label>
+
+                <input
+                  type="text"
+                  id="municipio_outro"
+                  name="municipio_outro"
+                  value="<%= valores.municipio_outro || '' %>"
+                >
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- DADOS DA EMPRESA -->
+
+          <div class="form-section">
+
+            <h3>Dados da empresa</h3>
+
+            <div class="form-grid">
+
+              <div class="form-group form-group-full">
+
+                <label for="razao_social">
+                  Razão Social *
+                </label>
+
+                <input
+                  type="text"
+                  id="razao_social"
+                  name="razao_social"
+                  value="<%= valores.razao_social || '' %>"
+                  required
+                >
+
+              </div>
+
+
+              <div class="form-group form-group-full">
+
+                <label for="nome_fantasia">
+                  Nome Fantasia
+                </label>
+
+                <input
+                  type="text"
+                  id="nome_fantasia"
+                  name="nome_fantasia"
+                  value="<%= valores.nome_fantasia || '' %>"
+                >
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="cnpj">
+                  CNPJ *
+                </label>
+
+                <input
+                  type="text"
+                  id="cnpj"
+                  name="cnpj"
+                  maxlength="18"
+                  placeholder="00.000.000/0000-00"
+                  value="<%= valores.cnpj || '' %>"
+                  required
+                >
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="capital_social">
+                  Capital Social
+                </label>
+
+                <input
+                  type="text"
+                  id="capital_social"
+                  name="capital_social"
+                  placeholder="R$ 0,00"
+                  value="<%= valores.capital_social || '' %>"
+                >
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="regime_tributario">
+                  Regime Tributário
+                </label>
+
+                <select
+                  id="regime_tributario"
+                  name="regime_tributario"
+                >
+
+                  <option value="">
+                    Selecione
+                  </option>
+
+                  <option value="MEI">
+                    MEI
+                  </option>
+
+                  <option value="Simples Nacional">
+                    Simples Nacional
+                  </option>
+
+                  <option value="Lucro Presumido">
+                    Lucro Presumido
+                  </option>
+
+                  <option value="Lucro Real">
+                    Lucro Real
+                  </option>
+
+                  <option value="Outro">
+                    Outro
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="inscricao_estadual">
+                  Inscrição Estadual
+                </label>
+
+                <input
+                  type="text"
+                  id="inscricao_estadual"
+                  name="inscricao_estadual"
+                  value="<%= valores.inscricao_estadual || '' %>"
+                >
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="inscricao_municipal">
+                  Inscrição Municipal
+                </label>
+
+                <input
+                  type="text"
+                  id="inscricao_municipal"
+                  name="inscricao_municipal"
+                  value="<%= valores.inscricao_municipal || '' %>"
+                >
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ENDEREÇO -->
+
+          <div class="form-section">
+
+            <h3>Endereço</h3>
+
+            <div class="form-grid">
+
+              <div class="form-group">
+
+                <label for="cep">
+                  CEP
+                </label>
+
+                <input
+                  type="text"
+                  id="cep"
+                  name="cep"
+                  maxlength="9"
+                  placeholder="00000-000"
+                  value="<%= valores.cep || '' %>"
+                >
+
+              </div>
+
+
+              <div class="form-group form-group-full">
+
+                <label for="endereco">
+                  Endereço completo
+                </label>
+
+                <input
+                  type="text"
+                  id="endereco"
+                  name="endereco"
+                  placeholder="Rua, avenida, número e bairro"
+                  value="<%= valores.endereco || '' %>"
+                >
+
+              </div>
+
+
+              <div class="form-group form-group-full">
+
+                <label for="complemento">
+                  Complemento
+                </label>
+
+                <input
+                  type="text"
+                  id="complemento"
+                  name="complemento"
+                  value="<%= valores.complemento || '' %>"
+                >
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- CONTATO -->
+
+          <div class="form-section">
+
+            <h3>Contato</h3>
+
+            <div class="form-grid">
+
+              <div class="form-group form-group-full">
+
+                <label for="contato_nome">
+                  Nome do responsável / contato *
+                </label>
+
+                <input
+                  type="text"
+                  id="contato_nome"
+                  name="contato_nome"
+                  value="<%= valores.contato_nome || '' %>"
+                  required
+                >
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="telefone">
+                  Telefone principal *
+                </label>
+
+                <input
+                  type="tel"
+                  id="telefone"
+                  name="telefone"
+                  placeholder="(00) 00000-0000"
+                  value="<%= valores.telefone || '' %>"
+                  required
+                >
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="telefone_secundario">
+                  Segundo telefone
+                </label>
+
+                <input
+                  type="tel"
+                  id="telefone_secundario"
+                  name="telefone_secundario"
+                  placeholder="(00) 00000-0000"
+                  value="<%= valores.telefone_secundario || '' %>"
+                >
+
+              </div>
+
+
+              <div class="form-group form-group-full">
+
+                <label for="email">
+                  E-mail *
+                </label>
+
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="empresa@exemplo.com"
+                  value="<%= valores.email || '' %>"
+                  required
+                >
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ATIVIDADE -->
+
+          <div class="form-section">
+
+            <h3>Área de atuação</h3>
+
+            <div class="form-grid">
+
+              <div class="form-group">
+
+                <label for="tipo_atividade">
+                  Tipo de atividade *
+                </label>
+
+                <select
+                  id="tipo_atividade"
+                  name="tipo_atividade"
+                  required
+                >
+
+                  <option value="">
+                    Selecione
+                  </option>
+
+                  <option value="Serviço">
+                    Serviço
+                  </option>
+
+                  <option value="Produto">
+                    Produto
+                  </option>
+
+                  <option value="Serviço e Produto">
+                    Serviço e Produto
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="setor_atividade">
+                  Setor de atividade *
+                </label>
+
+                <select
+                  id="setor_atividade"
+                  name="setor_atividade"
+                  required
+                >
+
+                  <option value="">
+                    Selecione
+                  </option>
+
+                  <option>Construção Civil</option>
+                  <option>Elétrica</option>
+                  <option>Mecânica</option>
+                  <option>Automação e Instrumentação</option>
+                  <option>Montagem Industrial</option>
+                  <option>Engenharia</option>
+                  <option>Comissionamento</option>
+                  <option>Manutenção</option>
+                  <option>Meio Ambiente</option>
+                  <option>Segurança do Trabalho</option>
+                  <option>Transporte e Logística</option>
+                  <option>Alimentação</option>
+                  <option>Limpeza e Conservação</option>
+                  <option>Vigilância e Segurança Patrimonial</option>
+                  <option>Fornecimento de Materiais</option>
+                  <option>Locação de Equipamentos</option>
+                  <option>Serviços Administrativos</option>
+                  <option>Recursos Humanos</option>
+                  <option>Tecnologia da Informação</option>
+                  <option value="Outros">Outros</option>
+
+                </select>
+
+              </div>
+
+
+              <div
+                class="form-group form-group-full"
+                id="outro-setor-container"
+                style="display:none;"
+              >
+
+                <label for="outro_setor">
+                  Informe o setor de atividade *
+                </label>
+
+                <input
+                  type="text"
+                  id="outro_setor"
+                  name="outro_setor"
+                  value="<%= valores.outro_setor || '' %>"
+                >
+
+              </div>
+
+
+              <div class="form-group form-group-full">
+
+                <label for="observacoes">
+                  Observações
+                </label>
+
+                <textarea
+                  id="observacoes"
+                  name="observacoes"
+                  rows="5"
+                  placeholder="Informe experiências, principais serviços, produtos, certificações ou outras informações relevantes."
+                ><%= valores.observacoes || '' %></textarea>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- PORTFÓLIO -->
+
+          <div class="form-section">
+
+            <h3>Portfólio</h3>
+
+            <div class="upload-box">
+
+              <label for="portfolio">
+                Anexe o portfólio da empresa
+              </label>
+
+              <input
+                type="file"
+                id="portfolio"
+                name="portfolio"
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+              >
+
+              <div
+                id="arquivo-selecionado"
+                class="arquivo-selecionado"
+                style="display:none;"
+              >
+
+                <span id="nome-arquivo"></span>
+
+                <button
+                  type="button"
+                  id="remover-arquivo"
+                  class="btn-remover-arquivo"
+                >
+                  Remover arquivo
+                </button>
+
+              </div>
+
+              <small>
+                Formatos aceitos: PDF, DOC, DOCX, JPG ou PNG.
+                Tamanho máximo: 10 MB.
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-actions">
+
+            <button
+              type="submit"
+              class="btn btn-primary btn-submit"
+            >
+              Enviar cadastro
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<style>
+
+  .cadastro-page {
+    background: #f5f7fa;
+  }
+
+  .cadastro-hero {
+    padding: 64px 0 52px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .cadastro-hero h1 {
+    margin: 10px 0 12px;
+    font-size: 42px;
+  }
+
+  .cadastro-hero p {
+    max-width: 760px;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .cadastro-tag {
+    display: inline-block;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .cadastro-section {
+    padding: 50px 0 80px;
+  }
+
+  .cadastro-box {
+    max-width: 1000px;
+    margin: auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.06);
+  }
+
+  .cadastro-box-header {
+    margin-bottom: 36px;
+  }
+
+  .form-section {
+    padding: 30px 0;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .form-section:first-of-type {
+    border-top: 0;
+  }
+
+  .form-section h3 {
+    margin-bottom: 22px;
+    font-size: 20px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-group-full {
+    grid-column: 1 / -1;
+  }
+
+  .form-group label,
+  .upload-box label {
+    font-weight: 600;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font: inherit;
+    background: #ffffff;
+  }
+
+  .form-group textarea {
+    resize: vertical;
+  }
+
+  .upload-box {
+    border: 2px dashed #d1d5db;
+    padding: 25px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .arquivo-selecionado {
+    margin-top: 10px;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    background: #f9fafb;
+  }
+
+  .arquivo-selecionado span {
+    font-size: 14px;
+    word-break: break-word;
+  }
+
+  .btn-remover-arquivo {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: underline;
+    white-space: nowrap;
+  }
+
+  .form-actions {
+    padding-top: 25px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn-submit {
+    min-width: 220px;
+    padding: 14px 28px;
+    font-size: 16px;
+  }
+
+  .alert-error {
+    margin-bottom: 25px;
+    padding: 18px;
+    border-radius: 8px;
+    background: #fff4f4;
+    border: 1px solid #f1b5b5;
+  }
+
+  @media (max-width: 768px) {
+
+    .cadastro-box {
+      padding: 24px;
+    }
+
+    .cadastro-hero h1 {
+      font-size: 32px;
+    }
+
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .form-group-full {
+      grid-column: auto;
+    }
+
+    .btn-submit {
+      width: 100%;
+    }
+
+  }
+
+</style>
+
+
+<script>
+
+  // MUNICÍPIO
+
+  const municipio =
+    document.getElementById('municipio');
+
+  const municipioOutroContainer =
+    document.getElementById('municipio-outro-container');
+
+  const municipioOutro =
+    document.getElementById('municipio_outro');
+
+
+  function atualizarMunicipio() {
+
+    if (municipio.value === 'Outro') {
+
+      municipioOutroContainer.style.display = 'flex';
+      municipioOutro.required = true;
+
+    } else {
+
+      municipioOutroContainer.style.display = 'none';
+      municipioOutro.required = false;
+      municipioOutro.value = '';
+
+    }
+
+  }
+
+  municipio.addEventListener(
+    'change',
+    atualizarMunicipio
+  );
+
+  atualizarMunicipio();
+
+
+  // SETOR
+
+  const setor =
+    document.getElementById('setor_atividade');
+
+  const outroSetorContainer =
+    document.getElementById('outro-setor-container');
+
+  const outroSetor =
+    document.getElementById('outro_setor');
+
+
+  function atualizarSetor() {
+
+    if (setor.value === 'Outros') {
+
+      outroSetorContainer.style.display = 'flex';
+      outroSetor.required = true;
+
+    } else {
+
+      outroSetorContainer.style.display = 'none';
+      outroSetor.required = false;
+      outroSetor.value = '';
+
+    }
+
+  }
+
+  setor.addEventListener(
+    'change',
+    atualizarSetor
+  );
+
+  atualizarSetor();
+
+
+  // PORTFÓLIO
+
+  const portfolio =
+    document.getElementById('portfolio');
+
+  const arquivoSelecionado =
+    document.getElementById('arquivo-selecionado');
+
+  const nomeArquivo =
+    document.getElementById('nome-arquivo');
+
+  const removerArquivo =
+    document.getElementById('remover-arquivo');
+
+
+  portfolio.addEventListener(
+    'change',
+    function () {
+
+      if (
+        this.files &&
+        this.files.length > 0
+      ) {
+
+        nomeArquivo.textContent =
+          this.files[0].name;
+
+        arquivoSelecionado.style.display =
+          'flex';
+
+      } else {
+
+        nomeArquivo.textContent = '';
+
+        arquivoSelecionado.style.display =
+          'none';
+
+      }
+
+    }
+  );
+
+
+  removerArquivo.addEventListener(
+    'click',
+    function () {
+
+      portfolio.value = '';
+
+      nomeArquivo.textContent = '';
+
+      arquivoSelecionado.style.display =
+        'none';
+
+    }
+  );
+
+
+  // CNPJ
+
+  const cnpj =
+    document.getElementById('cnpj');
+
+
+  cnpj.addEventListener(
+    'input',
+    function () {
+
+      let valor =
+        this.value.replace(/\D/g, '');
+
+      valor =
+        valor.substring(0, 14);
+
+      valor =
+        valor.replace(
+          /^(\d{2})(\d)/,
+          '$1.$2'
+        );
+
+      valor =
+        valor.replace(
+          /^(\d{2})\.(\d{3})(\d)/,
+          '$1.$2.$3'
+        );
+
+      valor =
+        valor.replace(
+          /\.(\d{3})(\d)/,
+          '.$1/$2'
+        );
+
+      valor =
+        valor.replace(
+          /(\d{4})(\d)/,
+          '$1-$2'
+        );
+
+      this.value = valor;
+
+    }
+  );
+
+
+  // CEP
+
+  const cep =
+    document.getElementById('cep');
+
+
+  cep.addEventListener(
+    'input',
+    function () {
+
+      let valor =
+        this.value.replace(/\D/g, '');
+
+      valor =
+        valor.substring(0, 8);
+
+      if (valor.length > 5) {
+
+        valor =
+          valor.replace(
+            /(\d{5})(\d+)/,
+            '$1-$2'
+          );
+
+      }
+
+      this.value = valor;
+
+    }
+  );
+
+
+  // TELEFONES
+
+  function mascaraTelefone(elemento) {
+
+    elemento.addEventListener(
+      'input',
+      function () {
+
+        let valor =
+          this.value.replace(/\D/g, '');
+
+        valor =
+          valor.substring(0, 11);
+
+        if (valor.length > 10) {
+
+          valor =
+            valor.replace(
+              /(\d{2})(\d{5})(\d{4})/,
+              '($1) $2-$3'
+            );
+
+        } else if (valor.length > 6) {
+
+          valor =
+            valor.replace(
+              /(\d{2})(\d{4})(\d{0,4})/,
+              '($1) $2-$3'
+            );
+
+        } else if (valor.length > 2) {
+
+          valor =
+            valor.replace(
+              /(\d{2})(\d+)/,
+              '($1) $2'
+            );
+
+        }
+
+        this.value = valor;
+
+      }
+    );
+
+  }
+
+
+  mascaraTelefone(
+    document.getElementById('telefone')
+  );
+
+  mascaraTelefone(
+    document.getElementById('telefone_secundario')
+  );
+
+</script>
+
+
+<%- include('../partials/footer') %>
