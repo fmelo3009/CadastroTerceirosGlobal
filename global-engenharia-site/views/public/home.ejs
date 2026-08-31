@@ -52,38 +52,32 @@
     <div class="foco-list">
 
       <div class="foco-item">
-
         <span class="n">01</span>
 
         <span>
           Cadastre seu currículo ou sua empresa para oportunidades
           relacionadas à UTE Tupã Fase I.
         </span>
-
       </div>
 
 
       <div class="foco-item">
-
         <span class="n">02</span>
 
         <span>
           Os cadastros ficarão disponíveis para consulta das equipes
           responsáveis pelos processos de contratação.
         </span>
-
       </div>
 
 
       <div class="foco-item">
-
         <span class="n">03</span>
 
         <span>
           Profissionais e empresas poderão apresentar suas áreas de atuação,
           experiências, qualificações e informações de contato.
         </span>
-
       </div>
 
     </div>
@@ -98,7 +92,7 @@
      ESCOLHA DO TIPO DE CADASTRO
 ========================================================= -->
 
-<section class="section section-alt">
+<section class="section section-alt" id="cadastro">
 
   <div class="container">
 
@@ -194,7 +188,7 @@
      SOBRE A UTE TUPÃ
 ========================================================= -->
 
-<section class="hero">
+<section class="hero" id="sobre-tupa">
 
   <div class="container hero-inner">
 
@@ -209,32 +203,23 @@
       </h2>
 
       <p class="lead">
-
         Localizada no município de Macaé, no Rio de Janeiro, a UTE Tupã
         Fase I está inserida em um contexto estratégico de fortalecimento
         da infraestrutura energética nacional.
-
       </p>
 
-
       <p class="lead">
-
         O empreendimento contribuirá para a diversificação da matriz
         elétrica, para o atendimento à demanda de energia e para o
         aumento da confiabilidade do sistema.
-
       </p>
 
-
       <p class="lead">
-
         Além da usina termelétrica, o projeto contempla estruturas e
         sistemas associados necessários à sua implantação e operação,
         incluindo instalações de conexão ao sistema elétrico e demais
         infraestruturas de apoio.
-
       </p>
-
 
       <div class="hero-ctas">
 
@@ -271,7 +256,7 @@
      MULHERES NA UTE TUPÃ
 ========================================================= -->
 
-<section class="section section-alt">
+<section class="section section-alt" id="mulheres-tupa">
 
   <div class="container">
 
@@ -288,42 +273,29 @@
           Seu talento também faz parte dessa história.
         </h2>
 
-
         <p class="lead">
-
           Acreditamos que grandes projetos são construídos por pessoas
           com diferentes conhecimentos, experiências e perspectivas.
-
         </p>
 
-
         <p class="lead">
-
           Por isso, incentivamos a participação e a contratação de
           mulheres em todas as áreas e níveis profissionais compatíveis
           com suas qualificações.
-
         </p>
 
-
         <p class="lead">
-
           A UTE Tupã Fase I quer ampliar oportunidades, promover um
           ambiente de trabalho diverso, respeitoso e inclusivo e
           contribuir para que cada profissional possa construir sua
           própria trajetória.
-
         </p>
 
-
         <p class="lead">
-
           Se você é mulher e busca uma oportunidade para desenvolver
           sua carreira, cadastre seu currículo e venha fazer parte
           desse projeto.
-
         </p>
-
 
         <div class="hero-ctas">
 
@@ -469,76 +441,55 @@
 
 <style>
 
+html {
+  scroll-behavior: smooth;
+}
+
 
 /* CARDS DE CADASTRO */
 
 .tipo-cadastro-grid {
-
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 28px;
-
   max-width: 900px;
-
   margin: 40px auto 0;
-
 }
 
 
 .tipo-cadastro-card {
-
   background: #ffffff;
-
   border: 1px solid #e2e8f0;
-
   border-radius: 16px;
-
   padding: 40px 32px;
-
   text-align: center;
-
   text-decoration: none;
-
   color: inherit;
-
   transition: all 0.25s ease;
-
 }
 
 
 .tipo-cadastro-card:hover {
-
   transform: translateY(-5px);
-
   box-shadow: 0 14px 35px rgba(0,0,0,0.10);
-
 }
 
 
 .tipo-cadastro-icon {
-
   font-size: 48px;
-
   margin-bottom: 18px;
-
 }
 
 
 .tipo-cadastro-card h3 {
-
   margin-bottom: 12px;
-
   font-size: 24px;
-
 }
 
 
 .tipo-cadastro-card p {
-
   margin-bottom: 25px;
-
   line-height: 1.6;
-
 }
 
 
@@ -546,24 +497,16 @@
 /* IMAGENS */
 
 .hero-media img {
-
   width: 100%;
-
   display: block;
-
   border-radius: 16px;
-
   object-fit: cover;
-
 }
 
 
 .mulheres-media img {
-
   min-height: 420px;
-
   object-fit: cover;
-
 }
 
 
@@ -571,24 +514,16 @@
 /* MODELO 3D */
 
 .modelo-usina {
-
   max-width: 1100px;
-
   margin: 35px auto 0;
-
 }
 
 
 .modelo-usina img {
-
   width: 100%;
-
   display: block;
-
   border-radius: 16px;
-
   box-shadow: 0 12px 30px rgba(0,0,0,0.10);
-
 }
 
 
@@ -596,57 +531,37 @@
 /* CHAMADA FINAL */
 
 .chamada-final {
-
   max-width: 850px;
-
   margin: 0 auto;
-
   text-align: center;
-
 }
 
 
 .chamada-final h2 {
-
   margin-top: 12px;
-
 }
 
 
 .chamada-final p {
-
   max-width: 700px;
-
   margin-left: auto;
-
   margin-right: auto;
-
   line-height: 1.7;
-
 }
 
 
 .chamada-botoes {
-
   display: flex;
-
   justify-content: center;
-
   gap: 15px;
-
   flex-wrap: wrap;
-
   margin-top: 28px;
-
 }
 
 
 .frase-final {
-
   margin-top: 30px;
-
   font-weight: 600;
-
 }
 
 
@@ -656,27 +571,18 @@
 @media (max-width: 700px) {
 
   .tipo-cadastro-grid {
-
     grid-template-columns: 1fr;
-
   }
-
 
   .tipo-cadastro-card {
-
     padding: 30px 22px;
-
   }
 
-
   .mulheres-media img {
-
     min-height: auto;
-
   }
 
 }
-
 
 </style>
 
