@@ -1115,3 +1115,29 @@ p { margin: 0 0 1em; }
 
 .status-form { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .status-form select { padding: 9px 12px; border: 1px solid var(--concrete-300); border-radius: 6px; font-family: var(--font-body); }
+
+.arquivo-selecionado {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  background: #f9fafb;
+}
+
+.arquivo-selecionado span {
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.btn-remover-arquivo {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  white-space: nowrap;
+}
