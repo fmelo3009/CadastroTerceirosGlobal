@@ -258,4 +258,29 @@ router.get('/:slug', (req, res, next) => {
 });
 router.post('/:slug', upload.any(), validacoesCadastro, processarCadastro);
 
+// ============================================================
+// CADASTRO - PESSOA FÍSICA
+// ============================================================
+
+router.get('/pessoa-fisica', (req, res) => {
+  res.render('cadastro/pessoa-fisica', {
+    titulo: 'Cadastro de Pessoa Física - UTE Tupã',
+    valores: {},
+    erros: []
+  });
+});
+
+
+// ============================================================
+// CADASTRO - PESSOA JURÍDICA
+// ============================================================
+
+router.get('/pessoa-juridica', (req, res) => {
+  res.render('cadastro/pessoa-juridica', {
+    titulo: 'Cadastro de Pessoa Jurídica - UTE Tupã',
+    valores: {},
+    erros: []
+  });
+});
+
 module.exports = router;
