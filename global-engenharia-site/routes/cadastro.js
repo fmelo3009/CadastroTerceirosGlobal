@@ -269,7 +269,334 @@ router.get('/pessoa-fisica', (req, res) => {
     erros: []
   });
 });
+// ============================================================
+// SALVAR CADASTRO - PESSOA FÍSICA
+// ============================================================
 
+router.post(
+  '/pessoa-fisica',
+  upload.single('curriculo'),
+
+  [
+    body('nome')
+      .trim()
+      .notEmpty()
+      .withMessage('Informe o nome completo.'),
+
+    body('cpf')
+      .trim()
+      .notEmpty()
+      .withMessage('Informe o CPF.'),
+
+    body('municipio')
+      .trim()
+      .notEmpty()
+      .withMessage('Informe o município.'),
+
+    body('telefone')
+      .trim()
+      .notEmpty()
+      .withMessage('Informe o telefone principal.'),
+
+    body('email')
+      .trim()
+      .isEmail()
+      .withMessage('Informe um e-mail válido.'),
+
+    body('profissao')
+      .trim()
+      .notEmpty()
+      .withMessage('Informe a profissão.')
+  ],
+
+  (req, res) => {
+
+    const resultado = validationResult(req);
+
+    if (!resultado.isEmpty()) {
+
+      if (req.file && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+
+      return res.status(400).render('cadastro/pessoa-fisica', {
+        titulo: 'Cadastro de Pessoa Física - UTE Tupã',
+        valores: req.body,
+        erros: resultado.array()
+      });
+
+    }
+
+    try {
+
+      const b = req.body;
+
+      const cpfLimpo = String(b.cpf || '').replace(/\D/g, '');
+
+      const jaExiste = db
+        .prepare(`
+          SELECT id
+          FROM terceirizados
+          WHERE cpf_cnpj = ?
+        `)
+        .get(cpfLimpo);
+
+
+      if (jaExiste) {
+
+        if (req.file && fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
+
+        return res.status(400).render('cadastro/pessoa-fisica', {
+          titulo: 'Cadastro de Pessoa Física - UTE Tupã',
+          valores: b,
+          erros: [
+            {
+              msg: 'Já existe um cadastro com este CPF.'
+            }
+          ]
+        });
+
+      }
+
+
+      // MUNICÍPIO
+      let municipioFinal = b.municipio;
+
+      if (
+        b.municipio === 'Outro' &&
+        b.municipio_outro &&
+        b.municipio_outro.trim()
+      ) {
+        municipioFinal = b.municipio_outro.trim();
+      }
+
+
+      // PROFISSÃO
+      let profissaoFinal = b.profissao;
+
+      if (
+        b.profissao === 'Outros' &&
+        b.outra_profissao &&
+        b.outra_profissao.trim()
+      ) {
+        profissaoFinal = b.outra_profissao.trim();
+      }
+
+
+      // -------------------------------------------------------
+      // SALVA CADASTRO
+      // -------------------------------------------------------
+
+      const info = db
+        .prepare(`
+          INSERT INTO terceirizados (
+
+            tipo,
+            razao_social,
+            cpf_cnpj,
+
+            telefone,
+            telefone_secundario,
+            email,
+
+            cep,
+            endereco,
+            complemento,
+            cidade,
+
+            sexo,
+            profissao,
+
+            observacoes,
+            situacao_cadastral
+
+          )
+
+          VALUES (
+
+            'PF',
+            @nome,
+            @cpf,
+
+            @telefone,
+            @telefone_secundario,
+            @email,
+
+            @cep,
+            @endereco,
+            @complemento,
+            @cidade,
+
+            @sexo,
+            @profissao,
+
+            @observacoes,
+            'Pendente de análise'
+
+          )
+        `)
+        .run({
+
+          nome: b.nome.trim(),
+
+          cpf: cpfLimpo,
+
+          telefone: b.telefone || null,
+
+          telefone_secundario:
+            b.telefone_secundario || null,
+
+          email: b.email || null,
+
+          cep: b.cep || null,
+
+          endereco: b.endereco || null,
+
+          complemento: b.complemento || null,
+
+          cidade: municipioFinal,
+
+          sexo: b.sexo || null,
+
+          profissao: profissaoFinal,
+
+          observacoes: b.observacoes || null
+
+        });
+
+
+      const novoId = info.lastInsertRowid;
+
+
+      // -------------------------------------------------------
+      // SALVA CURRÍCULO
+      // -------------------------------------------------------
+
+      if (req.file) {
+
+        const pastaFinal = path.join(
+          config.UPLOADS_PATH,
+          'terceirizados',
+          String(novoId)
+        );
+
+        if (!fs.existsSync(pastaFinal)) {
+          fs.mkdirSync(pastaFinal, {
+            recursive: true
+          });
+        }
+
+
+        const nomeArquivo = path.basename(req.file.path);
+
+        const destino = path.join(
+          pastaFinal,
+          nomeArquivo
+        );
+
+
+        fs.renameSync(
+          req.file.path,
+          destino
+        );
+
+
+        db.prepare(`
+          INSERT INTO documentos (
+
+            terceirizado_id,
+            tipo_documento,
+            nome_arquivo_original,
+            caminho_arquivo,
+            status
+
+          )
+
+          VALUES (?, ?, ?, ?, ?)
+
+        `).run(
+
+          novoId,
+
+          'Currículo',
+
+          req.file.originalname,
+
+          path.relative(
+            config.UPLOADS_PATH,
+            destino
+          ),
+
+          'Enviado'
+
+        );
+
+      }
+
+
+      // -------------------------------------------------------
+      // TELA DE SUCESSO
+      // -------------------------------------------------------
+
+      return res.render(
+        'cadastro/sucesso',
+        {
+
+          titulo: 'Cadastro enviado',
+
+          protocolo: novoId,
+
+          nome: b.nome,
+
+          empreendimentoAtual: {
+            nome: 'UTE Tupã Fase I'
+          }
+
+        }
+      );
+
+
+    } catch (err) {
+
+      console.error(
+        'Erro ao salvar Pessoa Física:',
+        err
+      );
+
+
+      if (
+        req.file &&
+        fs.existsSync(req.file.path)
+      ) {
+        fs.unlinkSync(req.file.path);
+      }
+
+
+      return res.status(500).render(
+        'cadastro/pessoa-fisica',
+        {
+
+          titulo:
+            'Cadastro de Pessoa Física - UTE Tupã',
+
+          valores: req.body,
+
+          erros: [
+            {
+              msg:
+                'Ocorreu um erro ao salvar o cadastro. Tente novamente.'
+            }
+          ]
+
+        }
+      );
+
+    }
+
+  }
+);
 
 // ============================================================
 // CADASTRO - PESSOA JURÍDICA
