@@ -1,0 +1,704 @@
+<%- include('../partials/head', { titulo }) %>
+
+<%- include('../partials/header') %>
+
+<main class="cadastro-page">
+
+  <section class="cadastro-hero">
+    <div class="container">
+      <span class="cadastro-tag">UTE Tupã Fase I</span>
+
+      <h1>Cadastro de Pessoa Física</h1>
+
+      <p>
+        Cadastre seu currículo para oportunidades profissionais
+        relacionadas à UTE Tupã Fase I.
+      </p>
+    </div>
+  </section>
+
+
+  <section class="cadastro-section">
+    <div class="container">
+
+      <div class="cadastro-box">
+
+        <div class="cadastro-box-header">
+          <h2>Dados do profissional</h2>
+
+          <p>
+            Preencha seus dados abaixo. As informações serão utilizadas
+            para composição do banco de profissionais da UTE Tupã Fase I.
+          </p>
+        </div>
+
+
+        <% if (erros && erros.length > 0) { %>
+
+          <div class="alert alert-error">
+
+            <strong>Verifique as informações abaixo:</strong>
+
+            <ul>
+              <% erros.forEach(function(erro) { %>
+                <li><%= erro.msg %></li>
+              <% }) %>
+            </ul>
+
+          </div>
+
+        <% } %>
+
+
+        <form
+          action="/cadastro/pessoa-fisica"
+          method="POST"
+          enctype="multipart/form-data"
+          class="cadastro-form"
+        >
+
+
+          <!-- LOCALIZAÇÃO -->
+          <div class="form-section">
+
+            <h3>Localização</h3>
+
+            <div class="form-grid">
+
+              <div class="form-group">
+                <label for="municipio">
+                  Município *
+                </label>
+
+                <select
+                  id="municipio"
+                  name="municipio"
+                  required
+                >
+                  <option value="">Selecione</option>
+                  <option value="Macaé">Macaé</option>
+                  <option value="Rio das Ostras">Rio das Ostras</option>
+                  <option value="Carapebus">Carapebus</option>
+                  <option value="Conceição de Macabu">Conceição de Macabu</option>
+                  <option value="Casimiro de Abreu">Casimiro de Abreu</option>
+                  <option value="Outro">Outro município</option>
+                </select>
+              </div>
+
+
+              <div
+                class="form-group"
+                id="municipio-outro-container"
+                style="display:none;"
+              >
+                <label for="municipio_outro">
+                  Informe o município
+                </label>
+
+                <input
+                  type="text"
+                  id="municipio_outro"
+                  name="municipio_outro"
+                >
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- DADOS PESSOAIS -->
+          <div class="form-section">
+
+            <h3>Dados pessoais</h3>
+
+            <div class="form-grid">
+
+              <div class="form-group form-group-full">
+                <label for="nome">
+                  Nome completo *
+                </label>
+
+                <input
+                  type="text"
+                  id="nome"
+                  name="nome"
+                  value="<%= valores.nome || '' %>"
+                  required
+                >
+              </div>
+
+
+              <div class="form-group">
+                <label for="cpf">
+                  CPF *
+                </label>
+
+                <input
+                  type="text"
+                  id="cpf"
+                  name="cpf"
+                  maxlength="14"
+                  placeholder="000.000.000-00"
+                  value="<%= valores.cpf || '' %>"
+                  required
+                >
+              </div>
+
+
+              <div class="form-group">
+                <label for="sexo">
+                  Sexo
+                </label>
+
+                <select
+                  id="sexo"
+                  name="sexo"
+                >
+                  <option value="">Selecione</option>
+                  <option value="Feminino">Feminino</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Outro">Outro</option>
+                  <option value="Prefiro não informar">Prefiro não informar</option>
+                </select>
+              </div>
+
+
+              <div class="form-group">
+                <label for="cep">
+                  CEP
+                </label>
+
+                <input
+                  type="text"
+                  id="cep"
+                  name="cep"
+                  maxlength="9"
+                  placeholder="00000-000"
+                  value="<%= valores.cep || '' %>"
+                >
+              </div>
+
+
+              <div class="form-group form-group-full">
+                <label for="endereco">
+                  Endereço
+                </label>
+
+                <input
+                  type="text"
+                  id="endereco"
+                  name="endereco"
+                  value="<%= valores.endereco || '' %>"
+                >
+              </div>
+
+
+              <div class="form-group form-group-full">
+                <label for="complemento">
+                  Complemento
+                </label>
+
+                <input
+                  type="text"
+                  id="complemento"
+                  name="complemento"
+                  value="<%= valores.complemento || '' %>"
+                >
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- CONTATO -->
+          <div class="form-section">
+
+            <h3>Contato</h3>
+
+            <div class="form-grid">
+
+              <div class="form-group">
+                <label for="telefone">
+                  Telefone principal *
+                </label>
+
+                <input
+                  type="tel"
+                  id="telefone"
+                  name="telefone"
+                  value="<%= valores.telefone || '' %>"
+                  required
+                >
+              </div>
+
+
+              <div class="form-group">
+                <label for="telefone_secundario">
+                  Segundo telefone
+                </label>
+
+                <input
+                  type="tel"
+                  id="telefone_secundario"
+                  name="telefone_secundario"
+                  value="<%= valores.telefone_secundario || '' %>"
+                >
+              </div>
+
+
+              <div class="form-group form-group-full">
+                <label for="email">
+                  E-mail *
+                </label>
+
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value="<%= valores.email || '' %>"
+                  required
+                >
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- PROFISSIONAL -->
+          <div class="form-section">
+
+            <h3>Informações profissionais</h3>
+
+            <div class="form-grid">
+
+              <div class="form-group form-group-full">
+
+                <label for="profissao">
+                  Profissão / Área de atuação *
+                </label>
+
+                <select
+                  id="profissao"
+                  name="profissao"
+                  required
+                >
+                  <option value="">Selecione sua profissão</option>
+
+                  <option>Administrador</option>
+                  <option>Agrimensor</option>
+                  <option>Ajudante</option>
+                  <option>Armador</option>
+                  <option>Arquivista</option>
+                  <option>Assistente Administrativo</option>
+                  <option>Assistente Ambiental</option>
+                  <option>Assistente de Recursos Humanos</option>
+                  <option>Assistente Social</option>
+                  <option>Auxiliar de Almoxarifado</option>
+                  <option>Auxiliar de Serviços Gerais</option>
+                  <option>Biólogo</option>
+                  <option>Geógrafo</option>
+                  <option>Jornalista</option>
+                  <option>Comunicador Social</option>
+                  <option>Caldeireiro</option>
+                  <option>Carpinteiro</option>
+                  <option>Comprador</option>
+                  <option>Contador</option>
+                  <option>Cozinheiro</option>
+                  <option>Economista</option>
+                  <option>Eletricista de Linha de Transmissão</option>
+                  <option>Eletricista de Subestação</option>
+                  <option>Eletricista</option>
+                  <option>Eletrotécnico</option>
+                  <option>Encanador Industrial</option>
+                  <option>Encarregado de Obras</option>
+                  <option>Enfermeiro</option>
+                  <option>Engenheiro Civil</option>
+                  <option>Engenheiro de Automação</option>
+                  <option>Engenheiro de Planejamento</option>
+                  <option>Engenheiro de Produção</option>
+                  <option>Engenheiro de Proteção e Controle</option>
+                  <option>Engenheiro de Qualidade</option>
+                  <option>Engenheiro de Segurança</option>
+                  <option>Engenheiro Eletricista</option>
+                  <option>Engenheiro Mecânico</option>
+                  <option>Especialista em Comissionamento</option>
+                  <option>Inspetor de Elétrica</option>
+                  <option>Inspetor de END</option>
+                  <option>Inspetor de Instrumentação</option>
+                  <option>Inspetor de Mecânica</option>
+                  <option>Inspetor de Qualidade</option>
+                  <option>Inspetor de Soldagem</option>
+                  <option>Instrumentista</option>
+                  <option>Mecânico de Manutenção</option>
+                  <option>Mecânico Montador</option>
+                  <option>Mestre de Obras</option>
+                  <option>Montador de Linha de Transmissão</option>
+                  <option>Montador Industrial</option>
+                  <option>Motorista de Caminhão/Carreta</option>
+                  <option>Motorista</option>
+                  <option>Operador de Empilhadeira</option>
+                  <option>Operador de Escavadeira</option>
+                  <option>Operador de Máquinas Pesadas</option>
+                  <option>Operador de Pá Carregadeira</option>
+                  <option>Operador de Retroescavadeira</option>
+                  <option>Operador de Rolo Compactador</option>
+                  <option>Operador de Sala de Controle</option>
+                  <option>Pedreiro</option>
+                  <option>Pintor</option>
+                  <option>Psicólogo</option>
+                  <option>Soldador</option>
+                  <option>Técnico de Automação</option>
+                  <option>Técnico de Comissionamento</option>
+                  <option>Técnico de Concreto</option>
+                  <option>Técnico de Controle e Automação</option>
+                  <option>Técnico de Gasoduto</option>
+                  <option>Técnico de HVAC</option>
+                  <option>Técnico de Linha de Transmissão</option>
+                  <option>Técnico de Manutenção</option>
+                  <option>Técnico de Materiais</option>
+                  <option>Técnico de Medição</option>
+                  <option>Técnico de Meio Ambiente</option>
+                  <option>Técnico de Planejamento</option>
+                  <option>Técnico de Proteção e Controle</option>
+                  <option>Técnico de Segurança</option>
+                  <option>Técnico de Start-up</option>
+                  <option>Técnico de Subestação</option>
+                  <option>Técnico em Automação</option>
+                  <option>Técnico em Edificações</option>
+                  <option>Técnico em Eletrônica</option>
+                  <option>Técnico em Instrumentação</option>
+                  <option>Técnico em Mecânica</option>
+                  <option>Técnico em Meio Ambiente</option>
+                  <option>Técnico em Qualidade</option>
+                  <option>Técnico em Segurança do Trabalho</option>
+                  <option>Técnico em Topografia</option>
+                  <option>Topógrafo</option>
+                  <option>Tubista</option>
+                  <option>Vigilante</option>
+                  <option>Outros</option>
+
+                </select>
+
+              </div>
+
+
+              <div
+                class="form-group form-group-full"
+                id="outra-profissao-container"
+                style="display:none;"
+              >
+
+                <label for="outra_profissao">
+                  Informe sua profissão
+                </label>
+
+                <input
+                  type="text"
+                  id="outra_profissao"
+                  name="outra_profissao"
+                >
+
+              </div>
+
+
+              <div class="form-group form-group-full">
+
+                <label for="observacoes">
+                  Observações
+                </label>
+
+                <textarea
+                  id="observacoes"
+                  name="observacoes"
+                  rows="5"
+                  placeholder="Informe experiências, qualificações ou outras informações que considere relevantes."
+                ><%= valores.observacoes || '' %></textarea>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- CURRÍCULO -->
+          <div class="form-section">
+
+            <h3>Currículo</h3>
+
+            <div class="upload-box">
+
+              <label for="curriculo">
+                Anexe seu currículo *
+              </label>
+
+              <input
+                type="file"
+                id="curriculo"
+                name="curriculo"
+                accept=".pdf,.doc,.docx"
+                required
+              >
+
+              <small>
+                Formatos aceitos: PDF, DOC ou DOCX.
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <!-- BOTÃO -->
+          <div class="form-actions">
+
+            <button
+              type="submit"
+              class="btn btn-primary btn-submit"
+            >
+              Enviar cadastro
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+
+<style>
+
+  .cadastro-page {
+    background: #f5f7fa;
+  }
+
+
+  .cadastro-hero {
+    padding: 64px 0 52px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+
+  .cadastro-hero h1 {
+    margin: 10px 0 12px;
+    font-size: 42px;
+  }
+
+
+  .cadastro-hero p {
+    max-width: 700px;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+
+  .cadastro-tag {
+    display: inline-block;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+
+  .cadastro-section {
+    padding: 50px 0 80px;
+  }
+
+
+  .cadastro-box {
+    max-width: 1000px;
+    margin: auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.06);
+  }
+
+
+  .cadastro-box-header {
+    margin-bottom: 36px;
+  }
+
+
+  .cadastro-box-header h2 {
+    margin-bottom: 8px;
+  }
+
+
+  .form-section {
+    padding: 30px 0;
+    border-top: 1px solid #e5e7eb;
+  }
+
+
+  .form-section:first-of-type {
+    border-top: 0;
+  }
+
+
+  .form-section h3 {
+    margin-bottom: 22px;
+    font-size: 20px;
+  }
+
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+
+  .form-group-full {
+    grid-column: 1 / -1;
+  }
+
+
+  .form-group label,
+  .upload-box label {
+    font-weight: 600;
+  }
+
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font: inherit;
+    background: #ffffff;
+  }
+
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #374151;
+  }
+
+
+  .upload-box {
+    border: 2px dashed #d1d5db;
+    padding: 25px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+
+  .upload-box input {
+    max-width: 500px;
+  }
+
+
+  .upload-box small {
+    opacity: .7;
+  }
+
+
+  .form-actions {
+    padding-top: 25px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+
+  .btn-submit {
+    min-width: 220px;
+    padding: 14px 28px;
+    font-size: 16px;
+  }
+
+
+  .alert-error {
+    margin-bottom: 25px;
+    padding: 18px;
+    border-radius: 8px;
+    background: #fff4f4;
+    border: 1px solid #f1b5b5;
+  }
+
+
+  @media (max-width: 768px) {
+
+    .cadastro-box {
+      padding: 24px;
+    }
+
+    .cadastro-hero h1 {
+      font-size: 32px;
+    }
+
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .form-group-full {
+      grid-column: auto;
+    }
+
+    .btn-submit {
+      width: 100%;
+    }
+
+  }
+
+</style>
+
+
+<script>
+
+  const municipio = document.getElementById('municipio');
+  const municipioOutroContainer =
+    document.getElementById('municipio-outro-container');
+
+  municipio.addEventListener('change', function () {
+
+    if (this.value === 'Outro') {
+      municipioOutroContainer.style.display = 'flex';
+    } else {
+      municipioOutroContainer.style.display = 'none';
+    }
+
+  });
+
+
+  const profissao = document.getElementById('profissao');
+  const outraProfissaoContainer =
+    document.getElementById('outra-profissao-container');
+
+  profissao.addEventListener('change', function () {
+
+    if (this.value === 'Outros') {
+      outraProfissaoContainer.style.display = 'flex';
+    } else {
+      outraProfissaoContainer.style.display = 'none';
+    }
+
+  });
+
+</script>
+
+
+<%- include('../partials/footer') %>
