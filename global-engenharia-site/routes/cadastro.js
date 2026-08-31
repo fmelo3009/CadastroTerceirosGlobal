@@ -1492,6 +1492,482 @@ router.get(
 // IMPORTANTE: PRECISAM FICAR DEPOIS DE PESSOA-FISICA E PESSOA-JURIDICA
 // ===========================================================================
 
+// ============================================================
+// CADASTRO - PESSOA JURÍDICA
+// ============================================================
+
+router.get('/pessoa-juridica', (req, res) => {
+
+  res.render('cadastro/pessoa-juridica', {
+    titulo: 'Cadastro de Pessoa Jurídica',
+    erros: [],
+    valores: {}
+  });
+
+});
+
+
+// ============================================================
+// SALVAR PESSOA JURÍDICA
+// ============================================================
+
+router.post(
+  '/pessoa-juridica',
+  upload.single('portfolio'),
+  (req, res) => {
+
+    try {
+
+      const {
+        municipio,
+        municipio_outro,
+        razao_social,
+        nome_fantasia,
+        cnpj,
+        capital_social,
+        regime_tributario,
+        inscricao_estadual,
+        inscricao_municipal,
+        cep,
+        endereco,
+        complemento,
+        contato_nome,
+        telefone,
+        telefone_secundario,
+        email,
+        tipo_atividade,
+        setor_atividade,
+        outro_setor,
+        observacoes
+      } = req.body;
+
+
+      // ======================================================
+      // VALIDAÇÕES
+      // ======================================================
+
+      const erros = [];
+
+
+      if (!municipio) {
+        erros.push({
+          msg: 'Informe o município.'
+        });
+      }
+
+
+      if (
+        municipio === 'Outro' &&
+        !municipio_outro
+      ) {
+
+        erros.push({
+          msg: 'Informe o município da empresa.'
+        });
+
+      }
+
+
+      if (!razao_social) {
+
+        erros.push({
+          msg: 'Informe a Razão Social.'
+        });
+
+      }
+
+
+      if (!cnpj) {
+
+        erros.push({
+          msg: 'Informe o CNPJ.'
+        });
+
+      }
+
+
+      if (!contato_nome) {
+
+        erros.push({
+          msg: 'Informe o nome do responsável ou contato.'
+        });
+
+      }
+
+
+      if (!telefone) {
+
+        erros.push({
+          msg: 'Informe o telefone principal.'
+        });
+
+      }
+
+
+      if (!email) {
+
+        erros.push({
+          msg: 'Informe o e-mail.'
+        });
+
+      }
+
+
+      if (!tipo_atividade) {
+
+        erros.push({
+          msg: 'Informe o tipo de atividade.'
+        });
+
+      }
+
+
+      if (!setor_atividade) {
+
+        erros.push({
+          msg: 'Informe o setor de atividade.'
+        });
+
+      }
+
+
+      if (
+        setor_atividade === 'Outros' &&
+        !outro_setor
+      ) {
+
+        erros.push({
+          msg: 'Informe o setor de atividade.'
+        });
+
+      }
+
+
+      // ======================================================
+      // CNPJ SOMENTE NÚMEROS
+      // ======================================================
+
+      const cnpjLimpo =
+        (cnpj || '').replace(/\D/g, '');
+
+
+      if (
+        cnpjLimpo &&
+        cnpjLimpo.length !== 14
+      ) {
+
+        erros.push({
+          msg: 'Informe um CNPJ válido com 14 dígitos.'
+        });
+
+      }
+
+
+      // ======================================================
+      // SE HOUVER ERRO
+      // ======================================================
+
+      if (erros.length > 0) {
+
+        return res.status(400).render(
+          'cadastro/pessoa-juridica',
+          {
+            titulo: 'Cadastro de Pessoa Jurídica',
+            erros,
+            valores: req.body
+          }
+        );
+
+      }
+
+
+      // ======================================================
+      // VERIFICAR CNPJ JÁ CADASTRADO
+      // ======================================================
+
+      const empresaExistente = db
+        .prepare(`
+          SELECT id
+          FROM terceirizados
+          WHERE cpf_cnpj = ?
+        `)
+        .get(cnpjLimpo);
+
+
+      if (empresaExistente) {
+
+        return res.status(400).render(
+          'cadastro/pessoa-juridica',
+          {
+            titulo: 'Cadastro de Pessoa Jurídica',
+            erros: [
+              {
+                msg: 'Este CNPJ já está cadastrado.'
+              }
+            ],
+            valores: req.body
+          }
+        );
+
+      }
+
+
+      // ======================================================
+      // MUNICÍPIO FINAL
+      // ======================================================
+
+      const municipioFinal =
+        municipio === 'Outro'
+          ? municipio_outro.trim()
+          : municipio;
+
+
+      // ======================================================
+      // SETOR FINAL
+      // ======================================================
+
+      const setorFinal =
+        setor_atividade === 'Outros'
+          ? outro_setor.trim()
+          : setor_atividade;
+
+
+      // ======================================================
+      // CADASTRAR EMPRESA
+      // ======================================================
+
+      const resultado = db
+        .prepare(`
+          INSERT INTO terceirizados (
+
+            tipo,
+
+            razao_social,
+            nome_fantasia,
+            cpf_cnpj,
+
+            telefone,
+            telefone_secundario,
+            email,
+
+            cep,
+            endereco,
+            complemento,
+            cidade,
+            estado,
+
+            capital_social,
+            regime_tributario,
+
+            inscricao_estadual,
+            inscricao_municipal,
+
+            contato_nome,
+            contato_telefone,
+
+            tipo_atividade,
+            setor_atividade,
+
+            observacoes,
+
+            situacao_cadastral
+
+          ) VALUES (
+
+            ?,
+            ?, ?, ?,
+            ?, ?, ?,
+            ?, ?, ?, ?, ?,
+            ?, ?,
+            ?, ?,
+            ?, ?,
+            ?, ?,
+            ?,
+            ?
+
+          )
+        `)
+        .run(
+
+          'PJ',
+
+          razao_social.trim(),
+          nome_fantasia
+            ? nome_fantasia.trim()
+            : null,
+
+          cnpjLimpo,
+
+          telefone,
+          telefone_secundario || null,
+          email.trim(),
+
+          cep || null,
+          endereco || null,
+          complemento || null,
+
+          municipioFinal,
+
+          'RJ',
+
+          capital_social || null,
+          regime_tributario || null,
+
+          inscricao_estadual || null,
+          inscricao_municipal || null,
+
+          contato_nome.trim(),
+          telefone,
+
+          tipo_atividade,
+          setorFinal,
+
+          observacoes || null,
+
+          'Pendente de análise'
+
+        );
+
+
+      const empresaId =
+        resultado.lastInsertRowid;
+
+
+      // ======================================================
+      // SALVAR PORTFÓLIO
+      // ======================================================
+
+      if (req.file) {
+
+        const pastaEmpresa =
+          path.join(
+            config.UPLOADS_PATH,
+            'terceirizados',
+            String(empresaId)
+          );
+
+
+        if (!fs.existsSync(pastaEmpresa)) {
+
+          fs.mkdirSync(
+            pastaEmpresa,
+            {
+              recursive: true
+            }
+          );
+
+        }
+
+
+        const extensao =
+          path.extname(
+            req.file.originalname
+          );
+
+
+        const nomeArquivo =
+          `portfolio-${Date.now()}${extensao}`;
+
+
+        const caminhoFinal =
+          path.join(
+            pastaEmpresa,
+            nomeArquivo
+          );
+
+
+        fs.renameSync(
+          req.file.path,
+          caminhoFinal
+        );
+
+
+        const caminhoBanco =
+          path
+            .relative(
+              config.UPLOADS_PATH,
+              caminhoFinal
+            )
+            .replace(/\\/g, '/');
+
+
+        db.prepare(`
+          INSERT INTO documentos (
+
+            terceirizado_id,
+            tipo_documento,
+            nome_arquivo,
+            caminho_arquivo,
+            status
+
+          ) VALUES (?, ?, ?, ?, ?)
+        `)
+        .run(
+
+          empresaId,
+          'Portfólio',
+          req.file.originalname,
+          caminhoBanco,
+          'Enviado'
+
+        );
+
+      }
+
+
+      // ======================================================
+      // SUCESSO
+      // ======================================================
+
+      return res.render(
+        'cadastro/sucesso',
+        {
+
+          titulo: 'Cadastro realizado',
+
+          nome:
+            razao_social,
+
+          empreendimento:
+            'UTE Tupã Fase I'
+
+        }
+      );
+
+
+    } catch (erro) {
+
+      console.error(
+        'Erro no cadastro de Pessoa Jurídica:',
+        erro
+      );
+
+
+      return res.status(500).render(
+        'cadastro/pessoa-juridica',
+        {
+
+          titulo:
+            'Cadastro de Pessoa Jurídica',
+
+          erros: [
+            {
+              msg:
+                'Não foi possível realizar o cadastro. Tente novamente.'
+            }
+          ],
+
+          valores:
+            req.body || {}
+
+        }
+      );
+
+    }
+
+  }
+);
+
 router.get(
   '/:slug',
   (req, res, next) => {
