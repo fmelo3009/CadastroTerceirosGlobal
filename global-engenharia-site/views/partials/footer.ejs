@@ -5,15 +5,22 @@
     <div class="footer-grid">
 
 
+      <!-- ================================================== -->
       <!-- MARCA -->
+      <!-- ================================================== -->
+
       <div>
 
         <div class="footer-brand">
-          <span class="footer-brand-mark">GE</span>
+
+          <span class="footer-brand-mark">
+            GE
+          </span>
 
           <span class="footer-brand-text">
             Global Engenharia
           </span>
+
         </div>
 
         <p>
@@ -25,7 +32,10 @@
 
 
 
+      <!-- ================================================== -->
       <!-- LINKS RÁPIDOS -->
+      <!-- ================================================== -->
+
       <div>
 
         <h4>Links rápidos</h4>
@@ -62,7 +72,10 @@
 
 
 
+      <!-- ================================================== -->
       <!-- CADASTROS -->
+      <!-- ================================================== -->
+
       <div>
 
         <h4>Cadastre-se</h4>
@@ -97,14 +110,19 @@
 
 
 
-      <!-- INFORMAÇÕES -->
+      <!-- ================================================== -->
+      <!-- INFORMAÇÕES DA UTE -->
+      <!-- ================================================== -->
+
       <div>
 
         <h4>UTE Tupã Fase I</h4>
 
         <ul class="footer-info">
 
+
           <!-- LOCALIZAÇÃO -->
+
           <li>
 
             <svg
@@ -114,8 +132,17 @@
               stroke="currentColor"
               stroke-width="2"
             >
-              <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/>
-              <circle cx="12" cy="9.5" r="2.5"/>
+
+              <path
+                d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"
+              />
+
+              <circle
+                cx="12"
+                cy="9.5"
+                r="2.5"
+              />
+
             </svg>
 
             <span>
@@ -127,6 +154,7 @@
 
 
           <!-- EMPREENDIMENTO -->
+
           <li>
 
             <svg
@@ -136,9 +164,17 @@
               stroke="currentColor"
               stroke-width="2"
             >
+
               <path d="M3 21h18"/>
-              <path d="M5 21V9l7-4 7 4v12"/>
-              <path d="M9 21v-6h6v6"/>
+
+              <path
+                d="M5 21V9l7-4 7 4v12"
+              />
+
+              <path
+                d="M9 21v-6h6v6"
+              />
+
             </svg>
 
             <span>
@@ -150,6 +186,7 @@
 
 
           <!-- CAPACIDADE -->
+
           <li>
 
             <svg
@@ -159,7 +196,11 @@
               stroke="currentColor"
               stroke-width="2"
             >
-              <path d="m13 2-9 12h8l-1 8 9-12h-8z"/>
+
+              <path
+                d="m13 2-9 12h8l-1 8 9-12h-8z"
+              />
+
             </svg>
 
             <span>
@@ -176,23 +217,147 @@
 
 
 
+    <!-- ==================================================== -->
     <!-- RODAPÉ INFERIOR -->
+    <!-- ==================================================== -->
+
     <div class="footer-bottom">
 
       <span>
-        &copy; <%= new Date().getFullYear() %>
-        Global Engenharia. Todos os direitos reservados.
+
+        &copy;
+        <%= new Date().getFullYear() %>
+
+        Global Engenharia.
+        Todos os direitos reservados.
+
       </span>
 
-      <span>
-        Portal de Cadastro – UTE Tupã Fase I
-      </span>
+
+      <div class="footer-bottom-right">
+
+        <span>
+          Portal de Cadastro – UTE Tupã Fase I
+        </span>
+
+
+        <!-- ACESSO ADMINISTRATIVO -->
+
+        <a
+          href="/interno/login"
+          class="footer-admin-link"
+          title="Área Administrativa"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            width="15"
+            height="15"
+            aria-hidden="true"
+          >
+
+            <rect
+              x="5"
+              y="11"
+              width="14"
+              height="10"
+              rx="2"
+            />
+
+            <path
+              d="M8 11V7a4 4 0 0 1 8 0v4"
+            />
+
+          </svg>
+
+          Área Administrativa
+
+        </a>
+
+      </div>
 
     </div>
 
   </div>
 
 </footer>
+
+
+
+<!-- ======================================================== -->
+<!-- ESTILO DO ACESSO ADMINISTRATIVO -->
+<!-- ======================================================== -->
+
+<style>
+
+  .footer-bottom-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 22px;
+
+  }
+
+
+  .footer-admin-link {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: inherit;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    opacity: 0.65;
+
+    transition:
+      opacity .2s ease;
+
+  }
+
+
+  .footer-admin-link:hover {
+
+    opacity: 1;
+
+    text-decoration: underline;
+
+  }
+
+
+  .footer-admin-link svg {
+
+    flex-shrink: 0;
+
+  }
+
+
+  @media (max-width: 768px) {
+
+    .footer-bottom-right {
+
+      flex-direction: column;
+
+      align-items: flex-start;
+
+      gap: 10px;
+
+    }
+
+  }
+
+</style>
+
 
 
 <script src="/js/main.js"></script>
