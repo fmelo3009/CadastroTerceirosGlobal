@@ -1,35 +1,112 @@
 <header class="site-header">
   <div class="container">
+
+    <!-- MARCA / LOGO -->
     <a href="/" class="brand">
-      <img src="/img/logo-gpe.png" alt="Grupo Global · GPE" style="height:34px;width:auto;" />
+      <img
+        src="/img/logo-gpe.png"
+        alt="Grupo Global · GPE"
+        style="height:34px;width:auto;"
+      />
+
       <span class="brand-text">
-        Global Engenharia
-        <small>Cadastro de Terceirizados</small>
+        UTE Tupã Fase I
+        <small>Cadastro de Profissionais e Empresas</small>
       </span>
     </a>
 
+
+    <!-- MENU DESKTOP -->
     <nav class="nav-desktop" aria-label="Navegação principal">
-      <a href="/" class="<%= caminhoAtual === '/' ? 'ativo' : '' %>">Início</a>
-      <a href="/sobre" class="<%= caminhoAtual === '/sobre' ? 'ativo' : '' %>">Sobre</a>
-      <a href="/servicos" class="<%= caminhoAtual === '/servicos' ? 'ativo' : '' %>">Serviços</a>
-      <a href="/contato" class="<%= caminhoAtual === '/contato' ? 'ativo' : '' %>">Contato</a>
+
+      <a
+        href="/"
+        class="<%= caminhoAtual === '/' ? 'ativo' : '' %>"
+      >
+        Início
+      </a>
+
+      <a href="/#sobre-tupa">
+        Sobre a Tupã
+      </a>
+
+      <a href="/#cadastro">
+        Cadastro
+      </a>
+
+      <a href="/#mulheres-tupa">
+        Mulheres na Tupã
+      </a>
+
     </nav>
 
+
+    <!-- AÇÕES -->
     <div class="header-actions">
-      <a href="/interno/login" class="btn btn-outline">Acesso administrativo</a>
-      <a href="/cadastro" class="btn btn-primary">Cadastre-se como Terceirizado</a>
-      <button class="hamburger" aria-label="Abrir menu" aria-expanded="false">
-        <span></span><span></span><span></span>
+
+      <a
+        href="/cadastro/pessoa-fisica"
+        class="btn btn-outline"
+      >
+        Pessoa Física
+      </a>
+
+      <a
+        href="/cadastro/pessoa-juridica"
+        class="btn btn-primary"
+      >
+        Pessoa Jurídica
+      </a>
+
+      <button
+        class="hamburger"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
+
     </div>
+
   </div>
 
+
+  <!-- MENU MOBILE -->
   <nav class="nav-mobile" aria-label="Navegação mobile">
-    <a href="/">Início</a>
-    <a href="/sobre">Sobre</a>
-    <a href="/servicos">Serviços</a>
-    <a href="/contato">Contato</a>
-    <a href="/interno/login" class="btn btn-outline btn-block" style="margin-top:16px;">Acesso administrativo</a>
-    <a href="/cadastro" class="btn btn-primary btn-block">Cadastre-se como Terceirizado</a>
+
+    <a href="/">
+      Início
+    </a>
+
+    <a href="/#sobre-tupa">
+      Sobre a Tupã
+    </a>
+
+    <a href="/#cadastro">
+      Cadastro
+    </a>
+
+    <a href="/#mulheres-tupa">
+      Mulheres na Tupã
+    </a>
+
+    <a
+      href="/cadastro/pessoa-fisica"
+      class="btn btn-outline btn-block"
+      style="margin-top:16px;"
+    >
+      Cadastro Pessoa Física
+    </a>
+
+    <a
+      href="/cadastro/pessoa-juridica"
+      class="btn btn-primary btn-block"
+    >
+      Cadastro Pessoa Jurídica
+    </a>
+
   </nav>
+
 </header>
