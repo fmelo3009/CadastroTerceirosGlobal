@@ -68,6 +68,14 @@ router.get('/logout', (req, res) => {
   });
 });
 
+router.get('/', exigirLogin, (req, res) => {
+
+  res.render('interno/index', {
+    titulo: 'Painel Administrativo'
+  });
+
+});
+
 // Todas as rotas abaixo exigem login
 router.use(exigirLogin);
 
