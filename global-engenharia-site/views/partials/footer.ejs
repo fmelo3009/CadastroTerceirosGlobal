@@ -1,58 +1,198 @@
 <footer class="site-footer">
+
   <div class="container">
+
     <div class="footer-grid">
+
+
+      <!-- MARCA -->
       <div>
+
         <div class="footer-brand">
           <span class="footer-brand-mark">GE</span>
-          <span class="footer-brand-text">Global Engenharia</span>
+
+          <span class="footer-brand-text">
+            Global Engenharia
+          </span>
         </div>
-        <p><%= empresa.slogan %></p>
+
+        <p>
+          Cadastro de profissionais e empresas para oportunidades
+          relacionadas à UTE Tupã Fase I.
+        </p>
+
       </div>
 
+
+
+      <!-- LINKS RÁPIDOS -->
       <div>
+
         <h4>Links rápidos</h4>
+
         <ul>
-          <li><a href="/">Início</a></li>
-          <li><a href="/sobre">Institucional</a></li>
-          <li><a href="/servicos">Serviços</a></li>
-          <li><a href="/contato">Contato</a></li>
-          <li><a href="/cadastro">Cadastre-se</a></li>
+
+          <li>
+            <a href="/">
+              Início
+            </a>
+          </li>
+
+          <li>
+            <a href="/#sobre-tupa">
+              Sobre a UTE Tupã
+            </a>
+          </li>
+
+          <li>
+            <a href="/#cadastro">
+              Cadastro
+            </a>
+          </li>
+
+          <li>
+            <a href="/#mulheres-tupa">
+              Mulheres na UTE Tupã
+            </a>
+          </li>
+
         </ul>
+
       </div>
 
+
+
+      <!-- CADASTROS -->
       <div>
-        <h4>Empreendimentos</h4>
+
+        <h4>Cadastre-se</h4>
+
         <ul>
-          <% empreendimentosFooter.forEach(function(emp) { %>
-            <li><a href="/cadastro/<%= emp.slug %>"><%= emp.nome %></a></li>
-          <% }) %>
-          <li><a href="<%= linkGPE %>" target="_blank" rel="noopener">Site do Grupo Global (GPE)</a></li>
-          <li><a href="/interno/login">Acesso administrativo</a></li>
+
+          <li>
+            <a href="/cadastro/pessoa-fisica">
+              Pessoa Física
+            </a>
+          </li>
+
+          <li>
+            <a href="/cadastro/pessoa-juridica">
+              Pessoa Jurídica
+            </a>
+          </li>
+
+          <li>
+            <a
+              href="<%= linkGPE %>"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Site do Grupo Global
+            </a>
+          </li>
+
         </ul>
+
       </div>
 
+
+
+      <!-- INFORMAÇÕES -->
       <div>
-        <h4>Informações</h4>
+
+        <h4>UTE Tupã Fase I</h4>
+
         <ul class="footer-info">
+
+          <!-- LOCALIZAÇÃO -->
           <li>
-            <svg class="footer-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-            <span><%= empresa.endereco %></span>
+
+            <svg
+              class="footer-ico"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/>
+              <circle cx="12" cy="9.5" r="2.5"/>
+            </svg>
+
+            <span>
+              Macaé - Rio de Janeiro
+            </span>
+
           </li>
+
+
+
+          <!-- EMPREENDIMENTO -->
           <li>
-            <svg class="footer-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.4 2.1L8 9.9a16 16 0 0 0 6 6l1.4-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.8 2.1z"/></svg>
-            <span><%= empresa.telefone %></span>
+
+            <svg
+              class="footer-ico"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M3 21h18"/>
+              <path d="M5 21V9l7-4 7 4v12"/>
+              <path d="M9 21v-6h6v6"/>
+            </svg>
+
+            <span>
+              SJE – São João Energia S.A.
+            </span>
+
           </li>
+
+
+
+          <!-- CAPACIDADE -->
           <li>
-            <svg class="footer-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 6 10 7 10-7"/></svg>
-            <a href="mailto:<%= empresa.email %>"><%= empresa.email %></a>
+
+            <svg
+              class="footer-ico"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="m13 2-9 12h8l-1 8 9-12h-8z"/>
+            </svg>
+
+            <span>
+              Capacidade instalada aproximada: 176,9 MW
+            </span>
+
           </li>
+
         </ul>
+
       </div>
+
     </div>
+
+
+
+    <!-- RODAPÉ INFERIOR -->
     <div class="footer-bottom">
-      <span>&copy; <%= new Date().getFullYear() %> <%= empresa.nome %>. Todos os direitos reservados.</span>
-      <span>CONTEÚDO INSTITUCIONAL PROVISÓRIO — EM ATUALIZAÇÃO</span>
+
+      <span>
+        &copy; <%= new Date().getFullYear() %>
+        Global Engenharia. Todos os direitos reservados.
+      </span>
+
+      <span>
+        Portal de Cadastro – UTE Tupã Fase I
+      </span>
+
     </div>
+
   </div>
+
 </footer>
+
+
 <script src="/js/main.js"></script>
