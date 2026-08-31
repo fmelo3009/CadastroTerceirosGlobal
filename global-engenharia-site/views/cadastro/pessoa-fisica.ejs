@@ -784,24 +784,42 @@
 
             <div class="upload-box">
 
-              <label for="curriculo">
-                Anexe seu currículo *
-              </label>
+  <label for="curriculo">
+    Anexe seu currículo *
+  </label>
 
-              <input
-                type="file"
-                id="curriculo"
-                name="curriculo"
-                accept=".pdf,.doc,.docx"
-                required
-              >
+  <input
+    type="file"
+    id="curriculo"
+    name="curriculo"
+    accept=".pdf,.doc,.docx"
+    required
+  >
 
-              <small>
-                Formatos aceitos: PDF, DOC ou DOCX.
-                Tamanho máximo: 10 MB.
-              </small>
+  <div
+    id="arquivo-selecionado"
+    class="arquivo-selecionado"
+    style="display:none;"
+  >
 
-            </div>
+    <span id="nome-arquivo"></span>
+
+    <button
+      type="button"
+      id="remover-arquivo"
+      class="btn-remover-arquivo"
+    >
+      Remover arquivo
+    </button>
+
+  </div>
+
+  <small>
+    Formatos aceitos: PDF, DOC ou DOCX.
+    Tamanho máximo: 10 MB.
+  </small>
+
+</div>
 
           </div>
 
