@@ -1,86 +1,184 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <%- include('../partials/head') %>
 </head>
 
 <body>
+
 <%- include('../partials/header') %>
 
-<!-- SEÇÃO 1 — OBJETIVO DO SITE -->
+<!-- APRESENTAÇÃO PRINCIPAL -->
 <section class="foco-real">
   <div class="container foco-grid">
-    <div>
-      <div class="eyebrow">Cadastro de terceirizados</div>
 
-      <h1>Uma base integrada de empresas e profissionais para o Grupo Global</h1>
+    <div>
+      <div class="eyebrow">UTE Tupã Fase I</div>
+
+      <h1>
+        Faça parte da construção da UTE Tupã Fase I
+      </h1>
 
       <p>
-        Este portal foi desenvolvido para centralizar o cadastro de empresas e profissionais
-        terceirizados interessados em prestar serviços aos empreendimentos do Grupo Global.
-        As informações ficam organizadas por área de atuação e empreendimento, formando uma base
-        interna de consulta para futuras necessidades de contratação.
+        A UTE Tupã Fase I é um empreendimento de geração de energia elétrica
+        da SJE – São João Energia S.A., localizado em Macaé, Rio de Janeiro.
       </p>
 
-      <div class="foco-ctas">
-        <a href="/cadastro" class="btn btn-accent">
-          Cadastre-se como Terceirizado
-        </a>
+      <p>
+        O projeto contará com aproximadamente 176,9 MW de capacidade instalada
+        e utilizará gás natural para geração de energia, contribuindo para a
+        expansão e a segurança do sistema elétrico brasileiro.
+      </p>
 
-        <a href="/interno/login" class="btn btn-outline">
-          Acesso administrativo →
-        </a>
-      </div>
+      <p>
+        Este portal foi criado para formar uma base de profissionais e empresas
+        interessadas em participar das oportunidades relacionadas ao empreendimento.
+      </p>
+
     </div>
 
     <div class="foco-list">
+
       <div class="foco-item">
         <span class="n">01</span>
         <span>
-          Empresas e profissionais realizam o cadastro informando sua experiência, serviços,
-          documentos e empreendimentos de interesse.
+          Cadastre seu currículo ou sua empresa para futuras oportunidades
+          relacionadas à UTE Tupã Fase I.
         </span>
       </div>
 
       <div class="foco-item">
         <span class="n">02</span>
         <span>
-          Os dados ficam centralizados e organizados em uma base interna de consulta.
+          Os cadastros ficarão disponíveis para consulta das equipes responsáveis
+          pelos processos de contratação.
         </span>
       </div>
 
       <div class="foco-item">
         <span class="n">03</span>
         <span>
-          Quando surgir uma necessidade de contratação, a equipe responsável poderá pesquisar
-          e consultar os cadastros disponíveis.
+          Profissionais e empresas poderão informar suas áreas de atuação,
+          experiências e informações de contato.
         </span>
       </div>
+
     </div>
+
   </div>
 </section>
 
-<!-- SEÇÃO 2 — APRESENTAÇÃO DO GRUPO GLOBAL -->
-<section class="hero">
-  <div class="container hero-inner">
-    <div>
-      <div class="eyebrow">Grupo Global</div>
 
-      <h2>Experiência em serviços industriais e geração de energia</h2>
+<!-- ESCOLHA DO CADASTRO -->
+<section class="section section-alt">
+
+  <div class="container">
+
+    <div class="section-head center">
+
+      <div
+        class="eyebrow"
+        style="justify-content:center;display:flex;"
+      >
+        Faça seu cadastro
+      </div>
+
+      <h2>Como você deseja se cadastrar?</h2>
+
+      <p>
+        Escolha abaixo o tipo de cadastro adequado ao seu perfil.
+      </p>
+
+    </div>
+
+
+    <div class="tipo-cadastro-grid">
+
+      <!-- PESSOA FÍSICA -->
+      <a href="/cadastro/pessoa-fisica" class="tipo-cadastro-card">
+
+        <div class="tipo-cadastro-icon">
+          👤
+        </div>
+
+        <h3>Pessoa Física</h3>
+
+        <p>
+          Para profissionais interessados em cadastrar seu currículo
+          e suas informações profissionais.
+        </p>
+
+        <span class="btn btn-primary">
+          Cadastrar currículo
+        </span>
+
+      </a>
+
+
+      <!-- PESSOA JURÍDICA -->
+      <a href="/cadastro/pessoa-juridica" class="tipo-cadastro-card">
+
+        <div class="tipo-cadastro-icon">
+          🏢
+        </div>
+
+        <h3>Pessoa Jurídica</h3>
+
+        <p>
+          Para empresas interessadas em apresentar seus serviços,
+          produtos e portfólio para o empreendimento.
+        </p>
+
+        <span class="btn btn-primary">
+          Cadastrar empresa
+        </span>
+
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- SOBRE A UTE TUPÃ -->
+<section class="hero">
+
+  <div class="container hero-inner">
+
+    <div>
+
+      <div class="eyebrow">
+        Sobre o empreendimento
+      </div>
+
+      <h2>
+        UTE Tupã Fase I
+      </h2>
 
       <p class="lead">
-        O Grupo Global iniciou sua trajetória há mais de vinte anos atuando na prestação de
-        serviços de manutenção e montagens industriais. Ao longo dos anos, ampliou sua atuação
-        para o setor de geração de energia, reunindo empresas e empreendimentos com experiência
-        técnica, compromisso operacional e presença em diferentes regiões do país.
+        Localizada no município de Macaé, no Rio de Janeiro, a UTE Tupã
+        Fase I integra um importante contexto de fortalecimento da
+        infraestrutura energética nacional.
       </p>
 
       <p class="lead">
-        A Global Engenharia integra essa estrutura prestando serviços de montagem, manutenção
-        e apoio técnico aos empreendimentos do grupo.
+        Além da usina termelétrica, o empreendimento contempla estruturas
+        e sistemas necessários à sua implantação e operação, incluindo
+        instalações de conexão ao sistema elétrico e demais infraestruturas
+        de apoio.
+      </p>
+
+      <p class="lead">
+        Mais do que um empreendimento de geração de energia, a UTE Tupã
+        representa novas oportunidades para profissionais, empresas,
+        parceiros e comunidades da região.
       </p>
 
       <div class="hero-ctas">
+
         <a
           href="https://globalparticipacoesenergia.com.br/"
           target="_blank"
@@ -90,279 +188,108 @@
           Conheça o Grupo Global
         </a>
 
-        <a href="/cadastro" class="btn btn-outline-dark">
-          Cadastre-se como Terceirizado
-        </a>
       </div>
+
     </div>
+
 
     <div class="hero-media">
+
       <img
-        src="/img/hero-empreendimento.png"
-        alt="Vista aérea de empreendimento de geração de energia do Grupo Global"
+        src="/img/card-ute-tupa-placeholder.png"
+        alt="UTE Tupã Fase I"
       />
+
     </div>
+
   </div>
+
 </section>
 
-<!-- SEÇÃO 3 — EMPREENDIMENTOS -->
-<section class="section section-alt">
+
+<!-- CHAMADA FINAL -->
+<section class="section">
+
   <div class="container">
+
     <div class="section-head center">
+
       <div
         class="eyebrow"
         style="justify-content:center;display:flex;"
       >
-        Empreendimentos
+        Oportunidades
       </div>
 
-      <h2>Empreendimentos do Grupo Global</h2>
+      <h2>
+        Faça parte da UTE Tupã Fase I
+      </h2>
 
       <p>
-        Os cadastros podem ser realizados de forma geral ou vinculados a um empreendimento
-        específico. Conheça abaixo as unidades atualmente apresentadas no portal.
-      </p>
-    </div>
-
-    <div
-      class="grid-emp"
-      style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;"
-    >
-      <% empreendimentos.forEach(function(emp) { %>
-        <div class="card-emp">
-          <div class="foto">
-            <img src="<%= emp.imagem %>" alt="<%= emp.nome %>" />
-            <span class="tag"><%= emp.tipo %></span>
-          </div>
-
-          <div class="corpo">
-            <h3><%= emp.nome %></h3>
-
-            <p><%= emp.descricao %></p>
-
-            <div
-              style="
-                display:flex;
-                justify-content:space-between;
-                align-items:center;
-                gap:10px;
-                flex-wrap:wrap;
-              "
-            >
-              <% if (emp.linkExterno) { %>
-                <a
-                  href="<%= emp.linkExterno %>"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="link"
-                >
-                  Saiba mais →
-                </a>
-              <% } else { %>
-                <span
-                  class="link"
-                  style="color:var(--concrete-600);"
-                >
-                  Saiba mais em breve
-                </span>
-              <% } %>
-
-              <a
-                href="/cadastro/<%= emp.slug %>"
-                class="btn btn-outline-dark"
-                style="padding:8px 14px;font-size:12.5px;"
-              >
-                Cadastre-se
-              </a>
-            </div>
-          </div>
-        </div>
-      <% }) %>
-    </div>
-
-    <style>
-      @media (max-width: 900px) {
-        .grid-emp {
-          grid-template-columns: repeat(2, 1fr) !important;
-        }
-      }
-
-      @media (max-width: 620px) {
-        .grid-emp {
-          grid-template-columns: 1fr !important;
-        }
-      }
-    </style>
-  </div>
-</section>
-
-<!-- SEÇÃO 4 — QUEM SOMOS -->
-<section class="section">
-  <div class="container split">
-    <div>
-      <div class="eyebrow">Quem somos</div>
-
-      <h2>Presença técnica em cada etapa da operação</h2>
-
-      <p>
-        A <%= empresa.nome %> reúne equipes e parceiros especializados para atender os
-        empreendimentos de geração de energia do Grupo Global em serviços de montagem,
-        manutenção e apoio técnico.
+        Juntos, vamos construir um projeto que gera energia,
+        oportunidades e desenvolvimento.
       </p>
 
-      <p>
-        Nosso trabalho é conduzido com foco em segurança, organização, qualidade e continuidade
-        operacional.
-      </p>
-
-      <a
-        href="https://globalparticipacoesenergia.com.br/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn btn-outline-dark"
-      >
-        Saiba mais
-      </a>
     </div>
 
-    <div class="split-media reticle">
-      <img
-        src="https://images.unsplash.com/photo-1581094651181-35942459ef62?auto=format&fit=crop&w=900&q=60"
-        alt="Equipe técnica em ambiente industrial"
-      />
-    </div>
   </div>
+
 </section>
 
-<!-- SEÇÃO 5 — ÁREAS DE ATUAÇÃO -->
-<section class="section section-alt">
-  <div class="container">
-    <div
-      class="section-head center"
-      style="margin-left:auto;margin-right:auto;"
-    >
-      <div
-        class="eyebrow"
-        style="justify-content:center;display:flex;"
-      >
-        Áreas de atuação
-      </div>
 
-      <h2>Onde a Global Engenharia atua</h2>
+<style>
 
-      <p>
-        Conheça algumas das principais frentes de serviços disponíveis para cadastro no portal.
-      </p>
-    </div>
+.tipo-cadastro-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  max-width: 900px;
+  margin: 40px auto 0;
+}
 
-    <div class="grid grid-4">
-      <% servicos.slice(0, 8).forEach(function(s, i) { %>
-        <div class="card">
-          <div class="card-tag">
-            SRV-<%= String(i + 1).padStart(2, '0') %>
-          </div>
+.tipo-cadastro-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 38px 30px;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s ease;
+}
 
-          <div class="card-icon">GE</div>
+.tipo-cadastro-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 35px rgba(0,0,0,0.10);
+}
 
-          <h3><%= s.nome %></h3>
+.tipo-cadastro-icon {
+  font-size: 46px;
+  margin-bottom: 18px;
+}
 
-          <p>
-            Empresas e profissionais com experiência nesta área podem realizar seu cadastro
-            para futuras oportunidades.
-          </p>
-        </div>
-      <% }) %>
-    </div>
+.tipo-cadastro-card h3 {
+  margin-bottom: 12px;
+  font-size: 24px;
+}
 
-    <div class="section-foot-action">
-      <a href="/servicos" class="btn btn-outline-dark">
-        Ver todos os serviços
-      </a>
-    </div>
-  </div>
-</section>
+.tipo-cadastro-card p {
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
 
-<!-- SEÇÃO 6 — DIFERENCIAIS -->
-<section class="section">
-  <div class="container">
-    <div class="section-head">
-      <div class="eyebrow">Diferenciais</div>
-      <h2>Princípios que orientam o nosso trabalho</h2>
-    </div>
+@media (max-width: 700px) {
 
-    <div class="grid grid-3">
-      <div class="card">
-        <div class="card-icon">01</div>
-        <h3>Excelência técnica</h3>
-        <p>Equipes qualificadas e processos acompanhados em cada etapa de execução.</p>
-      </div>
+  .tipo-cadastro-grid {
+    grid-template-columns: 1fr;
+  }
 
-      <div class="card">
-        <div class="card-icon">02</div>
-        <h3>Segurança</h3>
-        <p>A segurança do trabalho é prioridade em todas as atividades.</p>
-      </div>
+}
 
-      <div class="card">
-        <div class="card-icon">03</div>
-        <h3>Qualidade</h3>
-        <p>Padrões de qualidade aplicados do planejamento à entrega.</p>
-      </div>
+</style>
 
-      <div class="card">
-        <div class="card-icon">04</div>
-        <h3>Compromisso</h3>
-        <p>Responsabilidade com prazos, resultados e transparência.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">05</div>
-        <h3>Experiência</h3>
-        <p>Conhecimento aplicado às rotinas industriais e de manutenção.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">06</div>
-        <h3>Proximidade</h3>
-        <p>Atendimento alinhado às necessidades de cada empreendimento.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SEÇÃO 7 — CONTATO -->
-<section class="section">
-  <div class="container">
-    <div class="section-head">
-      <div class="eyebrow">Contato</div>
-      <h2>Fale com a Global Engenharia</h2>
-    </div>
-
-    <div class="contact-strip">
-      <div class="contact-item">
-        <div class="eyebrow">Telefone</div>
-        <strong><%= empresa.telefone %></strong>
-      </div>
-
-      <div class="contact-item">
-        <div class="eyebrow">E-mail</div>
-        <strong><%= empresa.email %></strong>
-      </div>
-
-      <div class="contact-item">
-        <div class="eyebrow">Endereço</div>
-        <strong><%= empresa.endereco %></strong>
-      </div>
-    </div>
-
-    <div class="section-foot-action">
-      <a href="/contato" class="btn btn-outline-dark">
-        Ir para a página de contato
-      </a>
-    </div>
-  </div>
-</section>
 
 <%- include('../partials/footer') %>
+
 </body>
 </html>
