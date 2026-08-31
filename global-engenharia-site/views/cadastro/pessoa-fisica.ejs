@@ -1317,6 +1317,64 @@
     )
   );
 
+// REMOVER CURRÍCULO SELECIONADO
+
+const curriculo =
+  document.getElementById('curriculo');
+
+const arquivoSelecionado =
+  document.getElementById('arquivo-selecionado');
+
+const nomeArquivo =
+  document.getElementById('nome-arquivo');
+
+const removerArquivo =
+  document.getElementById('remover-arquivo');
+
+
+curriculo.addEventListener(
+  'change',
+  function () {
+
+    if (
+      this.files &&
+      this.files.length > 0
+    ) {
+
+      nomeArquivo.textContent =
+        this.files[0].name;
+
+      arquivoSelecionado.style.display =
+        'flex';
+
+    } else {
+
+      nomeArquivo.textContent =
+        '';
+
+      arquivoSelecionado.style.display =
+        'none';
+
+    }
+
+  }
+);
+
+
+removerArquivo.addEventListener(
+  'click',
+  function () {
+
+    curriculo.value = '';
+
+    nomeArquivo.textContent = '';
+
+    arquivoSelecionado.style.display =
+      'none';
+
+  }
+);
+
 </script>
 
 
