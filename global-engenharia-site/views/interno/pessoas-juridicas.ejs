@@ -1,0 +1,396 @@
+<%- include('../partials/head', { titulo }) %>
+
+<%- include('../partials/header') %>
+
+<main class="admin-page">
+
+  <div class="admin-container">
+
+    <div class="admin-top">
+
+      <div>
+
+        <a href="/interno" class="voltar">
+          ← Painel Administrativo
+        </a>
+
+        <h1>Pessoas Jurídicas</h1>
+
+        <p>
+          Empresas cadastradas para a
+          UTE Tupã Fase I.
+        </p>
+
+      </div>
+
+      <div class="total-card">
+        <strong><%= total %></strong>
+        <span>empresas</span>
+      </div>
+
+    </div>
+
+
+    <form
+      method="GET"
+      action="/interno/pessoas-juridicas"
+      class="filtros"
+    >
+
+      <input
+        type="text"
+        name="busca"
+        placeholder="Razão Social, CNPJ ou contato"
+        value="<%= filtros.busca %>"
+      >
+
+      <input
+        type="text"
+        name="cidade"
+        placeholder="Município"
+        value="<%= filtros.cidade %>"
+      >
+
+      <input
+        type="text"
+        name="setor"
+        placeholder="Setor de atividade"
+        value="<%= filtros.setor %>"
+      >
+
+      <select name="situacao">
+
+        <option value="">
+          Todas as situações
+        </option>
+
+        <% situacoes.forEach(situacao => { %>
+
+          <option
+            value="<%= situacao %>"
+            <%= filtros.situacao === situacao ? 'selected' : '' %>
+          >
+            <%= situacao %>
+          </option>
+
+        <% }) %>
+
+      </select>
+
+      <button type="submit">
+        Filtrar
+      </button>
+
+      <a
+        href="/interno/pessoas-juridicas"
+        class="limpar"
+      >
+        Limpar
+      </a>
+
+    </form>
+
+
+    <div class="tabela-box">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Razão Social</th>
+            <th>CNPJ</th>
+            <th>Município</th>
+            <th>Setor</th>
+            <th>Tipo</th>
+            <th>Contato</th>
+            <th>Telefone</th>
+            <th>Situação</th>
+            <th>Portfólio</th>
+            <th></th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <% if (empresas.length === 0) { %>
+
+            <tr>
+              <td
+                colspan="10"
+                class="sem-registros"
+              >
+                Nenhuma empresa cadastrada.
+              </td>
+            </tr>
+
+          <% } %>
+
+
+          <% empresas.forEach(empresa => { %>
+
+            <tr>
+
+              <td>
+                <strong>
+                  <%= empresa.razao_social %>
+                </strong>
+
+                <% if (empresa.nome_fantasia) { %>
+                  <br>
+                  <small>
+                    <%= empresa.nome_fantasia %>
+                  </small>
+                <% } %>
+
+              </td>
+
+              <td>
+                <%= empresa.cpf_cnpj %>
+              </td>
+
+              <td>
+                <%= empresa.cidade || '-' %>
+              </td>
+
+              <td>
+                <%= empresa.setor_atividade || '-' %>
+              </td>
+
+              <td>
+                <%= empresa.tipo_atividade || '-' %>
+              </td>
+
+              <td>
+                <%= empresa.contato_nome || '-' %>
+              </td>
+
+              <td>
+                <%= empresa.telefone || '-' %>
+              </td>
+
+              <td>
+                <span class="status">
+                  <%= empresa.situacao_cadastral %>
+                </span>
+              </td>
+
+              <td>
+
+                <% if (empresa.documento_id) { %>
+
+                  <a
+                    href="/interno/documentos/<%= empresa.documento_id %>/download"
+                    class="arquivo"
+                  >
+                    Baixar
+                  </a>
+
+                <% } else { %>
+
+                  <span class="sem-arquivo">
+                    Não enviado
+                  </span>
+
+                <% } %>
+
+              </td>
+
+              <td>
+
+                <a
+                  href="/interno/terceirizados/<%= empresa.id %>"
+                  class="detalhes"
+                >
+                  Ver cadastro
+                </a>
+
+              </td>
+
+            </tr>
+
+          <% }) %>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</main>
+
+
+<style>
+
+.admin-page {
+  background: #f5f7fa;
+  min-height: 80vh;
+  padding: 50px 20px;
+}
+
+.admin-container {
+  max-width: 1500px;
+  margin: auto;
+}
+
+.admin-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.admin-top h1 {
+  color: #062c62;
+  margin: 8px 0;
+  font-size: 32px;
+}
+
+.admin-top p {
+  color: #667085;
+  margin: 0;
+}
+
+.voltar {
+  color: #1e5aa8;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.total-card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px 25px;
+  text-align: center;
+}
+
+.total-card strong {
+  display: block;
+  font-size: 25px;
+  color: #062c62;
+}
+
+.total-card span {
+  color: #667085;
+  font-size: 13px;
+}
+
+.filtros {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filtros input,
+.filtros select {
+  border: 1px solid #d0d5dd;
+  padding: 11px;
+  border-radius: 7px;
+  min-width: 180px;
+}
+
+.filtros button {
+  border: none;
+  background: #1457a6;
+  color: white;
+  border-radius: 7px;
+  padding: 11px 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.limpar {
+  padding: 11px 18px;
+  text-decoration: none;
+  color: #475467;
+}
+
+.tabela-box {
+  background: white;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 1300px;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  background: #f9fafb;
+  color: #475467;
+  padding: 14px;
+  font-size: 13px;
+}
+
+td {
+  padding: 15px;
+  border-top: 1px solid #eaecf0;
+  color: #344054;
+  font-size: 14px;
+}
+
+.status {
+  background: #eef4ff;
+  color: #175cd3;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.arquivo,
+.detalhes {
+  color: #175cd3;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sem-arquivo {
+  color: #98a2b3;
+}
+
+.sem-registros {
+  text-align: center;
+  padding: 40px;
+}
+
+@media(max-width: 700px) {
+
+  .admin-top {
+    display: block;
+  }
+
+  .total-card {
+    display: inline-block;
+    margin-top: 20px;
+  }
+
+  .filtros {
+    display: block;
+  }
+
+  .filtros input,
+  .filtros select,
+  .filtros button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+}
+
+</style>
+
+
+<%- include('../partials/footer') %>
