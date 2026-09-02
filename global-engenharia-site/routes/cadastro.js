@@ -9,9 +9,9 @@ const db = require('../lib/db');
 const config = require('../config');
 
 
-// ---------------------------------------------------------------------------
+// ============================================================
 // UPLOAD TEMPORÁRIO
-// ---------------------------------------------------------------------------
+// ============================================================
 
 const tmpDir = path.join(config.UPLOADS_PATH, 'tmp');
 
@@ -19,15 +19,12 @@ if (!fs.existsSync(tmpDir)) {
   fs.mkdirSync(tmpDir, { recursive: true });
 }
 
-
 const storage = multer.diskStorage({
-
   destination: (req, file, cb) => {
     cb(null, tmpDir);
   },
 
   filename: (req, file, cb) => {
-
     const nomeSeguro = file.originalname.replace(
       /[^a-zA-Z0-9.\-_]/g,
       '_'
@@ -37,14 +34,10 @@ const storage = multer.diskStorage({
       null,
       `${Date.now()}-${Math.round(Math.random() * 1e6)}-${nomeSeguro}`
     );
-
   }
-
 });
 
-
 const upload = multer({
-
   storage,
 
   limits: {
@@ -55,926 +48,136 @@ const upload = multer({
   },
 
   fileFilter: (req, file, cb) => {
+    const permitidos = /pdf|jpg|jpeg|png|doc|docx/i;
 
-    const permitidos =
-      /pdf|jpg|jpeg|png|doc|docx/i;
+    const extensao = path.extname(
+      file.originalname
+    );
 
-    const ok =
-      permitidos.test(
-        path.extname(file.originalname)
-      );
-
-    if (!ok) {
-
+    if (!permitidos.test(extensao)) {
       return cb(
         new Error(
           'Tipo de arquivo não permitido. Envie PDF, JPG, PNG, DOC ou DOCX.'
         )
       );
-
     }
 
     cb(null, true);
-
   }
-
 });
 
 
-// ---------------------------------------------------------------------------
-// FUNÇÕES DO CADASTRO ANTIGO
-// ---------------------------------------------------------------------------
+// ============================================================
+// FUNÇÕES AUXILIARES
+// ============================================================
 
-function buscarEmpreendimento(slug) {
-
-  if (!slug) return null;
-
-  return config.EMPREENDIMENTOS.find(
-    (e) => e.slug === slug
-  ) || null;
-
+function apagarArquivoTemporario(file) {
+  if (
+    file &&
+    file.path &&
+    fs.existsSync(file.path)
+  ) {
+    try {
+      fs.unlinkSync(file.path);
+    } catch (erro) {
+      console.error(
+        'Erro ao excluir arquivo temporário:',
+        erro
+      );
+    }
+  }
 }
 
 
-function carregarDadosFormulario(slug) {
+function moverArquivoParaCadastro(
+  file,
+  terceirizadoId,
+  prefixo
+) {
+  const pastaFinal = path.join(
+    config.UPLOADS_PATH,
+    'terceirizados',
+    String(terceirizadoId)
+  );
 
-  const servicos = db
-    .prepare(
-      'SELECT * FROM servicos ORDER BY nome'
-    )
-    .all();
+  if (!fs.existsSync(pastaFinal)) {
+    fs.mkdirSync(
+      pastaFinal,
+      { recursive: true }
+    );
+  }
+
+  const extensao = path.extname(
+    file.originalname
+  );
+
+  const nomeArquivo =
+    `${prefixo}-${Date.now()}${extensao}`;
+
+  const destino = path.join(
+    pastaFinal,
+    nomeArquivo
+  );
+
+  fs.renameSync(
+    file.path,
+    destino
+  );
 
   return {
+    destino,
 
-    servicos,
-
-    estados:
-      config.ESTADOS_BR,
-
-    tiposDocumento:
-      config.TIPOS_DOCUMENTO,
-
-    empreendimentos:
-      config.EMPREENDIMENTOS,
-
-    empreendimentoAtual:
-      buscarEmpreendimento(slug)
-
+    caminhoBanco: path
+      .relative(
+        config.UPLOADS_PATH,
+        destino
+      )
+      .replace(/\\/g, '/')
   };
-
 }
 
 
-// ---------------------------------------------------------------------------
-// VALIDAÇÕES DO CADASTRO ANTIGO
-// ---------------------------------------------------------------------------
+// ============================================================
+// PÁGINA PRINCIPAL DO CADASTRO
+// ============================================================
 
-const validacoesCadastro = [
+router.get('/', (req, res) => {
+  res.redirect('/#cadastro');
+});
 
-  body('tipo')
-    .isIn(['PJ', 'PF'])
-    .withMessage(
-      'Selecione o tipo de cadastro.'
-    ),
 
-  body('razao_social')
-    .trim()
-    .notEmpty()
-    .withMessage(
-      'Informe o nome / razão social.'
-    ),
-
-  body('cpf_cnpj')
-    .trim()
-    .notEmpty()
-    .withMessage(
-      'Informe o CPF ou CNPJ.'
-    ),
-
-  body('cidade')
-    .trim()
-    .notEmpty()
-    .withMessage(
-      'Informe a cidade.'
-    ),
-
-  body('estado')
-    .trim()
-    .isLength({
-      min: 2,
-      max: 2
-    })
-    .withMessage(
-      'Selecione o estado.'
-    ),
-
-  body().custom(
-    (value, { req }) => {
-
-      if (
-        !req.body.telefone &&
-        !req.body.email
-      ) {
-
-        throw new Error(
-          'Informe ao menos um telefone ou e-mail para contato.'
-        );
-
-      }
-
-      return true;
-
-    }
-  )
-
-];
-
-
-// ---------------------------------------------------------------------------
-// PROCESSAMENTO DO CADASTRO ANTIGO
-// ---------------------------------------------------------------------------
-
-function processarCadastro(req, res) {
-
-  const slugRota =
-    req.params.slug || null;
-
-
-  const empreendimentoSlug =
-    slugRota ||
-    (
-      req.body.empreendimento ||
-      null
-    );
-
-
-  const empreendimentoValido =
-    empreendimentoSlug
-      ? buscarEmpreendimento(
-          empreendimentoSlug
-        )
-      : true;
-
-
-  const dadosFormulario =
-    carregarDadosFormulario(
-      empreendimentoSlug
-    );
-
-
-  const resultado =
-    validationResult(req);
-
-
-  if (
-    !resultado.isEmpty() ||
-    (
-      empreendimentoSlug &&
-      !empreendimentoValido
-    )
-  ) {
-
-    (req.files || []).forEach(
-      (f) =>
-        fs.unlink(
-          f.path,
-          () => {}
-        )
-    );
-
-
-    const erros =
-      resultado.array();
-
-
-    if (
-      empreendimentoSlug &&
-      !empreendimentoValido
-    ) {
-
-      erros.push({
-        msg:
-          'Empreendimento inválido.'
-      });
-
-    }
-
-
-    return res
-      .status(400)
-      .render(
-        'cadastro/form',
-        {
-
-          titulo:
-            'Cadastro de Terceirizados',
-
-          ...dadosFormulario,
-
-          valores:
-            req.body,
-
-          erros
-
-        }
-      );
-
-  }
-
-
-  try {
-
-    const b =
-      req.body;
-
-
-    const cpfCnpjLimpo =
-      String(
-        b.cpf_cnpj
-      ).replace(
-        /\D/g,
-        ''
-      );
-
-
-    const jaExiste =
-      db
-        .prepare(
-          `
-          SELECT id
-          FROM terceirizados
-          WHERE cpf_cnpj = ?
-          `
-        )
-        .get(
-          cpfCnpjLimpo
-        );
-
-
-    if (jaExiste) {
-
-      (req.files || [])
-        .forEach(
-          (f) =>
-            fs.unlink(
-              f.path,
-              () => {}
-            )
-        );
-
-
-      return res
-        .status(400)
-        .render(
-          'cadastro/form',
-          {
-
-            titulo:
-              'Cadastro de Terceirizados',
-
-            ...dadosFormulario,
-
-            valores:
-              b,
-
-            erros: [
-              {
-                msg:
-                  'Já existe um cadastro com este CPF/CNPJ. Entre em contato conosco se precisar atualizar seus dados.'
-              }
-            ]
-
-          }
-        );
-
-    }
-
-
-    let novoId;
-
-
-    const transacao =
-      db.transaction(
-        () => {
-
-
-          const infoTerceirizado =
-            db
-              .prepare(
-                `
-                INSERT INTO terceirizados
-                (
-                  empreendimento,
-                  tipo,
-                  razao_social,
-                  nome_fantasia,
-                  cpf_cnpj,
-                  inscricao_estadual,
-                  inscricao_municipal,
-                  telefone,
-                  whatsapp,
-                  email,
-                  endereco,
-                  complemento,
-                  cep,
-                  cidade,
-                  estado,
-                  contato_nome,
-                  contato_telefone,
-                  setor_atividade,
-                  observacoes,
-                  situacao_cadastral
-                )
-
-                VALUES
-                (
-                  @empreendimento,
-                  @tipo,
-                  @razao_social,
-                  @nome_fantasia,
-                  @cpf_cnpj,
-                  @inscricao_estadual,
-                  @inscricao_municipal,
-                  @telefone,
-                  @whatsapp,
-                  @email,
-                  @endereco,
-                  @complemento,
-                  @cep,
-                  @cidade,
-                  @estado,
-                  @contato_nome,
-                  @contato_telefone,
-                  @setor_atividade,
-                  @observacoes,
-                  'Pendente de análise'
-                )
-                `
-              )
-              .run(
-                {
-
-                  empreendimento:
-                    empreendimentoSlug ||
-                    null,
-
-                  tipo:
-                    b.tipo,
-
-                  razao_social:
-                    b.razao_social,
-
-                  nome_fantasia:
-                    b.nome_fantasia ||
-                    null,
-
-                  cpf_cnpj:
-                    cpfCnpjLimpo,
-
-                  inscricao_estadual:
-                    b.inscricao_estadual ||
-                    null,
-
-                  inscricao_municipal:
-                    b.inscricao_municipal ||
-                    null,
-
-                  telefone:
-                    b.telefone ||
-                    null,
-
-                  whatsapp:
-                    b.whatsapp ||
-                    null,
-
-                  email:
-                    b.email ||
-                    null,
-
-                  endereco:
-                    b.endereco ||
-                    null,
-
-                  complemento:
-                    b.complemento ||
-                    null,
-
-                  cep:
-                    b.cep ||
-                    null,
-
-                  cidade:
-                    b.cidade,
-
-                  estado:
-                    b.estado
-                      .toUpperCase(),
-
-                  contato_nome:
-                    b.contato_nome ||
-                    null,
-
-                  contato_telefone:
-                    b.contato_telefone ||
-                    null,
-
-                  setor_atividade:
-                    b.setor_atividade ||
-                    null,
-
-                  observacoes:
-                    b.observacoes ||
-                    null
-
-                }
-              );
-
-
-          novoId =
-            infoTerceirizado
-              .lastInsertRowid;
-
-
-          const servicosSelecionados =
-            []
-              .concat(
-                b['servicos_ids[]'] ||
-                b.servicos_ids ||
-                []
-              )
-              .filter(
-                Boolean
-              );
-
-
-          const insertServico =
-            db.prepare(
-              `
-              INSERT INTO terceirizado_servicos
-              (
-                terceirizado_id,
-                servico_id,
-                servico_outro
-              )
-
-              VALUES
-              (
-                ?,
-                ?,
-                NULL
-              )
-              `
-            );
-
-
-          servicosSelecionados
-            .forEach(
-              (sid) =>
-                insertServico
-                  .run(
-                    novoId,
-                    Number(sid)
-                  )
-            );
-
-
-          if (
-            b.outros_servicos &&
-            b.outros_servicos.trim()
-          ) {
-
-            const insertOutro =
-              db.prepare(
-                `
-                INSERT INTO terceirizado_servicos
-                (
-                  terceirizado_id,
-                  servico_id,
-                  servico_outro
-                )
-
-                VALUES
-                (
-                  ?,
-                  NULL,
-                  ?
-                )
-                `
-              );
-
-
-            b.outros_servicos
-              .split(',')
-              .map(
-                (s) =>
-                  s.trim()
-              )
-              .filter(
-                Boolean
-              )
-              .forEach(
-                (nome) =>
-                  insertOutro.run(
-                    novoId,
-                    nome
-                  )
-              );
-
-          }
-
-
-          db.prepare(
-            `
-            INSERT INTO experiencias
-            (
-              terceirizado_id,
-              tempo_experiencia,
-              area_atuacao,
-              principais_atividades,
-              empresas_projetos_anteriores,
-              principais_competencias,
-              certificacoes
-            )
-
-            VALUES
-            (
-              ?,
-              ?,
-              ?,
-              ?,
-              ?,
-              ?,
-              ?
-            )
-            `
-          )
-          .run(
-
-            novoId,
-
-            b.tempo_experiencia ||
-            null,
-
-            b.area_atuacao ||
-            null,
-
-            b.principais_atividades ||
-            null,
-
-            b.empresas_projetos_anteriores ||
-            null,
-
-            b.principais_competencias ||
-            null,
-
-            b.certificacoes ||
-            null
-
-          );
-
-
-          let metaDocumentos =
-            [];
-
-          try {
-
-            metaDocumentos =
-              JSON.parse(
-                b.documentos_meta ||
-                '[]'
-              );
-
-          } catch (e) {
-
-            metaDocumentos =
-              [];
-
-          }
-
-
-          const insertDoc =
-            db.prepare(
-              `
-              INSERT INTO documentos
-              (
-                terceirizado_id,
-                tipo_documento,
-                nome_arquivo_original,
-                caminho_arquivo,
-                status,
-                data_validade
-              )
-
-              VALUES
-              (
-                ?,
-                ?,
-                ?,
-                ?,
-                ?,
-                ?
-              )
-              `
-            );
-
-
-          const pastaFinal =
-            path.join(
-
-              config.UPLOADS_PATH,
-
-              'terceirizados',
-
-              String(novoId)
-
-            );
-
-
-          if (
-            !fs.existsSync(
-              pastaFinal
-            )
-          ) {
-
-            fs.mkdirSync(
-              pastaFinal,
-              {
-                recursive:
-                  true
-              }
-            );
-
-          }
-
-
-          metaDocumentos
-            .forEach(
-              (meta) => {
-
-                if (
-                  !meta.tipo
-                ) {
-                  return;
-                }
-
-
-                const arquivoEnviado =
-                  (req.files || [])
-                    .find(
-                      (f) =>
-                        f.fieldname ===
-                        meta.campo
-                    );
-
-
-                if (
-                  arquivoEnviado
-                ) {
-
-                  const destino =
-                    path.join(
-
-                      pastaFinal,
-
-                      path.basename(
-                        arquivoEnviado.path
-                      )
-
-                    );
-
-
-                  fs.renameSync(
-                    arquivoEnviado.path,
-                    destino
-                  );
-
-
-                  insertDoc.run(
-
-                    novoId,
-
-                    meta.tipo,
-
-                    arquivoEnviado
-                      .originalname,
-
-                    path.relative(
-                      config.UPLOADS_PATH,
-                      destino
-                    ),
-
-                    'Enviado',
-
-                    meta.validade ||
-                    null
-
-                  );
-
-                } else {
-
-                  insertDoc.run(
-
-                    novoId,
-
-                    meta.tipo,
-
-                    null,
-
-                    null,
-
-                    'Pendente',
-
-                    meta.validade ||
-                    null
-
-                  );
-
-                }
-
-              }
-            );
-
-
-          (req.files || [])
-            .filter(
-              (f) =>
-                fs.existsSync(
-                  f.path
-                )
-            )
-            .forEach(
-              (f) =>
-                fs.unlink(
-                  f.path,
-                  () => {}
-                )
-            );
-
-        }
-      );
-
-
-    transacao();
-
-
-    return res.render(
-      'cadastro/sucesso',
-      {
-
-        titulo:
-          'Cadastro enviado',
-
-        protocolo:
-          novoId,
-
-        nome:
-          b.nome_fantasia ||
-          b.razao_social,
-
-        empreendimentoAtual:
-          dadosFormulario
-            .empreendimentoAtual
-
-      }
-    );
-
-
-  } catch (err) {
-
-    console.error(
-      'Erro ao salvar cadastro de terceirizado:',
-      err
-    );
-
-
-    (req.files || [])
-      .forEach(
-        (f) =>
-          fs.existsSync(
-            f.path
-          ) &&
-          fs.unlink(
-            f.path,
-            () => {}
-          )
-      );
-
-
-    return res
-      .status(500)
-      .render(
-        'cadastro/form',
-        {
-
-          titulo:
-            'Cadastro de Terceirizados',
-
-          ...dadosFormulario,
-
-          valores:
-            req.body,
-
-          erros: [
-            {
-              msg:
-                'Ocorreu um erro ao salvar seu cadastro. Tente novamente em instantes.'
-            }
-          ]
-
-        }
-      );
-
-  }
-
-}
-
-
-// ===========================================================================
-// CADASTRO GERAL ANTIGO
-// ===========================================================================
-
-router.get(
-  '/',
-  (req, res) => {
-
-    const dados =
-      carregarDadosFormulario(
-        null
-      );
-
-
-    res.render(
-      'cadastro/form',
-      {
-
-        titulo:
-          'Cadastro de Terceirizados',
-
-        ...dados,
-
-        valores:
-          {},
-
-        erros:
-          []
-
-      }
-    );
-
-  }
-);
-
-
-router.post(
-  '/',
-  upload.any(),
-  validacoesCadastro,
-  processarCadastro
-);
-
-
-// ===========================================================================
-// CADASTRO - PESSOA FÍSICA
-// ===========================================================================
+// ============================================================
+// PESSOA FÍSICA
+// ============================================================
 
 router.get(
   '/pessoa-fisica',
   (req, res) => {
-
     res.render(
       'cadastro/pessoa-fisica',
       {
-
         titulo:
           'Cadastro de Pessoa Física - UTE Tupã',
 
-        valores:
-          {},
+        valores: {},
 
-        erros:
-          []
-
+        erros: []
       }
     );
-
   }
 );
 
 
-// ---------------------------------------------------------------------------
+// ============================================================
 // SALVAR PESSOA FÍSICA
-// ---------------------------------------------------------------------------
+// ============================================================
 
 router.post(
-
   '/pessoa-fisica',
 
-  upload.single(
-    'curriculo'
-  ),
+  upload.single('curriculo'),
 
   [
-
     body('nome')
       .trim()
       .notEmpty()
@@ -1016,43 +219,22 @@ router.post(
       .withMessage(
         'Informe a profissão.'
       )
-
   ],
 
   (req, res) => {
-
-
     const resultado =
-      validationResult(
-        req
+      validationResult(req);
+
+    if (!resultado.isEmpty()) {
+      apagarArquivoTemporario(
+        req.file
       );
-
-
-    if (
-      !resultado.isEmpty()
-    ) {
-
-
-      if (
-        req.file &&
-        fs.existsSync(
-          req.file.path
-        )
-      ) {
-
-        fs.unlinkSync(
-          req.file.path
-        );
-
-      }
-
 
       return res
         .status(400)
         .render(
           'cadastro/pessoa-fisica',
           {
-
             titulo:
               'Cadastro de Pessoa Física - UTE Tupã',
 
@@ -1061,69 +243,72 @@ router.post(
 
             erros:
               resultado.array()
-
           }
         );
-
     }
 
-
     try {
-
-
-      const b =
-        req.body;
-
+      const b = req.body;
 
       const cpfLimpo =
         String(
-          b.cpf ||
-          ''
+          b.cpf || ''
         ).replace(
           /\D/g,
           ''
         );
 
-
-      const jaExiste =
-        db
-          .prepare(
-            `
-            SELECT id
-            FROM terceirizados
-            WHERE cpf_cnpj = ?
-            `
-          )
-          .get(
-            cpfLimpo
-          );
-
-
-      if (
-        jaExiste
-      ) {
-
-
-        if (
-          req.file &&
-          fs.existsSync(
-            req.file.path
-          )
-        ) {
-
-          fs.unlinkSync(
-            req.file.path
-          );
-
-        }
-
+      if (cpfLimpo.length !== 11) {
+        apagarArquivoTemporario(
+          req.file
+        );
 
         return res
           .status(400)
           .render(
             'cadastro/pessoa-fisica',
             {
+              titulo:
+                'Cadastro de Pessoa Física - UTE Tupã',
 
+              valores:
+                b,
+
+              erros: [
+                {
+                  msg:
+                    'Informe um CPF válido com 11 dígitos.'
+                }
+              ]
+            }
+          );
+      }
+
+
+      // --------------------------------------------------------
+      // VERIFICAR CPF DUPLICADO
+      // --------------------------------------------------------
+
+      const jaExiste = db
+        .prepare(`
+          SELECT id
+          FROM terceirizados
+          WHERE cpf_cnpj = ?
+        `)
+        .get(
+          cpfLimpo
+        );
+
+      if (jaExiste) {
+        apagarArquivoTemporario(
+          req.file
+        );
+
+        return res
+          .status(400)
+          .render(
+            'cadastro/pessoa-fisica',
+            {
               titulo:
                 'Cadastro de Pessoa Física - UTE Tupã',
 
@@ -1136,101 +321,155 @@ router.post(
                     'Já existe um cadastro com este CPF.'
                 }
               ]
-
             }
           );
-
       }
 
+
+      // --------------------------------------------------------
+      // MUNICÍPIO
+      // --------------------------------------------------------
 
       let municipioFinal =
         b.municipio;
 
-
       if (
-        b.municipio ===
-          'Outro' &&
-        b.municipio_outro &&
-        b.municipio_outro.trim()
+        b.municipio === 'Outro'
       ) {
+        if (
+          !b.municipio_outro ||
+          !b.municipio_outro.trim()
+        ) {
+          apagarArquivoTemporario(
+            req.file
+          );
+
+          return res
+            .status(400)
+            .render(
+              'cadastro/pessoa-fisica',
+              {
+                titulo:
+                  'Cadastro de Pessoa Física - UTE Tupã',
+
+                valores:
+                  b,
+
+                erros: [
+                  {
+                    msg:
+                      'Informe o município.'
+                  }
+                ]
+              }
+            );
+        }
 
         municipioFinal =
-          b.municipio_outro
-            .trim();
-
+          b.municipio_outro.trim();
       }
 
+
+      // --------------------------------------------------------
+      // PROFISSÃO
+      // --------------------------------------------------------
 
       let profissaoFinal =
         b.profissao;
 
-
       if (
-        b.profissao ===
-          'Outros' &&
-        b.outra_profissao &&
-        b.outra_profissao.trim()
+        b.profissao === 'Outros'
       ) {
+        if (
+          !b.outra_profissao ||
+          !b.outra_profissao.trim()
+        ) {
+          apagarArquivoTemporario(
+            req.file
+          );
+
+          return res
+            .status(400)
+            .render(
+              'cadastro/pessoa-fisica',
+              {
+                titulo:
+                  'Cadastro de Pessoa Física - UTE Tupã',
+
+                valores:
+                  b,
+
+                erros: [
+                  {
+                    msg:
+                      'Informe a profissão.'
+                  }
+                ]
+              }
+            );
+        }
 
         profissaoFinal =
-          b.outra_profissao
-            .trim();
-
+          b.outra_profissao.trim();
       }
 
 
-      const info =
-        db
-          .prepare(
-            `
-            INSERT INTO terceirizados
-            (
-              tipo,
-              razao_social,
-              cpf_cnpj,
+      // --------------------------------------------------------
+      // TRANSAÇÃO
+      // --------------------------------------------------------
 
-              telefone,
-              telefone_secundario,
-              email,
+      let novoId;
 
-              cep,
-              endereco,
-              complemento,
-              cidade,
+      const transacao =
+        db.transaction(() => {
 
-              sexo,
-              profissao,
+          const info = db
+            .prepare(`
+              INSERT INTO terceirizados
+              (
+                tipo,
+                razao_social,
+                cpf_cnpj,
 
-              observacoes,
-              situacao_cadastral
-            )
+                telefone,
+                telefone_secundario,
+                email,
 
-            VALUES
-            (
-              'PF',
-              @nome,
-              @cpf,
+                cep,
+                endereco,
+                complemento,
+                cidade,
 
-              @telefone,
-              @telefone_secundario,
-              @email,
+                sexo,
+                profissao,
 
-              @cep,
-              @endereco,
-              @complemento,
-              @cidade,
+                observacoes,
+                situacao_cadastral
+              )
 
-              @sexo,
-              @profissao,
+              VALUES
+              (
+                'PF',
+                @nome,
+                @cpf,
 
-              @observacoes,
-              'Pendente de análise'
-            )
-            `
-          )
-          .run(
-            {
+                @telefone,
+                @telefone_secundario,
+                @email,
 
+                @cep,
+                @endereco,
+                @complemento,
+                @cidade,
+
+                @sexo,
+                @profissao,
+
+                @observacoes,
+                'Pendente de análise'
+              )
+            `)
+            .run({
               nome:
                 b.nome.trim(),
 
@@ -1238,159 +477,100 @@ router.post(
                 cpfLimpo,
 
               telefone:
-                b.telefone ||
-                null,
+                b.telefone || null,
 
               telefone_secundario:
                 b.telefone_secundario ||
                 null,
 
               email:
-                b.email ||
-                null,
+                b.email
+                  ? b.email.trim()
+                  : null,
 
               cep:
-                b.cep ||
-                null,
+                b.cep || null,
 
               endereco:
-                b.endereco ||
-                null,
+                b.endereco || null,
 
               complemento:
-                b.complemento ||
-                null,
+                b.complemento || null,
 
               cidade:
                 municipioFinal,
 
               sexo:
-                b.sexo ||
-                null,
+                b.sexo || null,
 
               profissao:
                 profissaoFinal,
 
               observacoes:
-                b.observacoes ||
-                null
+                b.observacoes || null
+            });
 
-            }
+          novoId =
+            info.lastInsertRowid;
+        });
+
+      transacao();
+
+
+      // --------------------------------------------------------
+      // CURRÍCULO
+      // --------------------------------------------------------
+
+      if (req.file) {
+        try {
+          const arquivo =
+            moverArquivoParaCadastro(
+              req.file,
+              novoId,
+              'curriculo'
+            );
+
+          db.prepare(`
+            INSERT INTO documentos
+            (
+              terceirizado_id,
+              tipo_documento,
+              nome_arquivo_original,
+              caminho_arquivo,
+              status
+            )
+
+            VALUES
+            (
+              ?,
+              ?,
+              ?,
+              ?,
+              ?
+            )
+          `)
+          .run(
+            novoId,
+            'Currículo',
+            req.file.originalname,
+            arquivo.caminhoBanco,
+            'Enviado'
           );
 
-
-      const novoId =
-        info.lastInsertRowid;
-
-
-      // ---------------------------------------------------------
-      // SALVAR CURRÍCULO
-      // ---------------------------------------------------------
-
-      if (
-        req.file
-      ) {
-
-
-        const pastaFinal =
-          path.join(
-
-            config.UPLOADS_PATH,
-
-            'terceirizados',
-
-            String(novoId)
-
+        } catch (erroArquivo) {
+          console.error(
+            'Erro ao salvar currículo:',
+            erroArquivo
           );
-
-
-        if (
-          !fs.existsSync(
-            pastaFinal
-          )
-        ) {
-
-          fs.mkdirSync(
-            pastaFinal,
-            {
-              recursive:
-                true
-            }
-          );
-
         }
-
-
-        const nomeArquivo =
-          path.basename(
-            req.file.path
-          );
-
-
-        const destino =
-          path.join(
-
-            pastaFinal,
-
-            nomeArquivo
-
-          );
-
-
-        fs.renameSync(
-          req.file.path,
-          destino
-        );
-
-
-        db.prepare(
-          `
-          INSERT INTO documentos
-          (
-            terceirizado_id,
-            tipo_documento,
-            nome_arquivo_original,
-            caminho_arquivo,
-            status
-          )
-
-          VALUES
-          (
-            ?,
-            ?,
-            ?,
-            ?,
-            ?
-          )
-          `
-        )
-        .run(
-
-          novoId,
-
-          'Currículo',
-
-          req.file
-            .originalname,
-
-          path.relative(
-            config.UPLOADS_PATH,
-            destino
-          ),
-
-          'Enviado'
-
-        );
-
       }
 
 
       return res.render(
         'cadastro/sucesso',
         {
-
           titulo:
-            'Cadastro enviado',
+            'Cadastro realizado',
 
           protocolo:
             novoId,
@@ -1402,40 +582,24 @@ router.post(
             nome:
               'UTE Tupã Fase I'
           }
-
         }
       );
 
-
-    } catch (err) {
-
-
+    } catch (erro) {
       console.error(
         'Erro ao salvar Pessoa Física:',
-        err
+        erro
       );
 
-
-      if (
-        req.file &&
-        fs.existsSync(
-          req.file.path
-        )
-      ) {
-
-        fs.unlinkSync(
-          req.file.path
-        );
-
-      }
-
+      apagarArquivoTemporario(
+        req.file
+      );
 
       return res
         .status(500)
         .render(
           'cadastro/pessoa-fisica',
           {
-
             titulo:
               'Cadastro de Pessoa Física - UTE Tupã',
 
@@ -1445,66 +609,36 @@ router.post(
             erros: [
               {
                 msg:
-                  'Ocorreu um erro ao salvar o cadastro. Tente novamente.'
+                  'Não foi possível realizar o cadastro. Tente novamente.'
               }
             ]
-
           }
         );
-
     }
-
   }
-
 );
 
 
-// ===========================================================================
-// CADASTRO - PESSOA JURÍDICA
-// ===========================================================================
+// ============================================================
+// PESSOA JURÍDICA
+// ============================================================
 
 router.get(
   '/pessoa-juridica',
   (req, res) => {
-
     res.render(
       'cadastro/pessoa-juridica',
       {
-
         titulo:
           'Cadastro de Pessoa Jurídica - UTE Tupã',
 
-        valores:
-          {},
+        erros: [],
 
-        erros:
-          []
-
+        valores: {}
       }
     );
-
   }
 );
-
-
-// ===========================================================================
-// ROTAS ANTIGAS COM SLUG
-// IMPORTANTE: PRECISAM FICAR DEPOIS DE PESSOA-FISICA E PESSOA-JURIDICA
-// ===========================================================================
-
-// ============================================================
-// CADASTRO - PESSOA JURÍDICA
-// ============================================================
-
-router.get('/pessoa-juridica', (req, res) => {
-
-  res.render('cadastro/pessoa-juridica', {
-    titulo: 'Cadastro de Pessoa Jurídica',
-    erros: [],
-    valores: {}
-  });
-
-});
 
 
 // ============================================================
@@ -1513,208 +647,231 @@ router.get('/pessoa-juridica', (req, res) => {
 
 router.post(
   '/pessoa-juridica',
+
   upload.single('portfolio'),
+
   (req, res) => {
-
     try {
-
       const {
         municipio,
         municipio_outro,
+
         razao_social,
         nome_fantasia,
         cnpj,
+
         capital_social,
         regime_tributario,
+
         inscricao_estadual,
         inscricao_municipal,
+
         cep,
         endereco,
         complemento,
+
         contato_nome,
         telefone,
         telefone_secundario,
         email,
+
         tipo_atividade,
         setor_atividade,
         outro_setor,
+
         observacoes
       } = req.body;
 
 
-      // ======================================================
+      // --------------------------------------------------------
       // VALIDAÇÕES
-      // ======================================================
+      // --------------------------------------------------------
 
       const erros = [];
 
-
       if (!municipio) {
         erros.push({
-          msg: 'Informe o município.'
+          msg:
+            'Informe o município.'
         });
       }
-
 
       if (
         municipio === 'Outro' &&
-        !municipio_outro
+        (
+          !municipio_outro ||
+          !municipio_outro.trim()
+        )
       ) {
-
         erros.push({
-          msg: 'Informe o município da empresa.'
+          msg:
+            'Informe o município da empresa.'
         });
-
       }
-
-
-      if (!razao_social) {
-
-        erros.push({
-          msg: 'Informe a Razão Social.'
-        });
-
-      }
-
-
-      if (!cnpj) {
-
-        erros.push({
-          msg: 'Informe o CNPJ.'
-        });
-
-      }
-
-
-      if (!contato_nome) {
-
-        erros.push({
-          msg: 'Informe o nome do responsável ou contato.'
-        });
-
-      }
-
-
-      if (!telefone) {
-
-        erros.push({
-          msg: 'Informe o telefone principal.'
-        });
-
-      }
-
-
-      if (!email) {
-
-        erros.push({
-          msg: 'Informe o e-mail.'
-        });
-
-      }
-
-
-      if (!tipo_atividade) {
-
-        erros.push({
-          msg: 'Informe o tipo de atividade.'
-        });
-
-      }
-
-
-      if (!setor_atividade) {
-
-        erros.push({
-          msg: 'Informe o setor de atividade.'
-        });
-
-      }
-
 
       if (
-        setor_atividade === 'Outros' &&
-        !outro_setor
+        !razao_social ||
+        !razao_social.trim()
       ) {
-
         erros.push({
-          msg: 'Informe o setor de atividade.'
+          msg:
+            'Informe a Razão Social.'
         });
+      }
 
+      if (!cnpj) {
+        erros.push({
+          msg:
+            'Informe o CNPJ.'
+        });
+      }
+
+      if (
+        !contato_nome ||
+        !contato_nome.trim()
+      ) {
+        erros.push({
+          msg:
+            'Informe o nome do responsável ou contato.'
+        });
+      }
+
+      if (!telefone) {
+        erros.push({
+          msg:
+            'Informe o telefone principal.'
+        });
+      }
+
+      if (
+        !email ||
+        !email.trim()
+      ) {
+        erros.push({
+          msg:
+            'Informe o e-mail.'
+        });
+      }
+
+      if (!tipo_atividade) {
+        erros.push({
+          msg:
+            'Informe o tipo de atividade.'
+        });
+      }
+
+      if (!setor_atividade) {
+        erros.push({
+          msg:
+            'Informe o setor de atividade.'
+        });
+      }
+
+      if (
+        setor_atividade ===
+          'Outros' &&
+        (
+          !outro_setor ||
+          !outro_setor.trim()
+        )
+      ) {
+        erros.push({
+          msg:
+            'Informe o setor de atividade.'
+        });
       }
 
 
-      // ======================================================
-      // CNPJ SOMENTE NÚMEROS
-      // ======================================================
+      // --------------------------------------------------------
+      // CNPJ
+      // --------------------------------------------------------
 
       const cnpjLimpo =
-        (cnpj || '').replace(/\D/g, '');
-
+        String(
+          cnpj || ''
+        ).replace(
+          /\D/g,
+          ''
+        );
 
       if (
         cnpjLimpo &&
         cnpjLimpo.length !== 14
       ) {
-
         erros.push({
-          msg: 'Informe um CNPJ válido com 14 dígitos.'
+          msg:
+            'Informe um CNPJ válido com 14 dígitos.'
         });
-
       }
 
-
-      // ======================================================
-      // SE HOUVER ERRO
-      // ======================================================
 
       if (erros.length > 0) {
-
-        return res.status(400).render(
-          'cadastro/pessoa-juridica',
-          {
-            titulo: 'Cadastro de Pessoa Jurídica',
-            erros,
-            valores: req.body
-          }
+        apagarArquivoTemporario(
+          req.file
         );
 
+        return res
+          .status(400)
+          .render(
+            'cadastro/pessoa-juridica',
+            {
+              titulo:
+                'Cadastro de Pessoa Jurídica - UTE Tupã',
+
+              erros,
+
+              valores:
+                req.body
+            }
+          );
       }
 
 
-      // ======================================================
-      // VERIFICAR CNPJ JÁ CADASTRADO
-      // ======================================================
+      // --------------------------------------------------------
+      // DUPLICIDADE
+      // --------------------------------------------------------
 
-      const empresaExistente = db
-        .prepare(`
-          SELECT id
-          FROM terceirizados
-          WHERE cpf_cnpj = ?
-        `)
-        .get(cnpjLimpo);
-
+      const empresaExistente =
+        db
+          .prepare(`
+            SELECT id
+            FROM terceirizados
+            WHERE cpf_cnpj = ?
+          `)
+          .get(
+            cnpjLimpo
+          );
 
       if (empresaExistente) {
-
-        return res.status(400).render(
-          'cadastro/pessoa-juridica',
-          {
-            titulo: 'Cadastro de Pessoa Jurídica',
-            erros: [
-              {
-                msg: 'Este CNPJ já está cadastrado.'
-              }
-            ],
-            valores: req.body
-          }
+        apagarArquivoTemporario(
+          req.file
         );
 
+        return res
+          .status(400)
+          .render(
+            'cadastro/pessoa-juridica',
+            {
+              titulo:
+                'Cadastro de Pessoa Jurídica - UTE Tupã',
+
+              erros: [
+                {
+                  msg:
+                    'Este CNPJ já está cadastrado.'
+                }
+              ],
+
+              valores:
+                req.body
+            }
+          );
       }
 
 
-      // ======================================================
-      // MUNICÍPIO FINAL
-      // ======================================================
+      // --------------------------------------------------------
+      // MUNICÍPIO
+      // --------------------------------------------------------
 
       const municipioFinal =
         municipio === 'Outro'
@@ -1722,305 +879,275 @@ router.post(
           : municipio;
 
 
-      // ======================================================
-      // SETOR FINAL
-      // ======================================================
+      // --------------------------------------------------------
+      // SETOR
+      // --------------------------------------------------------
 
       const setorFinal =
-        setor_atividade === 'Outros'
+        setor_atividade ===
+          'Outros'
           ? outro_setor.trim()
           : setor_atividade;
 
 
-      // ======================================================
-      // CADASTRAR EMPRESA
-      // ======================================================
+      // --------------------------------------------------------
+      // TRANSAÇÃO
+      // --------------------------------------------------------
 
-      const resultado = db
-        .prepare(`
-          INSERT INTO terceirizados (
+      let empresaId;
 
-            tipo,
+      const transacao =
+        db.transaction(() => {
 
-            razao_social,
-            nome_fantasia,
-            cpf_cnpj,
+          const resultado = db
+            .prepare(`
+              INSERT INTO terceirizados
+              (
+                tipo,
 
-            telefone,
-            telefone_secundario,
-            email,
+                razao_social,
+                nome_fantasia,
+                cpf_cnpj,
 
-            cep,
-            endereco,
-            complemento,
-            cidade,
-            estado,
+                telefone,
+                telefone_secundario,
+                email,
 
-            capital_social,
-            regime_tributario,
+                cep,
+                endereco,
+                complemento,
 
-            inscricao_estadual,
-            inscricao_municipal,
+                cidade,
+                estado,
 
-            contato_nome,
-            contato_telefone,
+                capital_social,
+                regime_tributario,
 
-            tipo_atividade,
-            setor_atividade,
+                inscricao_estadual,
+                inscricao_municipal,
 
-            observacoes,
+                contato_nome,
+                contato_telefone,
 
-            situacao_cadastral
+                tipo_atividade,
+                setor_atividade,
 
-          ) VALUES (
+                observacoes,
 
-            ?,
-            ?, ?, ?,
-            ?, ?, ?,
-            ?, ?, ?, ?, ?,
-            ?, ?,
-            ?, ?,
-            ?, ?,
-            ?, ?,
-            ?,
-            ?
+                situacao_cadastral
+              )
 
-          )
-        `)
-        .run(
+              VALUES
+              (
+                'PJ',
 
-          'PJ',
+                @razao_social,
+                @nome_fantasia,
+                @cnpj,
 
-          razao_social.trim(),
-          nome_fantasia
-            ? nome_fantasia.trim()
-            : null,
+                @telefone,
+                @telefone_secundario,
+                @email,
 
-          cnpjLimpo,
+                @cep,
+                @endereco,
+                @complemento,
 
-          telefone,
-          telefone_secundario || null,
-          email.trim(),
+                @cidade,
+                @estado,
 
-          cep || null,
-          endereco || null,
-          complemento || null,
+                @capital_social,
+                @regime_tributario,
 
-          municipioFinal,
+                @inscricao_estadual,
+                @inscricao_municipal,
 
-          'RJ',
+                @contato_nome,
+                @contato_telefone,
 
-          capital_social || null,
-          regime_tributario || null,
+                @tipo_atividade,
+                @setor_atividade,
 
-          inscricao_estadual || null,
-          inscricao_municipal || null,
+                @observacoes,
 
-          contato_nome.trim(),
-          telefone,
+                'Pendente de análise'
+              )
+            `)
+            .run({
+              razao_social:
+                razao_social.trim(),
 
-          tipo_atividade,
-          setorFinal,
+              nome_fantasia:
+                nome_fantasia
+                  ? nome_fantasia.trim()
+                  : null,
 
-          observacoes || null,
+              cnpj:
+                cnpjLimpo,
 
-          'Pendente de análise'
+              telefone:
+                telefone || null,
 
-        );
+              telefone_secundario:
+                telefone_secundario ||
+                null,
+
+              email:
+                email
+                  ? email.trim()
+                  : null,
+
+              cep:
+                cep || null,
+
+              endereco:
+                endereco || null,
+
+              complemento:
+                complemento || null,
+
+              cidade:
+                municipioFinal,
+
+              estado:
+                'RJ',
+
+              capital_social:
+                capital_social || null,
+
+              regime_tributario:
+                regime_tributario ||
+                null,
+
+              inscricao_estadual:
+                inscricao_estadual ||
+                null,
+
+              inscricao_municipal:
+                inscricao_municipal ||
+                null,
+
+              contato_nome:
+                contato_nome.trim(),
+
+              contato_telefone:
+                telefone || null,
+
+              tipo_atividade,
+
+              setor_atividade:
+                setorFinal,
+
+              observacoes:
+                observacoes || null
+            });
+
+          empresaId =
+            resultado.lastInsertRowid;
+        });
+
+      transacao();
 
 
-      const empresaId =
-        resultado.lastInsertRowid;
-
-
-      // ======================================================
-      // SALVAR PORTFÓLIO
-      // ======================================================
+      // --------------------------------------------------------
+      // PORTFÓLIO
+      // --------------------------------------------------------
 
       if (req.file) {
+        try {
+          const arquivo =
+            moverArquivoParaCadastro(
+              req.file,
+              empresaId,
+              'portfolio'
+            );
 
-        const pastaEmpresa =
-          path.join(
-            config.UPLOADS_PATH,
-            'terceirizados',
-            String(empresaId)
-          );
-
-
-        if (!fs.existsSync(pastaEmpresa)) {
-
-          fs.mkdirSync(
-            pastaEmpresa,
-            {
-              recursive: true
-            }
-          );
-
-        }
-
-
-        const extensao =
-          path.extname(
-            req.file.originalname
-          );
-
-
-        const nomeArquivo =
-          `portfolio-${Date.now()}${extensao}`;
-
-
-        const caminhoFinal =
-          path.join(
-            pastaEmpresa,
-            nomeArquivo
-          );
-
-
-        fs.renameSync(
-          req.file.path,
-          caminhoFinal
-        );
-
-
-        const caminhoBanco =
-          path
-            .relative(
-              config.UPLOADS_PATH,
-              caminhoFinal
+          db.prepare(`
+            INSERT INTO documentos
+            (
+              terceirizado_id,
+              tipo_documento,
+              nome_arquivo_original,
+              caminho_arquivo,
+              status
             )
-            .replace(/\\/g, '/');
 
+            VALUES
+            (
+              ?,
+              ?,
+              ?,
+              ?,
+              ?
+            )
+          `)
+          .run(
+            empresaId,
+            'Portfólio',
+            req.file.originalname,
+            arquivo.caminhoBanco,
+            'Enviado'
+          );
 
-        db.prepare(`
-          INSERT INTO documentos (
-
-            terceirizado_id,
-            tipo_documento,
-            nome_arquivo,
-            caminho_arquivo,
-            status
-
-          ) VALUES (?, ?, ?, ?, ?)
-        `)
-        .run(
-
-          empresaId,
-          'Portfólio',
-          req.file.originalname,
-          caminhoBanco,
-          'Enviado'
-
-        );
-
+        } catch (erroArquivo) {
+          console.error(
+            'Erro ao salvar portfólio:',
+            erroArquivo
+          );
+        }
       }
 
-
-      // ======================================================
-      // SUCESSO
-      // ======================================================
 
       return res.render(
         'cadastro/sucesso',
         {
+          titulo:
+            'Cadastro realizado',
 
-          titulo: 'Cadastro realizado',
+          protocolo:
+            empresaId,
 
           nome:
             razao_social,
 
-          empreendimento:
-            'UTE Tupã Fase I'
-
+          empreendimentoAtual: {
+            nome:
+              'UTE Tupã Fase I'
+          }
         }
       );
 
-
     } catch (erro) {
-
       console.error(
-        'Erro no cadastro de Pessoa Jurídica:',
+        'Erro ao salvar Pessoa Jurídica:',
         erro
       );
 
-
-      return res.status(500).render(
-        'cadastro/pessoa-juridica',
-        {
-
-          titulo:
-            'Cadastro de Pessoa Jurídica',
-
-          erros: [
-            {
-              msg:
-                'Não foi possível realizar o cadastro. Tente novamente.'
-            }
-          ],
-
-          valores:
-            req.body || {}
-
-        }
+      apagarArquivoTemporario(
+        req.file
       );
 
+      return res
+        .status(500)
+        .render(
+          'cadastro/pessoa-juridica',
+          {
+            titulo:
+              'Cadastro de Pessoa Jurídica - UTE Tupã',
+
+            erros: [
+              {
+                msg:
+                  'Não foi possível realizar o cadastro. Tente novamente.'
+              }
+            ],
+
+            valores:
+              req.body || {}
+          }
+        );
     }
-
   }
-);
-
-router.get(
-  '/:slug',
-  (req, res, next) => {
-
-
-    const emp =
-      buscarEmpreendimento(
-        req.params.slug
-      );
-
-
-    if (
-      !emp
-    ) {
-
-      return next();
-
-    }
-
-
-    const dados =
-      carregarDadosFormulario(
-        req.params.slug
-      );
-
-
-    res.render(
-      'cadastro/form',
-      {
-
-        titulo:
-          `Cadastro de Terceirizados · ${emp.nome}`,
-
-        ...dados,
-
-        valores:
-          {},
-
-        erros:
-          []
-
-      }
-    );
-
-  }
-);
-
-
-router.post(
-  '/:slug',
-  upload.any(),
-  validacoesCadastro,
-  processarCadastro
 );
 
 
