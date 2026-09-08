@@ -1,11 +1,10 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
+
 const config = require('./config.js');
 const { injetarUsuario } = require('./lib/auth');
-
-require('./lib/db');
-require('./lib/seed');
+const seedBanco = require('./lib/seed');
 
 const app = express();
 
@@ -14,20 +13,33 @@ app.set('trust proxy', 1);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
+
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(
+  express.static(
+    path.join(__dirname, 'public')
+  )
+);
 
 app.use(
   session({
     secret: config.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+
     cookie: {
       maxAge: 8 * 60 * 60 * 1000,
       httpOnly: true,
       sameSite: 'lax',
-      secure: false
+      secure:
+        process.env.NODE_ENV ===
+        'production'
     }
   })
 );
@@ -35,40 +47,108 @@ app.use(
 app.use(injetarUsuario);
 
 app.use((req, res, next) => {
-  res.locals.empresa = config.EMPRESA;
-  res.locals.caminhoAtual = req.path;
-  res.locals.linkGPE = config.LINK_GPE;
-  res.locals.empreendimentosFooter = config.EMPREENDIMENTOS;
+  res.locals.empresa =
+    config.EMPRESA;
+
+  res.locals.caminhoAtual =
+    req.path;
+
+  res.locals.linkGPE =
+    config.LINK_GPE;
+
+  res.locals.empreendimentosFooter =
+    config.EMPREENDIMENTOS;
+
   next();
 });
 
-app.use('/', require('./routes/public'));
-app.use('/cadastro', require('./routes/cadastro'));
-app.use('/interno', require('./routes/interno'));
+app.use(
+  '/',
+  require('./routes/public')
+);
+
+app.use(
+  '/cadastro',
+  require('./routes/cadastro')
+);
+
+app.use(
+  '/interno',
+  require('./routes/interno')
+);
 
 app.use((req, res) => {
-  res.status(404).render('erro', {
-    titulo: 'Página não encontrada',
-    mensagem: 'A página que você procura não existe ou foi movida.'
-  });
+  res
+    .status(404)
+    .render(
+      'erro',
+      {
+        titulo:
+          'Página não encontrada',
+
+        mensagem:
+          'A página que você procura não existe ou foi movida.'
+      }
+    );
 });
 
-app.use((err, req, res, next) => {
-  console.error(err);
+app.use(
+  (err, req, res, next) => {
 
-  const mensagem =
-    err.message && err.message.includes('File too large')
-      ? `O arquivo enviado excede o limite de ${config.MAX_UPLOAD_SIZE_MB}MB.`
-      : err.message || 'Ocorreu um erro inesperado.';
+    console.error(err);
 
-  res.status(500).render('erro', {
-    titulo: 'Erro',
-    mensagem
-  });
-});
+    const mensagem =
+      err.message &&
+      err.message.includes(
+        'File too large'
+      )
+        ? `O arquivo enviado excede o limite de ${config.MAX_UPLOAD_SIZE_MB}MB.`
+        : err.message ||
+          'Ocorreu um erro inesperado.';
 
-const PORT = process.env.PORT || config.PORT || 3000;
+    res
+      .status(500)
+      .render(
+        'erro',
+        {
+          titulo:
+            'Erro',
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+          mensagem
+        }
+      );
+  }
+);
+
+const PORT =
+  process.env.PORT ||
+  config.PORT ||
+  3000;
+
+async function iniciarServidor() {
+  try {
+
+    await seedBanco();
+
+    app.listen(
+      PORT,
+      () => {
+        console.log(
+          `Servidor rodando na porta ${PORT}`
+        );
+      }
+    );
+
+  } catch (erro) {
+
+    console.error(
+      'Erro ao iniciar aplicação:',
+      erro
+    );
+
+    process.exit(1);
+
+  }
+}
+
+iniciarServidor();
