@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const fs = require('fs');
-const path = require('path');
 
 const db = require('../lib/db');
 const config = require('../config');
+const supabase = require('../lib/supabase');
 const { exigirLogin } = require('../lib/auth');
 
 
@@ -282,6 +281,10 @@ router.get(
       const params = [];
 
 
+      // --------------------------------------------------------
+      // BUSCA
+      // --------------------------------------------------------
+
       if (busca) {
 
         params.push(
@@ -300,6 +303,10 @@ router.get(
       }
 
 
+      // --------------------------------------------------------
+      // CIDADE
+      // --------------------------------------------------------
+
       if (cidade) {
 
         params.push(
@@ -314,6 +321,10 @@ router.get(
       }
 
 
+      // --------------------------------------------------------
+      // PROFISSÃO
+      // --------------------------------------------------------
+
       if (profissao) {
 
         params.push(
@@ -327,6 +338,10 @@ router.get(
 
       }
 
+
+      // --------------------------------------------------------
+      // SITUAÇÃO
+      // --------------------------------------------------------
 
       if (situacao) {
 
@@ -444,6 +459,10 @@ router.get(
       const params = [];
 
 
+      // --------------------------------------------------------
+      // BUSCA
+      // --------------------------------------------------------
+
       if (busca) {
 
         params.push(
@@ -463,6 +482,10 @@ router.get(
       }
 
 
+      // --------------------------------------------------------
+      // CIDADE
+      // --------------------------------------------------------
+
       if (cidade) {
 
         params.push(
@@ -477,6 +500,10 @@ router.get(
       }
 
 
+      // --------------------------------------------------------
+      // SETOR
+      // --------------------------------------------------------
+
       if (setor) {
 
         params.push(
@@ -490,6 +517,10 @@ router.get(
 
       }
 
+
+      // --------------------------------------------------------
+      // SITUAÇÃO
+      // --------------------------------------------------------
 
       if (situacao) {
 
@@ -760,7 +791,7 @@ router.post(
 
 // ============================================================
 // DOWNLOAD DE CURRÍCULO / PORTFÓLIO
-// AINDA LOCAL NESTA ETAPA
+// SUPABASE STORAGE
 // ============================================================
 
 router.get(
@@ -768,6 +799,10 @@ router.get(
   async (req, res, next) => {
 
     try {
+
+      // --------------------------------------------------------
+      // BUSCAR DOCUMENTO NO BANCO
+      // --------------------------------------------------------
 
       const documento =
         await db.get(
@@ -803,48 +838,30 @@ router.get(
       }
 
 
-      const pastaUploads =
-        path.resolve(
-          config.UPLOADS_PATH
-        );
+      // --------------------------------------------------------
+      // BUSCAR ARQUIVO NO SUPABASE STORAGE
+      // --------------------------------------------------------
 
-
-      const caminhoAbsoluto =
-        path.resolve(
-          config.UPLOADS_PATH,
-          documento.caminho_arquivo
-        );
-
-
-      if (
-        caminhoAbsoluto !==
-          pastaUploads &&
-        !caminhoAbsoluto.startsWith(
-          `${pastaUploads}${path.sep}`
-        )
-      ) {
-
-        return res
-          .status(400)
-          .render(
-            'erro',
-            {
-              titulo:
-                'Caminho inválido',
-
-              mensagem:
-                'Não foi possível acessar este arquivo.'
-            }
+      const {
+        data,
+        error
+      } =
+        await supabase.storage
+          .from('documentos')
+          .download(
+            documento.caminho_arquivo
           );
 
-      }
-
 
       if (
-        !fs.existsSync(
-          caminhoAbsoluto
-        )
+        error ||
+        !data
       ) {
+
+        console.error(
+          'Erro no Supabase Storage:',
+          error
+        );
 
         return res
           .status(404)
@@ -855,20 +872,65 @@ router.get(
                 'Arquivo não encontrado',
 
               mensagem:
-                'O arquivo não foi localizado no servidor.'
+                'O arquivo não foi localizado no armazenamento.'
             }
           );
 
       }
 
 
-      res.download(
-        caminhoAbsoluto,
+      // --------------------------------------------------------
+      // CONVERTER PARA BUFFER
+      // --------------------------------------------------------
 
+      const arrayBuffer =
+        await data.arrayBuffer();
+
+      const buffer =
+        Buffer.from(
+          arrayBuffer
+        );
+
+
+      // --------------------------------------------------------
+      // DEFINIR NOME DO DOWNLOAD
+      // --------------------------------------------------------
+
+      const nomeArquivo =
         documento.nome_arquivo_original ||
-          path.basename(
-            caminhoAbsoluto
-          )
+        'documento';
+
+
+      const nomeArquivoSeguro =
+        nomeArquivo.replace(
+          /["\r\n]/g,
+          '_'
+        );
+
+
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${nomeArquivoSeguro}"; filename*=UTF-8''${encodeURIComponent(
+          nomeArquivo
+        )}`
+      );
+
+
+      res.setHeader(
+        'Content-Type',
+        data.type ||
+        'application/octet-stream'
+      );
+
+
+      res.setHeader(
+        'Content-Length',
+        buffer.length
+      );
+
+
+      return res.send(
+        buffer
       );
 
 
