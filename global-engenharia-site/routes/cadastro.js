@@ -13,31 +13,45 @@ const config = require('../config');
 // UPLOAD TEMPORÁRIO
 // ============================================================
 
-const tmpDir = path.join(config.UPLOADS_PATH, 'tmp');
+const tmpDir = path.join(
+  config.UPLOADS_PATH,
+  'tmp'
+);
 
 if (!fs.existsSync(tmpDir)) {
-  fs.mkdirSync(tmpDir, { recursive: true });
+  fs.mkdirSync(
+    tmpDir,
+    { recursive: true }
+  );
 }
 
 const storage = multer.diskStorage({
+
   destination: (req, file, cb) => {
     cb(null, tmpDir);
   },
 
   filename: (req, file, cb) => {
-    const nomeSeguro = file.originalname.replace(
-      /[^a-zA-Z0-9.\-_]/g,
-      '_'
-    );
+
+    const nomeSeguro =
+      file.originalname.replace(
+        /[^a-zA-Z0-9.\-_]/g,
+        '_'
+      );
 
     cb(
       null,
-      `${Date.now()}-${Math.round(Math.random() * 1e6)}-${nomeSeguro}`
+      `${Date.now()}-${Math.round(
+        Math.random() * 1e6
+      )}-${nomeSeguro}`
     );
   }
+
 });
 
+
 const upload = multer({
+
   storage,
 
   limits: {
@@ -48,13 +62,18 @@ const upload = multer({
   },
 
   fileFilter: (req, file, cb) => {
-    const permitidos = /pdf|jpg|jpeg|png|doc|docx/i;
 
-    const extensao = path.extname(
-      file.originalname
-    );
+    const permitidos =
+      /pdf|jpg|jpeg|png|doc|docx/i;
 
-    if (!permitidos.test(extensao)) {
+    const extensao =
+      path.extname(
+        file.originalname
+      );
+
+    if (
+      !permitidos.test(extensao)
+    ) {
       return cb(
         new Error(
           'Tipo de arquivo não permitido. Envie PDF, JPG, PNG, DOC ou DOCX.'
@@ -64,6 +83,7 @@ const upload = multer({
 
     cb(null, true);
   }
+
 });
 
 
@@ -72,20 +92,26 @@ const upload = multer({
 // ============================================================
 
 function apagarArquivoTemporario(file) {
+
   if (
     file &&
     file.path &&
     fs.existsSync(file.path)
   ) {
     try {
+
       fs.unlinkSync(file.path);
+
     } catch (erro) {
+
       console.error(
         'Erro ao excluir arquivo temporário:',
         erro
       );
+
     }
   }
+
 }
 
 
@@ -94,22 +120,26 @@ function moverArquivoParaCadastro(
   terceirizadoId,
   prefixo
 ) {
+
   const pastaFinal = path.join(
     config.UPLOADS_PATH,
     'terceirizados',
     String(terceirizadoId)
   );
 
-  if (!fs.existsSync(pastaFinal)) {
+  if (
+    !fs.existsSync(pastaFinal)
+  ) {
     fs.mkdirSync(
       pastaFinal,
       { recursive: true }
     );
   }
 
-  const extensao = path.extname(
-    file.originalname
-  );
+  const extensao =
+    path.extname(
+      file.originalname
+    );
 
   const nomeArquivo =
     `${prefixo}-${Date.now()}${extensao}`;
@@ -125,15 +155,22 @@ function moverArquivoParaCadastro(
   );
 
   return {
+
     destino,
 
-    caminhoBanco: path
-      .relative(
-        config.UPLOADS_PATH,
-        destino
-      )
-      .replace(/\\/g, '/')
+    caminhoBanco:
+      path
+        .relative(
+          config.UPLOADS_PATH,
+          destino
+        )
+        .replace(
+          /\\/g,
+          '/'
+        )
+
   };
+
 }
 
 
@@ -141,9 +178,16 @@ function moverArquivoParaCadastro(
 // PÁGINA PRINCIPAL DO CADASTRO
 // ============================================================
 
-router.get('/', (req, res) => {
-  res.redirect('/#cadastro');
-});
+router.get(
+  '/',
+  (req, res) => {
+
+    res.redirect(
+      '/#cadastro'
+    );
+
+  }
+);
 
 
 // ============================================================
@@ -153,6 +197,7 @@ router.get('/', (req, res) => {
 router.get(
   '/pessoa-fisica',
   (req, res) => {
+
     res.render(
       'cadastro/pessoa-fisica',
       {
@@ -164,6 +209,7 @@ router.get(
         erros: []
       }
     );
+
   }
 );
 
@@ -173,11 +219,13 @@ router.get(
 // ============================================================
 
 router.post(
+
   '/pessoa-fisica',
 
   upload.single('curriculo'),
 
   [
+
     body('nome')
       .trim()
       .notEmpty()
@@ -219,13 +267,18 @@ router.post(
       .withMessage(
         'Informe a profissão.'
       )
+
   ],
 
-  (req, res) => {
+  async (req, res) => {
+
     const resultado =
       validationResult(req);
 
-    if (!resultado.isEmpty()) {
+    if (
+      !resultado.isEmpty()
+    ) {
+
       apagarArquivoTemporario(
         req.file
       );
@@ -247,8 +300,16 @@ router.post(
         );
     }
 
+
     try {
-      const b = req.body;
+
+      const b =
+        req.body;
+
+
+      // ======================================================
+      // CPF
+      // ======================================================
 
       const cpfLimpo =
         String(
@@ -258,7 +319,11 @@ router.post(
           ''
         );
 
-      if (cpfLimpo.length !== 11) {
+
+      if (
+        cpfLimpo.length !== 11
+      ) {
+
         apagarArquivoTemporario(
           req.file
         );
@@ -285,21 +350,25 @@ router.post(
       }
 
 
-      // --------------------------------------------------------
-      // VERIFICAR CPF DUPLICADO
-      // --------------------------------------------------------
+      // ======================================================
+      // CPF DUPLICADO
+      // ======================================================
 
-      const jaExiste = db
-        .prepare(`
-          SELECT id
-          FROM terceirizados
-          WHERE cpf_cnpj = ?
-        `)
-        .get(
-          cpfLimpo
+      const jaExiste =
+        await db.get(
+          `
+            SELECT id
+            FROM terceirizados
+            WHERE cpf_cnpj = $1
+          `,
+          [
+            cpfLimpo
+          ]
         );
 
+
       if (jaExiste) {
+
         apagarArquivoTemporario(
           req.file
         );
@@ -326,20 +395,24 @@ router.post(
       }
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // MUNICÍPIO
-      // --------------------------------------------------------
+      // ======================================================
 
       let municipioFinal =
         b.municipio;
 
+
       if (
-        b.municipio === 'Outro'
+        b.municipio ===
+        'Outro'
       ) {
+
         if (
           !b.municipio_outro ||
           !b.municipio_outro.trim()
         ) {
+
           apagarArquivoTemporario(
             req.file
           );
@@ -365,25 +438,31 @@ router.post(
             );
         }
 
+
         municipioFinal =
           b.municipio_outro.trim();
+
       }
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // PROFISSÃO
-      // --------------------------------------------------------
+      // ======================================================
 
       let profissaoFinal =
         b.profissao;
 
+
       if (
-        b.profissao === 'Outros'
+        b.profissao ===
+        'Outros'
       ) {
+
         if (
           !b.outra_profissao ||
           !b.outra_profissao.trim()
         ) {
+
           apagarArquivoTemporario(
             req.file
           );
@@ -407,122 +486,123 @@ router.post(
                 ]
               }
             );
+
         }
+
 
         profissaoFinal =
           b.outra_profissao.trim();
+
       }
 
 
-      // --------------------------------------------------------
-      // TRANSAÇÃO
-      // --------------------------------------------------------
+      // ======================================================
+      // INSERT NO SUPABASE / POSTGRESQL
+      // ======================================================
 
-      let novoId;
+      const novoCadastro =
+        await db.get(
+          `
+            INSERT INTO terceirizados
+            (
+              tipo,
+              razao_social,
+              cpf_cnpj,
 
-      const transacao =
-        db.transaction(() => {
+              telefone,
+              telefone_secundario,
+              email,
 
-          const info = db
-            .prepare(`
-              INSERT INTO terceirizados
-              (
-                tipo,
-                razao_social,
-                cpf_cnpj,
+              cep,
+              endereco,
+              complemento,
+              cidade,
 
-                telefone,
-                telefone_secundario,
-                email,
+              sexo,
+              profissao,
 
-                cep,
-                endereco,
-                complemento,
-                cidade,
+              observacoes,
+              situacao_cadastral
+            )
 
-                sexo,
-                profissao,
+            VALUES
+            (
+              'PF',
+              $1,
+              $2,
 
-                observacoes,
-                situacao_cadastral
-              )
+              $3,
+              $4,
+              $5,
 
-              VALUES
-              (
-                'PF',
-                @nome,
-                @cpf,
+              $6,
+              $7,
+              $8,
+              $9,
 
-                @telefone,
-                @telefone_secundario,
-                @email,
+              $10,
+              $11,
 
-                @cep,
-                @endereco,
-                @complemento,
-                @cidade,
+              $12,
+              'Pendente de análise'
+            )
 
-                @sexo,
-                @profissao,
+            RETURNING id
+          `,
+          [
 
-                @observacoes,
-                'Pendente de análise'
-              )
-            `)
-            .run({
-              nome:
-                b.nome.trim(),
+            b.nome.trim(),
 
-              cpf:
-                cpfLimpo,
+            cpfLimpo,
 
-              telefone:
-                b.telefone || null,
+            b.telefone ||
+              null,
 
-              telefone_secundario:
-                b.telefone_secundario ||
-                null,
+            b.telefone_secundario ||
+              null,
 
-              email:
-                b.email
-                  ? b.email.trim()
-                  : null,
+            b.email
+              ? b.email.trim()
+              : null,
 
-              cep:
-                b.cep || null,
+            b.cep ||
+              null,
 
-              endereco:
-                b.endereco || null,
+            b.endereco ||
+              null,
 
-              complemento:
-                b.complemento || null,
+            b.complemento ||
+              null,
 
-              cidade:
-                municipioFinal,
+            municipioFinal,
 
-              sexo:
-                b.sexo || null,
+            b.sexo ||
+              null,
 
-              profissao:
-                profissaoFinal,
+            profissaoFinal,
 
-              observacoes:
-                b.observacoes || null
-            });
+            b.observacoes ||
+              null
 
-          novoId =
-            info.lastInsertRowid;
-        });
-
-      transacao();
+          ]
+        );
 
 
-      // --------------------------------------------------------
+      const novoId =
+        novoCadastro.id;
+
+
+      // ======================================================
       // CURRÍCULO
-      // --------------------------------------------------------
+      // TEMPORARIAMENTE AINDA LOCAL
+      // ======================================================
 
-      if (req.file) {
+      if (
+        req.file
+      ) {
+
         try {
+
           const arquivo =
             moverArquivoParaCadastro(
               req.file,
@@ -530,45 +610,65 @@ router.post(
               'curriculo'
             );
 
-          db.prepare(`
-            INSERT INTO documentos
-            (
-              terceirizado_id,
-              tipo_documento,
-              nome_arquivo_original,
-              caminho_arquivo,
-              status
-            )
 
-            VALUES
-            (
-              ?,
-              ?,
-              ?,
-              ?,
-              ?
-            )
-          `)
-          .run(
-            novoId,
-            'Currículo',
-            req.file.originalname,
-            arquivo.caminhoBanco,
-            'Enviado'
+          await db.query(
+            `
+              INSERT INTO documentos
+              (
+                terceirizado_id,
+                tipo_documento,
+                nome_arquivo_original,
+                caminho_arquivo,
+                status
+              )
+
+              VALUES
+              (
+                $1,
+                $2,
+                $3,
+                $4,
+                $5
+              )
+            `,
+            [
+
+              novoId,
+
+              'Currículo',
+
+              req.file.originalname,
+
+              arquivo.caminhoBanco,
+
+              'Enviado'
+
+            ]
           );
 
-        } catch (erroArquivo) {
+
+        } catch (
+          erroArquivo
+        ) {
+
           console.error(
             'Erro ao salvar currículo:',
             erroArquivo
           );
+
         }
+
       }
 
+
+      // ======================================================
+      // SUCESSO
+      // ======================================================
 
       return res.render(
         'cadastro/sucesso',
         {
+
           titulo:
             'Cadastro realizado',
 
@@ -582,24 +682,61 @@ router.post(
             nome:
               'UTE Tupã Fase I'
           }
+
         }
       );
 
+
     } catch (erro) {
+
       console.error(
         'Erro ao salvar Pessoa Física:',
         erro
       );
 
+
       apagarArquivoTemporario(
         req.file
       );
+
+
+      // Violação de UNIQUE no PostgreSQL
+      if (
+        erro.code ===
+        '23505'
+      ) {
+
+        return res
+          .status(400)
+          .render(
+            'cadastro/pessoa-fisica',
+            {
+
+              titulo:
+                'Cadastro de Pessoa Física - UTE Tupã',
+
+              valores:
+                req.body,
+
+              erros: [
+                {
+                  msg:
+                    'Já existe um cadastro com este CPF.'
+                }
+              ]
+
+            }
+          );
+
+      }
+
 
       return res
         .status(500)
         .render(
           'cadastro/pessoa-fisica',
           {
+
             titulo:
               'Cadastro de Pessoa Física - UTE Tupã',
 
@@ -612,10 +749,14 @@ router.post(
                   'Não foi possível realizar o cadastro. Tente novamente.'
               }
             ]
+
           }
         );
+
     }
+
   }
+
 );
 
 
@@ -626,17 +767,21 @@ router.post(
 router.get(
   '/pessoa-juridica',
   (req, res) => {
+
     res.render(
       'cadastro/pessoa-juridica',
       {
+
         titulo:
           'Cadastro de Pessoa Jurídica - UTE Tupã',
 
         erros: [],
 
         valores: {}
+
       }
     );
+
   }
 );
 
@@ -646,13 +791,19 @@ router.get(
 // ============================================================
 
 router.post(
+
   '/pessoa-juridica',
 
-  upload.single('portfolio'),
+  upload.single(
+    'portfolio'
+  ),
 
-  (req, res) => {
+  async (req, res) => {
+
     try {
+
       const {
+
         municipio,
         municipio_outro,
 
@@ -680,92 +831,132 @@ router.post(
         outro_setor,
 
         observacoes
+
       } = req.body;
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // VALIDAÇÕES
-      // --------------------------------------------------------
+      // ======================================================
 
       const erros = [];
 
-      if (!municipio) {
+
+      if (
+        !municipio
+      ) {
+
         erros.push({
           msg:
             'Informe o município.'
         });
+
       }
 
+
       if (
-        municipio === 'Outro' &&
+        municipio ===
+          'Outro' &&
         (
           !municipio_outro ||
           !municipio_outro.trim()
         )
       ) {
+
         erros.push({
           msg:
             'Informe o município da empresa.'
         });
+
       }
+
 
       if (
         !razao_social ||
         !razao_social.trim()
       ) {
+
         erros.push({
           msg:
             'Informe a Razão Social.'
         });
+
       }
 
-      if (!cnpj) {
+
+      if (
+        !cnpj
+      ) {
+
         erros.push({
           msg:
             'Informe o CNPJ.'
         });
+
       }
+
 
       if (
         !contato_nome ||
         !contato_nome.trim()
       ) {
+
         erros.push({
           msg:
             'Informe o nome do responsável ou contato.'
         });
+
       }
 
-      if (!telefone) {
+
+      if (
+        !telefone
+      ) {
+
         erros.push({
           msg:
             'Informe o telefone principal.'
         });
+
       }
+
 
       if (
         !email ||
         !email.trim()
       ) {
+
         erros.push({
           msg:
             'Informe o e-mail.'
         });
+
       }
 
-      if (!tipo_atividade) {
+
+      if (
+        !tipo_atividade
+      ) {
+
         erros.push({
           msg:
             'Informe o tipo de atividade.'
         });
+
       }
 
-      if (!setor_atividade) {
+
+      if (
+        !setor_atividade
+      ) {
+
         erros.push({
           msg:
             'Informe o setor de atividade.'
         });
+
       }
+
 
       if (
         setor_atividade ===
@@ -775,16 +966,18 @@ router.post(
           !outro_setor.trim()
         )
       ) {
+
         erros.push({
           msg:
             'Informe o setor de atividade.'
         });
+
       }
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // CNPJ
-      // --------------------------------------------------------
+      // ======================================================
 
       const cnpjLimpo =
         String(
@@ -794,18 +987,24 @@ router.post(
           ''
         );
 
+
       if (
         cnpjLimpo &&
         cnpjLimpo.length !== 14
       ) {
+
         erros.push({
           msg:
             'Informe um CNPJ válido com 14 dígitos.'
         });
+
       }
 
 
-      if (erros.length > 0) {
+      if (
+        erros.length > 0
+      ) {
+
         apagarArquivoTemporario(
           req.file
         );
@@ -815,6 +1014,7 @@ router.post(
           .render(
             'cadastro/pessoa-juridica',
             {
+
               titulo:
                 'Cadastro de Pessoa Jurídica - UTE Tupã',
 
@@ -822,27 +1022,34 @@ router.post(
 
               valores:
                 req.body
+
             }
           );
+
       }
 
 
-      // --------------------------------------------------------
-      // DUPLICIDADE
-      // --------------------------------------------------------
+      // ======================================================
+      // VERIFICAR DUPLICIDADE
+      // ======================================================
 
       const empresaExistente =
-        db
-          .prepare(`
+        await db.get(
+          `
             SELECT id
             FROM terceirizados
-            WHERE cpf_cnpj = ?
-          `)
-          .get(
+            WHERE cpf_cnpj = $1
+          `,
+          [
             cnpjLimpo
-          );
+          ]
+        );
 
-      if (empresaExistente) {
+
+      if (
+        empresaExistente
+      ) {
+
         apagarArquivoTemporario(
           req.file
         );
@@ -852,6 +1059,7 @@ router.post(
           .render(
             'cadastro/pessoa-juridica',
             {
+
               titulo:
                 'Cadastro de Pessoa Jurídica - UTE Tupã',
 
@@ -864,24 +1072,27 @@ router.post(
 
               valores:
                 req.body
+
             }
           );
+
       }
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // MUNICÍPIO
-      // --------------------------------------------------------
+      // ======================================================
 
       const municipioFinal =
-        municipio === 'Outro'
+        municipio ===
+          'Outro'
           ? municipio_outro.trim()
           : municipio;
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // SETOR
-      // --------------------------------------------------------
+      // ======================================================
 
       const setorFinal =
         setor_atividade ===
@@ -890,171 +1101,163 @@ router.post(
           : setor_atividade;
 
 
-      // --------------------------------------------------------
-      // TRANSAÇÃO
-      // --------------------------------------------------------
+      // ======================================================
+      // INSERT SUPABASE / POSTGRESQL
+      // ======================================================
 
-      let empresaId;
+      const novaEmpresa =
+        await db.get(
+          `
+            INSERT INTO terceirizados
+            (
+              tipo,
 
-      const transacao =
-        db.transaction(() => {
+              razao_social,
+              nome_fantasia,
+              cpf_cnpj,
 
-          const resultado = db
-            .prepare(`
-              INSERT INTO terceirizados
-              (
-                tipo,
+              telefone,
+              telefone_secundario,
+              email,
 
-                razao_social,
-                nome_fantasia,
-                cpf_cnpj,
+              cep,
+              endereco,
+              complemento,
 
-                telefone,
-                telefone_secundario,
-                email,
+              cidade,
+              estado,
 
-                cep,
-                endereco,
-                complemento,
+              capital_social,
+              regime_tributario,
 
-                cidade,
-                estado,
+              inscricao_estadual,
+              inscricao_municipal,
 
-                capital_social,
-                regime_tributario,
-
-                inscricao_estadual,
-                inscricao_municipal,
-
-                contato_nome,
-                contato_telefone,
-
-                tipo_atividade,
-                setor_atividade,
-
-                observacoes,
-
-                situacao_cadastral
-              )
-
-              VALUES
-              (
-                'PJ',
-
-                @razao_social,
-                @nome_fantasia,
-                @cnpj,
-
-                @telefone,
-                @telefone_secundario,
-                @email,
-
-                @cep,
-                @endereco,
-                @complemento,
-
-                @cidade,
-                @estado,
-
-                @capital_social,
-                @regime_tributario,
-
-                @inscricao_estadual,
-                @inscricao_municipal,
-
-                @contato_nome,
-                @contato_telefone,
-
-                @tipo_atividade,
-                @setor_atividade,
-
-                @observacoes,
-
-                'Pendente de análise'
-              )
-            `)
-            .run({
-              razao_social:
-                razao_social.trim(),
-
-              nome_fantasia:
-                nome_fantasia
-                  ? nome_fantasia.trim()
-                  : null,
-
-              cnpj:
-                cnpjLimpo,
-
-              telefone:
-                telefone || null,
-
-              telefone_secundario:
-                telefone_secundario ||
-                null,
-
-              email:
-                email
-                  ? email.trim()
-                  : null,
-
-              cep:
-                cep || null,
-
-              endereco:
-                endereco || null,
-
-              complemento:
-                complemento || null,
-
-              cidade:
-                municipioFinal,
-
-              estado:
-                'RJ',
-
-              capital_social:
-                capital_social || null,
-
-              regime_tributario:
-                regime_tributario ||
-                null,
-
-              inscricao_estadual:
-                inscricao_estadual ||
-                null,
-
-              inscricao_municipal:
-                inscricao_municipal ||
-                null,
-
-              contato_nome:
-                contato_nome.trim(),
-
-              contato_telefone:
-                telefone || null,
+              contato_nome,
+              contato_telefone,
 
               tipo_atividade,
+              setor_atividade,
 
-              setor_atividade:
-                setorFinal,
+              observacoes,
 
-              observacoes:
-                observacoes || null
-            });
+              situacao_cadastral
+            )
 
-          empresaId =
-            resultado.lastInsertRowid;
-        });
+            VALUES
+            (
+              'PJ',
 
-      transacao();
+              $1,
+              $2,
+              $3,
+
+              $4,
+              $5,
+              $6,
+
+              $7,
+              $8,
+              $9,
+
+              $10,
+              $11,
+
+              $12,
+              $13,
+
+              $14,
+              $15,
+
+              $16,
+              $17,
+
+              $18,
+              $19,
+
+              $20,
+
+              'Pendente de análise'
+            )
+
+            RETURNING id
+          `,
+          [
+
+            razao_social.trim(),
+
+            nome_fantasia
+              ? nome_fantasia.trim()
+              : null,
+
+            cnpjLimpo,
+
+            telefone ||
+              null,
+
+            telefone_secundario ||
+              null,
+
+            email
+              ? email.trim()
+              : null,
+
+            cep ||
+              null,
+
+            endereco ||
+              null,
+
+            complemento ||
+              null,
+
+            municipioFinal,
+
+            'RJ',
+
+            capital_social ||
+              null,
+
+            regime_tributario ||
+              null,
+
+            inscricao_estadual ||
+              null,
+
+            inscricao_municipal ||
+              null,
+
+            contato_nome.trim(),
+
+            telefone ||
+              null,
+
+            tipo_atividade,
+
+            setorFinal,
+
+            observacoes ||
+              null
+
+          ]
+        );
 
 
-      // --------------------------------------------------------
+      const empresaId =
+        novaEmpresa.id;
+
+
+      // ======================================================
       // PORTFÓLIO
-      // --------------------------------------------------------
+      // TEMPORARIAMENTE AINDA LOCAL
+      // ======================================================
 
-      if (req.file) {
+      if (
+        req.file
+      ) {
+
         try {
+
           const arquivo =
             moverArquivoParaCadastro(
               req.file,
@@ -1062,45 +1265,65 @@ router.post(
               'portfolio'
             );
 
-          db.prepare(`
-            INSERT INTO documentos
-            (
-              terceirizado_id,
-              tipo_documento,
-              nome_arquivo_original,
-              caminho_arquivo,
-              status
-            )
 
-            VALUES
-            (
-              ?,
-              ?,
-              ?,
-              ?,
-              ?
-            )
-          `)
-          .run(
-            empresaId,
-            'Portfólio',
-            req.file.originalname,
-            arquivo.caminhoBanco,
-            'Enviado'
+          await db.query(
+            `
+              INSERT INTO documentos
+              (
+                terceirizado_id,
+                tipo_documento,
+                nome_arquivo_original,
+                caminho_arquivo,
+                status
+              )
+
+              VALUES
+              (
+                $1,
+                $2,
+                $3,
+                $4,
+                $5
+              )
+            `,
+            [
+
+              empresaId,
+
+              'Portfólio',
+
+              req.file.originalname,
+
+              arquivo.caminhoBanco,
+
+              'Enviado'
+
+            ]
           );
 
-        } catch (erroArquivo) {
+
+        } catch (
+          erroArquivo
+        ) {
+
           console.error(
             'Erro ao salvar portfólio:',
             erroArquivo
           );
+
         }
+
       }
 
+
+      // ======================================================
+      // SUCESSO
+      // ======================================================
 
       return res.render(
         'cadastro/sucesso',
         {
+
           titulo:
             'Cadastro realizado',
 
@@ -1114,24 +1337,60 @@ router.post(
             nome:
               'UTE Tupã Fase I'
           }
+
         }
       );
 
+
     } catch (erro) {
+
       console.error(
         'Erro ao salvar Pessoa Jurídica:',
         erro
       );
 
+
       apagarArquivoTemporario(
         req.file
       );
+
+
+      if (
+        erro.code ===
+        '23505'
+      ) {
+
+        return res
+          .status(400)
+          .render(
+            'cadastro/pessoa-juridica',
+            {
+
+              titulo:
+                'Cadastro de Pessoa Jurídica - UTE Tupã',
+
+              erros: [
+                {
+                  msg:
+                    'Este CNPJ já está cadastrado.'
+                }
+              ],
+
+              valores:
+                req.body || {}
+
+            }
+          );
+
+      }
+
 
       return res
         .status(500)
         .render(
           'cadastro/pessoa-juridica',
           {
+
             titulo:
               'Cadastro de Pessoa Jurídica - UTE Tupã',
 
@@ -1144,10 +1403,14 @@ router.post(
 
             valores:
               req.body || {}
+
           }
         );
+
     }
+
   }
+
 );
 
 
