@@ -21,36 +21,110 @@ const SERVICOS_PADRAO = [
   'Engenharia e projetos',
   'Inspeção e ensaios não destrutivos (END)',
   'Tecnologia da informação',
-  'Serviços administrativos',
+  'Serviços administrativos'
 ];
 
-function seedServicos() {
-  const insert = db.prepare('INSERT OR IGNORE INTO servicos (nome) VALUES (?)');
-  const tx = db.transaction((lista) => {
-    for (const nome of lista) insert.run(nome);
-  });
-  tx(SERVICOS_PADRAO);
-  console.log(`Serviços: ${SERVICOS_PADRAO.length} verificados/inseridos.`);
+async function seedServicos() {
+  for (const nome of SERVICOS_PADRAO) {
+    await db.query(
+      `
+        INSERT INTO servicos (nome)
+        VALUES ($1)
+        ON CONFLICT (nome) DO NOTHING
+      `,
+      [nome]
+    );
+  }
+
+  console.log(
+    `Serviços: ${SERVICOS_PADRAO.length} verificados/inseridos.`
+  );
 }
 
-function seedAdmin() {
-  const existente = db.prepare('SELECT id FROM usuarios WHERE email = ?').get('admin@globalengenharia.com.br');
+async function seedAdmin() {
+  const emailAdmin =
+    process.env.ADMIN_EMAIL ||
+    'admin@globalengenharia.com.br';
+
+  const senhaAdmin =
+    process.env.ADMIN_PASSWORD;
+
+  const existente = await db.get(
+    `
+      SELECT id
+      FROM usuarios
+      WHERE LOWER(email) = LOWER($1)
+    `,
+    [emailAdmin]
+  );
+
   if (existente) {
-    console.log('Usuário admin já existe, nada a fazer.');
+    console.log('Usuário administrador já existe.');
     return;
   }
-  const senhaPadrao = 'GlobalEng@2026';
-  const hash = bcrypt.hashSync(senhaPadrao, 10);
-  db.prepare(`INSERT INTO usuarios (nome, email, senha_hash, papel) VALUES (?, ?, ?, 'admin')`)
-    .run('Administrador', 'admin@globalengenharia.com.br', hash);
 
-  console.log('--------------------------------------------------------');
-  console.log('Usuário administrador criado:');
-  console.log(' e-mail: admin@globalengenharia.com.br');
-  console.log(` senha : ${senhaPadrao}`);
-  console.log(' >>> Troque essa senha assim que possível <<<');
-  console.log('--------------------------------------------------------');
+  if (!senhaAdmin) {
+    console.warn(
+      'ADMIN_PASSWORD não definida. Usuário administrador não foi criado.'
+    );
+    return;
+  }
+
+  const hash = bcrypt.hashSync(
+    senhaAdmin,
+    10
+  );
+
+  await db.query(
+    `
+      INSERT INTO usuarios (
+        nome,
+        email,
+        senha_hash,
+        papel,
+        ativo
+      )
+      VALUES ($1, $2, $3, $4, TRUE)
+    `,
+    [
+      'Administrador',
+      emailAdmin,
+      hash,
+      'admin'
+    ]
+  );
+
+  console.log(
+    `Usuário administrador criado: ${emailAdmin}`
+  );
 }
 
-seedServicos();
-seedAdmin();
+async function seedBanco() {
+  try {
+    await seedServicos();
+    await seedAdmin();
+
+    console.log(
+      'Seed do banco concluído com sucesso.'
+    );
+  } catch (erro) {
+    console.error(
+      'Erro ao executar seed:',
+      erro
+    );
+
+    throw erro;
+  }
+}
+
+if (require.main === module) {
+  seedBanco()
+    .then(() => {
+      process.exit(0);
+    })
+    .catch(() => {
+      process.exit(1);
+    });
+}
+
+module.exports = seedBanco;
