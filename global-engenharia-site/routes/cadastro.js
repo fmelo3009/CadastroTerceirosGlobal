@@ -1,57 +1,39 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const fs = require('fs');
 const path = require('path');
 const { body, validationResult } = require('express-validator');
 
 const db = require('../lib/db');
 const config = require('../config');
+const supabase = require('../lib/supabase');
 
 
 // ============================================================
-// UPLOAD TEMPORÁRIO
+// UPLOAD EM MEMÓRIA
+// O arquivo não fica salvo no Render
 // ============================================================
 
-const tmpDir = path.join(
-  config.UPLOADS_PATH,
-  'tmp'
-);
+const storage = multer.memoryStorage();
 
-if (!fs.existsSync(tmpDir)) {
-  fs.mkdirSync(
-    tmpDir,
-    { recursive: true }
-  );
-}
+const EXTENSOES_PERMITIDAS = new Set([
+  '.pdf',
+  '.jpg',
+  '.jpeg',
+  '.png',
+  '.doc',
+  '.docx'
+]);
 
-const storage = multer.diskStorage({
-
-  destination: (req, file, cb) => {
-    cb(null, tmpDir);
-  },
-
-  filename: (req, file, cb) => {
-
-    const nomeSeguro =
-      file.originalname.replace(
-        /[^a-zA-Z0-9.\-_]/g,
-        '_'
-      );
-
-    cb(
-      null,
-      `${Date.now()}-${Math.round(
-        Math.random() * 1e6
-      )}-${nomeSeguro}`
-    );
-  }
-
-});
-
+const MIMES_PERMITIDOS = new Set([
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+]);
 
 const upload = multer({
-
   storage,
 
   limits: {
@@ -62,17 +44,24 @@ const upload = multer({
   },
 
   fileFilter: (req, file, cb) => {
-
-    const permitidos =
-      /pdf|jpg|jpeg|png|doc|docx/i;
-
     const extensao =
-      path.extname(
-        file.originalname
+      path
+        .extname(file.originalname)
+        .toLowerCase();
+
+    const extensaoValida =
+      EXTENSOES_PERMITIDAS.has(
+        extensao
+      );
+
+    const mimeValido =
+      MIMES_PERMITIDOS.has(
+        file.mimetype
       );
 
     if (
-      !permitidos.test(extensao)
+      !extensaoValida ||
+      !mimeValido
     ) {
       return cb(
         new Error(
@@ -83,94 +72,111 @@ const upload = multer({
 
     cb(null, true);
   }
-
 });
 
 
 // ============================================================
-// FUNÇÕES AUXILIARES
+// FUNÇÃO PARA SALVAR DOCUMENTO NO SUPABASE STORAGE
 // ============================================================
 
-function apagarArquivoTemporario(file) {
-
-  if (
-    file &&
-    file.path &&
-    fs.existsSync(file.path)
-  ) {
-    try {
-
-      fs.unlinkSync(file.path);
-
-    } catch (erro) {
-
-      console.error(
-        'Erro ao excluir arquivo temporário:',
-        erro
-      );
-
-    }
-  }
-
-}
-
-
-function moverArquivoParaCadastro(
+async function salvarDocumento(
   file,
   terceirizadoId,
+  tipoDocumento,
   prefixo
 ) {
-
-  const pastaFinal = path.join(
-    config.UPLOADS_PATH,
-    'terceirizados',
-    String(terceirizadoId)
-  );
-
-  if (
-    !fs.existsSync(pastaFinal)
-  ) {
-    fs.mkdirSync(
-      pastaFinal,
-      { recursive: true }
-    );
+  if (!file) {
+    return null;
   }
 
   const extensao =
-    path.extname(
-      file.originalname
+    path
+      .extname(file.originalname)
+      .toLowerCase();
+
+  const caminhoStorage =
+    `terceirizados/${terceirizadoId}/${prefixo}-${Date.now()}${extensao}`;
+
+
+  // ----------------------------------------------------------
+  // UPLOAD NO SUPABASE STORAGE
+  // ----------------------------------------------------------
+
+  const {
+    error: erroUpload
+  } =
+    await supabase.storage
+      .from('documentos')
+      .upload(
+        caminhoStorage,
+        file.buffer,
+        {
+          contentType:
+            file.mimetype,
+
+          upsert:
+            false
+        }
+      );
+
+
+  if (erroUpload) {
+    throw new Error(
+      `Erro ao enviar arquivo para o Supabase Storage: ${erroUpload.message}`
+    );
+  }
+
+
+  try {
+
+    // --------------------------------------------------------
+    // REGISTRAR ARQUIVO NO POSTGRESQL
+    // --------------------------------------------------------
+
+    await db.query(
+      `
+        INSERT INTO documentos
+        (
+          terceirizado_id,
+          tipo_documento,
+          nome_arquivo_original,
+          caminho_arquivo,
+          status
+        )
+
+        VALUES
+        (
+          $1,
+          $2,
+          $3,
+          $4,
+          $5
+        )
+      `,
+      [
+        terceirizadoId,
+        tipoDocumento,
+        file.originalname,
+        caminhoStorage,
+        'Enviado'
+      ]
     );
 
-  const nomeArquivo =
-    `${prefixo}-${Date.now()}${extensao}`;
+  } catch (erroBanco) {
 
-  const destino = path.join(
-    pastaFinal,
-    nomeArquivo
-  );
+    // Se o registro no banco falhar,
+    // removemos o arquivo que acabou de ser enviado.
+    await supabase.storage
+      .from('documentos')
+      .remove([
+        caminhoStorage
+      ]);
 
-  fs.renameSync(
-    file.path,
-    destino
-  );
+    throw erroBanco;
+  }
 
-  return {
 
-    destino,
-
-    caminhoBanco:
-      path
-        .relative(
-          config.UPLOADS_PATH,
-          destino
-        )
-        .replace(
-          /\\/g,
-          '/'
-        )
-
-  };
-
+  return caminhoStorage;
 }
 
 
@@ -181,11 +187,9 @@ function moverArquivoParaCadastro(
 router.get(
   '/',
   (req, res) => {
-
     res.redirect(
       '/#cadastro'
     );
-
   }
 );
 
@@ -197,7 +201,6 @@ router.get(
 router.get(
   '/pessoa-fisica',
   (req, res) => {
-
     res.render(
       'cadastro/pessoa-fisica',
       {
@@ -209,7 +212,6 @@ router.get(
         erros: []
       }
     );
-
   }
 );
 
@@ -219,13 +221,13 @@ router.get(
 // ============================================================
 
 router.post(
-
   '/pessoa-fisica',
 
-  upload.single('curriculo'),
+  upload.single(
+    'curriculo'
+  ),
 
   [
-
     body('nome')
       .trim()
       .notEmpty()
@@ -267,7 +269,6 @@ router.post(
       .withMessage(
         'Informe a profissão.'
       )
-
   ],
 
   async (req, res) => {
@@ -275,14 +276,10 @@ router.post(
     const resultado =
       validationResult(req);
 
+
     if (
       !resultado.isEmpty()
     ) {
-
-      apagarArquivoTemporario(
-        req.file
-      );
-
       return res
         .status(400)
         .render(
@@ -299,6 +296,10 @@ router.post(
           }
         );
     }
+
+
+    let novoId =
+      null;
 
 
     try {
@@ -323,11 +324,6 @@ router.post(
       if (
         cpfLimpo.length !== 11
       ) {
-
-        apagarArquivoTemporario(
-          req.file
-        );
-
         return res
           .status(400)
           .render(
@@ -368,11 +364,6 @@ router.post(
 
 
       if (jaExiste) {
-
-        apagarArquivoTemporario(
-          req.file
-        );
-
         return res
           .status(400)
           .render(
@@ -412,11 +403,6 @@ router.post(
           !b.municipio_outro ||
           !b.municipio_outro.trim()
         ) {
-
-          apagarArquivoTemporario(
-            req.file
-          );
-
           return res
             .status(400)
             .render(
@@ -438,10 +424,8 @@ router.post(
             );
         }
 
-
         municipioFinal =
           b.municipio_outro.trim();
-
       }
 
 
@@ -462,11 +446,6 @@ router.post(
           !b.outra_profissao ||
           !b.outra_profissao.trim()
         ) {
-
-          apagarArquivoTemporario(
-            req.file
-          );
-
           return res
             .status(400)
             .render(
@@ -486,18 +465,15 @@ router.post(
                 ]
               }
             );
-
         }
-
 
         profissaoFinal =
           b.outra_profissao.trim();
-
       }
 
 
       // ======================================================
-      // INSERT NO SUPABASE / POSTGRESQL
+      // INSERT NO POSTGRESQL / SUPABASE
       // ======================================================
 
       const novoCadastro =
@@ -517,6 +493,7 @@ router.post(
               endereco,
               complemento,
               cidade,
+              estado,
 
               sexo,
               profissao,
@@ -539,18 +516,18 @@ router.post(
               $7,
               $8,
               $9,
-
               $10,
-              $11,
 
+              $11,
               $12,
+
+              $13,
               'Pendente de análise'
             )
 
             RETURNING id
           `,
           [
-
             b.nome.trim(),
 
             cpfLimpo,
@@ -576,6 +553,8 @@ router.post(
 
             municipioFinal,
 
+            'RJ',
+
             b.sexo ||
               null,
 
@@ -583,80 +562,26 @@ router.post(
 
             b.observacoes ||
               null
-
           ]
         );
 
 
-      const novoId =
+      novoId =
         novoCadastro.id;
 
 
       // ======================================================
-      // CURRÍCULO
-      // TEMPORARIAMENTE AINDA LOCAL
+      // CURRÍCULO → SUPABASE STORAGE
       // ======================================================
 
-      if (
-        req.file
-      ) {
+      if (req.file) {
 
-        try {
-
-          const arquivo =
-            moverArquivoParaCadastro(
-              req.file,
-              novoId,
-              'curriculo'
-            );
-
-
-          await db.query(
-            `
-              INSERT INTO documentos
-              (
-                terceirizado_id,
-                tipo_documento,
-                nome_arquivo_original,
-                caminho_arquivo,
-                status
-              )
-
-              VALUES
-              (
-                $1,
-                $2,
-                $3,
-                $4,
-                $5
-              )
-            `,
-            [
-
-              novoId,
-
-              'Currículo',
-
-              req.file.originalname,
-
-              arquivo.caminhoBanco,
-
-              'Enviado'
-
-            ]
-          );
-
-
-        } catch (
-          erroArquivo
-        ) {
-
-          console.error(
-            'Erro ao salvar currículo:',
-            erroArquivo
-          );
-
-        }
+        await salvarDocumento(
+          req.file,
+          novoId,
+          'Currículo',
+          'curriculo'
+        );
 
       }
 
@@ -668,7 +593,6 @@ router.post(
       return res.render(
         'cadastro/sucesso',
         {
-
           titulo:
             'Cadastro realizado',
 
@@ -682,7 +606,6 @@ router.post(
             nome:
               'UTE Tupã Fase I'
           }
-
         }
       );
 
@@ -695,23 +618,40 @@ router.post(
       );
 
 
-      apagarArquivoTemporario(
-        req.file
-      );
+      // Se o cadastro foi criado,
+      // mas o arquivo falhou,
+      // removemos o cadastro para permitir nova tentativa.
+      if (novoId) {
+        try {
+          await db.query(
+            `
+              DELETE FROM terceirizados
+              WHERE id = $1
+            `,
+            [
+              novoId
+            ]
+          );
+        } catch (
+          erroLimpeza
+        ) {
+          console.error(
+            'Erro ao desfazer cadastro:',
+            erroLimpeza
+          );
+        }
+      }
 
 
-      // Violação de UNIQUE no PostgreSQL
       if (
         erro.code ===
         '23505'
       ) {
-
         return res
           .status(400)
           .render(
             'cadastro/pessoa-fisica',
             {
-
               titulo:
                 'Cadastro de Pessoa Física - UTE Tupã',
 
@@ -724,10 +664,8 @@ router.post(
                     'Já existe um cadastro com este CPF.'
                 }
               ]
-
             }
           );
-
       }
 
 
@@ -736,7 +674,6 @@ router.post(
         .render(
           'cadastro/pessoa-fisica',
           {
-
             titulo:
               'Cadastro de Pessoa Física - UTE Tupã',
 
@@ -749,14 +686,12 @@ router.post(
                   'Não foi possível realizar o cadastro. Tente novamente.'
               }
             ]
-
           }
         );
 
     }
 
   }
-
 );
 
 
@@ -767,21 +702,17 @@ router.post(
 router.get(
   '/pessoa-juridica',
   (req, res) => {
-
     res.render(
       'cadastro/pessoa-juridica',
       {
-
         titulo:
           'Cadastro de Pessoa Jurídica - UTE Tupã',
 
         erros: [],
 
         valores: {}
-
       }
     );
-
   }
 );
 
@@ -791,7 +722,6 @@ router.get(
 // ============================================================
 
 router.post(
-
   '/pessoa-juridica',
 
   upload.single(
@@ -800,10 +730,13 @@ router.post(
 
   async (req, res) => {
 
+    let empresaId =
+      null;
+
+
     try {
 
       const {
-
         municipio,
         municipio_outro,
 
@@ -831,7 +764,6 @@ router.post(
         outro_setor,
 
         observacoes
-
       } = req.body;
 
 
@@ -842,15 +774,11 @@ router.post(
       const erros = [];
 
 
-      if (
-        !municipio
-      ) {
-
+      if (!municipio) {
         erros.push({
           msg:
             'Informe o município.'
         });
-
       }
 
 
@@ -862,12 +790,10 @@ router.post(
           !municipio_outro.trim()
         )
       ) {
-
         erros.push({
           msg:
             'Informe o município da empresa.'
         });
-
       }
 
 
@@ -875,24 +801,18 @@ router.post(
         !razao_social ||
         !razao_social.trim()
       ) {
-
         erros.push({
           msg:
             'Informe a Razão Social.'
         });
-
       }
 
 
-      if (
-        !cnpj
-      ) {
-
+      if (!cnpj) {
         erros.push({
           msg:
             'Informe o CNPJ.'
         });
-
       }
 
 
@@ -900,24 +820,18 @@ router.post(
         !contato_nome ||
         !contato_nome.trim()
       ) {
-
         erros.push({
           msg:
             'Informe o nome do responsável ou contato.'
         });
-
       }
 
 
-      if (
-        !telefone
-      ) {
-
+      if (!telefone) {
         erros.push({
           msg:
             'Informe o telefone principal.'
         });
-
       }
 
 
@@ -925,36 +839,38 @@ router.post(
         !email ||
         !email.trim()
       ) {
-
         erros.push({
           msg:
             'Informe o e-mail.'
         });
-
       }
 
 
       if (
-        !tipo_atividade
+        email &&
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+          .test(email.trim())
       ) {
+        erros.push({
+          msg:
+            'Informe um e-mail válido.'
+        });
+      }
 
+
+      if (!tipo_atividade) {
         erros.push({
           msg:
             'Informe o tipo de atividade.'
         });
-
       }
 
 
-      if (
-        !setor_atividade
-      ) {
-
+      if (!setor_atividade) {
         erros.push({
           msg:
             'Informe o setor de atividade.'
         });
-
       }
 
 
@@ -966,12 +882,10 @@ router.post(
           !outro_setor.trim()
         )
       ) {
-
         erros.push({
           msg:
             'Informe o setor de atividade.'
         });
-
       }
 
 
@@ -992,29 +906,21 @@ router.post(
         cnpjLimpo &&
         cnpjLimpo.length !== 14
       ) {
-
         erros.push({
           msg:
             'Informe um CNPJ válido com 14 dígitos.'
         });
-
       }
 
 
       if (
         erros.length > 0
       ) {
-
-        apagarArquivoTemporario(
-          req.file
-        );
-
         return res
           .status(400)
           .render(
             'cadastro/pessoa-juridica',
             {
-
               titulo:
                 'Cadastro de Pessoa Jurídica - UTE Tupã',
 
@@ -1022,15 +928,13 @@ router.post(
 
               valores:
                 req.body
-
             }
           );
-
       }
 
 
       // ======================================================
-      // VERIFICAR DUPLICIDADE
+      // DUPLICIDADE
       // ======================================================
 
       const empresaExistente =
@@ -1049,17 +953,11 @@ router.post(
       if (
         empresaExistente
       ) {
-
-        apagarArquivoTemporario(
-          req.file
-        );
-
         return res
           .status(400)
           .render(
             'cadastro/pessoa-juridica',
             {
-
               titulo:
                 'Cadastro de Pessoa Jurídica - UTE Tupã',
 
@@ -1072,10 +970,8 @@ router.post(
 
               valores:
                 req.body
-
             }
           );
-
       }
 
 
@@ -1102,7 +998,7 @@ router.post(
 
 
       // ======================================================
-      // INSERT SUPABASE / POSTGRESQL
+      // INSERT POSTGRESQL / SUPABASE
       // ======================================================
 
       const novaEmpresa =
@@ -1183,7 +1079,6 @@ router.post(
             RETURNING id
           `,
           [
-
             razao_social.trim(),
 
             nome_fantasia
@@ -1238,80 +1133,26 @@ router.post(
 
             observacoes ||
               null
-
           ]
         );
 
 
-      const empresaId =
+      empresaId =
         novaEmpresa.id;
 
 
       // ======================================================
-      // PORTFÓLIO
-      // TEMPORARIAMENTE AINDA LOCAL
+      // PORTFÓLIO → SUPABASE STORAGE
       // ======================================================
 
-      if (
-        req.file
-      ) {
+      if (req.file) {
 
-        try {
-
-          const arquivo =
-            moverArquivoParaCadastro(
-              req.file,
-              empresaId,
-              'portfolio'
-            );
-
-
-          await db.query(
-            `
-              INSERT INTO documentos
-              (
-                terceirizado_id,
-                tipo_documento,
-                nome_arquivo_original,
-                caminho_arquivo,
-                status
-              )
-
-              VALUES
-              (
-                $1,
-                $2,
-                $3,
-                $4,
-                $5
-              )
-            `,
-            [
-
-              empresaId,
-
-              'Portfólio',
-
-              req.file.originalname,
-
-              arquivo.caminhoBanco,
-
-              'Enviado'
-
-            ]
-          );
-
-
-        } catch (
-          erroArquivo
-        ) {
-
-          console.error(
-            'Erro ao salvar portfólio:',
-            erroArquivo
-          );
-
-        }
+        await salvarDocumento(
+          req.file,
+          empresaId,
+          'Portfólio',
+          'portfolio'
+        );
 
       }
 
@@ -1323,7 +1164,6 @@ router.post(
       return res.render(
         'cadastro/sucesso',
         {
-
           titulo:
             'Cadastro realizado',
 
@@ -1337,7 +1177,6 @@ router.post(
             nome:
               'UTE Tupã Fase I'
           }
-
         }
       );
 
@@ -1350,22 +1189,37 @@ router.post(
       );
 
 
-      apagarArquivoTemporario(
-        req.file
-      );
+      if (empresaId) {
+        try {
+          await db.query(
+            `
+              DELETE FROM terceirizados
+              WHERE id = $1
+            `,
+            [
+              empresaId
+            ]
+          );
+        } catch (
+          erroLimpeza
+        ) {
+          console.error(
+            'Erro ao desfazer cadastro da empresa:',
+            erroLimpeza
+          );
+        }
+      }
 
 
       if (
         erro.code ===
         '23505'
       ) {
-
         return res
           .status(400)
           .render(
             'cadastro/pessoa-juridica',
             {
-
               titulo:
                 'Cadastro de Pessoa Jurídica - UTE Tupã',
 
@@ -1378,10 +1232,8 @@ router.post(
 
               valores:
                 req.body || {}
-
             }
           );
-
       }
 
 
@@ -1390,7 +1242,6 @@ router.post(
         .render(
           'cadastro/pessoa-juridica',
           {
-
             titulo:
               'Cadastro de Pessoa Jurídica - UTE Tupã',
 
@@ -1403,14 +1254,12 @@ router.post(
 
             valores:
               req.body || {}
-
           }
         );
 
     }
 
   }
-
 );
 
 
