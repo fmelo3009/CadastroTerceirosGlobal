@@ -250,7 +250,181 @@
 
 </section>
 
+<!-- =========================================================
+     VALORES
+========================================================= -->
 
+<section id="valores" class="secao-valores">
+
+  <div class="container">
+
+    <div class="valores-cabecalho">
+
+      <span class="secao-tag">
+        Nossa Cultura
+      </span>
+
+      <h2>
+        Nossos Valores
+      </h2>
+
+      <p>
+        Princípios que orientam nossas decisões,
+        nossa forma de trabalhar e nossas relações.
+      </p>
+
+    </div>
+
+
+    <div class="valores-grid">
+
+
+      <!-- COMPROMETIMENTO -->
+
+      <article class="valor-card">
+
+        <div class="valor-numero">
+          01
+        </div>
+
+        <h3>
+          Comprometimento
+        </h3>
+
+        <p>
+          Esforço para fazer com que as coisas funcionem.
+        </p>
+
+      </article>
+
+
+      <!-- FOCO EM RESULTADOS -->
+
+      <article class="valor-card">
+
+        <div class="valor-numero">
+          02
+        </div>
+
+        <h3>
+          Foco em resultados
+        </h3>
+
+        <p>
+          Esforço para superar metas.
+        </p>
+
+      </article>
+
+
+      <!-- HUMILDADE -->
+
+      <article class="valor-card">
+
+        <div class="valor-numero">
+          03
+        </div>
+
+        <h3>
+          Humildade
+        </h3>
+
+        <p>
+          Simplicidade, respeito e pés no chão.
+        </p>
+
+      </article>
+
+
+      <!-- INTEGRIDADE -->
+
+      <article class="valor-card">
+
+        <div class="valor-numero">
+          04
+        </div>
+
+        <h3>
+          Integridade
+        </h3>
+
+        <p>
+          Retidão, imparcialidade e honestidade.
+        </p>
+
+      </article>
+
+
+      <!-- MERITOCRACIA -->
+
+      <article class="valor-card">
+
+        <div class="valor-numero">
+          05
+        </div>
+
+        <h3>
+          Meritocracia
+        </h3>
+
+        <p>
+          Predomínio do mérito, da dedicação e do trabalho.
+        </p>
+
+      </article>
+
+
+      <!-- RESILIÊNCIA -->
+
+      <article class="valor-card">
+
+        <div class="valor-numero">
+          06
+        </div>
+
+        <h3>
+          Resiliência
+        </h3>
+
+        <p>
+          Capacidade de se adaptar às mudanças.
+        </p>
+
+      </article>
+
+
+      <!-- SEGURANÇA E MEIO AMBIENTE -->
+
+      <article class="valor-card valor-destaque">
+
+        <div class="valor-destaque-conteudo">
+
+          <div class="valor-numero">
+            07
+          </div>
+
+          <div>
+
+            <h3>
+              Segurança e meio ambiente
+            </h3>
+
+            <p>
+              A vida como um valor absoluto.
+            </p>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+    </div>
+
+  </div>
+
+</section>
 
 <!-- =========================================================
      MULHERES NA UTE TUPÃ
@@ -580,6 +754,368 @@ html {
 
   .mulheres-media img {
     min-height: auto;
+  }
+
+}
+
+/* ============================================================
+   VALORES
+============================================================ */
+
+.secao-valores {
+  padding: 90px 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f7f9fc 0%,
+      #ffffff 100%
+    );
+}
+
+
+/* CABEÇALHO */
+
+.valores-cabecalho {
+  max-width: 720px;
+
+  margin:
+    0 auto 50px;
+
+  text-align: center;
+}
+
+
+.secao-tag {
+  display: inline-block;
+
+  margin-bottom: 12px;
+
+  color: #e99a22;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1.5px;
+}
+
+
+.valores-cabecalho h2 {
+  margin:
+    0 0 14px;
+
+  color: #073b7a;
+
+  font-size: 36px;
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
+
+.valores-cabecalho p {
+  max-width: 620px;
+
+  margin:
+    0 auto;
+
+  color: #637083;
+
+  font-size: 16px;
+
+  line-height: 1.65;
+}
+
+
+/* ============================================================
+   GRID
+============================================================ */
+
+.valores-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 22px;
+}
+
+
+/* ============================================================
+   CARD
+============================================================ */
+
+.valor-card {
+  position: relative;
+
+  min-height: 175px;
+
+  padding: 30px;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border:
+    1px solid #e3e8ef;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 5px 18px
+    rgba(8, 42, 80, 0.05);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+.valor-card:hover {
+  transform:
+    translateY(-5px);
+
+  border-color:
+    #cfd9e7;
+
+  box-shadow:
+    0 12px 28px
+    rgba(8, 42, 80, 0.10);
+}
+
+
+/* DETALHE SUPERIOR */
+
+.valor-card::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 4px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #073b7a,
+      #1d579c
+    );
+}
+
+
+/* NÚMERO */
+
+.valor-numero {
+  margin-bottom: 18px;
+
+  color: #e99a22;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  letter-spacing: 1px;
+}
+
+
+/* TÍTULO */
+
+.valor-card h3 {
+  margin:
+    0 0 10px;
+
+  color: #073b7a;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  line-height: 1.25;
+}
+
+
+/* DESCRIÇÃO */
+
+.valor-card p {
+  margin: 0;
+
+  color: #5f6b7a;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+
+/* ============================================================
+   SEGURANÇA E MEIO AMBIENTE
+============================================================ */
+
+.valor-destaque {
+  grid-column:
+    1 / -1;
+
+  min-height: auto;
+
+  padding:
+    28px 32px;
+
+  background:
+    linear-gradient(
+      120deg,
+      #073b7a,
+      #0d4b8d
+    );
+
+  border: none;
+
+  box-shadow:
+    0 10px 26px
+    rgba(7, 59, 122, 0.18);
+}
+
+
+.valor-destaque::before {
+  background: #e99a22;
+}
+
+
+.valor-destaque-conteudo {
+  display: flex;
+  align-items: center;
+
+  gap: 24px;
+}
+
+
+.valor-destaque .valor-numero {
+  margin: 0;
+
+  min-width: 48px;
+
+  color: #f3aa36;
+
+  font-size: 24px;
+}
+
+
+.valor-destaque h3 {
+  color: #ffffff;
+
+  margin-bottom: 5px;
+
+  font-size: 20px;
+}
+
+
+.valor-destaque p {
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.88
+    );
+
+  font-size: 15px;
+}
+
+
+/* ============================================================
+   TABLET
+============================================================ */
+
+@media (max-width: 900px) {
+
+  .secao-valores {
+    padding:
+      70px 0;
+  }
+
+
+  .valores-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .valores-cabecalho h2 {
+    font-size: 32px;
+  }
+
+}
+
+
+/* ============================================================
+   CELULAR
+============================================================ */
+
+@media (max-width: 600px) {
+
+  .secao-valores {
+    padding:
+      55px 0;
+  }
+
+
+  .valores-cabecalho {
+    margin-bottom:
+      35px;
+
+    text-align:
+      left;
+  }
+
+
+  .valores-cabecalho h2 {
+    font-size:
+      29px;
+  }
+
+
+  .valores-cabecalho p {
+    font-size:
+      15px;
+  }
+
+
+  .valores-grid {
+    grid-template-columns:
+      1fr;
+
+    gap:
+      16px;
+  }
+
+
+  .valor-card {
+    min-height:
+      auto;
+
+    padding:
+      24px;
+  }
+
+
+  .valor-destaque-conteudo {
+    align-items:
+      flex-start;
+
+    gap:
+      15px;
+  }
+
+
+  .valor-destaque .valor-numero {
+    min-width:
+      34px;
+
+    font-size:
+      18px;
   }
 
 }
