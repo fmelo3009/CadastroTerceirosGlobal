@@ -140,8 +140,6 @@
     <div class="tipo-cadastro-grid">
 
 
-      <!-- PESSOA FÍSICA -->
-
       <a
         href="/cadastro/pessoa-fisica"
         class="tipo-cadastro-card"
@@ -167,9 +165,6 @@
 
       </a>
 
-
-
-      <!-- PESSOA JURÍDICA -->
 
       <a
         href="/cadastro/pessoa-juridica"
@@ -262,10 +257,14 @@
 
     <div class="sobre-media">
 
-      <img
-        src="/img/sobre-tupa.png"
-        alt="Modelo da UTE Tupã Fase I"
-      >
+      <div class="sobre-imagem-box">
+
+        <img
+          src="/img/sobre-tupa.png"
+          alt="Modelo da UTE Tupã Fase I"
+        >
+
+      </div>
 
     </div>
 
@@ -305,7 +304,6 @@
 
 
     <div class="valores-grid">
-
 
       <article class="valor-card">
 
@@ -502,16 +500,21 @@
 
     <div class="mulheres-media">
 
-      <img
-        src="/img/mulheres-tupa.png"
-        alt="Mulheres na UTE Tupã"
-      >
+      <div class="mulheres-imagem-box">
+
+        <img
+          src="/img/mulheres-tupa.png"
+          alt="Mulheres na UTE Tupã"
+        >
+
+      </div>
 
     </div>
 
   </div>
 
 </section>
+
 
 
 <!-- =========================================================
@@ -655,18 +658,21 @@ html {
 }
 
 
+
 /* ============================================================
    ABERTURA
 ============================================================ */
 
 .foco-real {
   padding: 70px 0;
+
   background:
     linear-gradient(
       120deg,
       #073b7a 0%,
       #0c4c91 100%
     );
+
   color: #ffffff;
 }
 
@@ -896,6 +902,8 @@ html {
 ============================================================ */
 
 .sobre-tupa-section {
+  padding: 90px 0;
+
   background: #ffffff;
 }
 
@@ -904,46 +912,65 @@ html {
   display: grid;
 
   grid-template-columns:
-    0.95fr 1.05fr;
+    minmax(420px, 0.88fr)
+    minmax(540px, 1.12fr);
 
-  gap: 65px;
+  gap: 55px;
 
   align-items: center;
+}
+
+
+.sobre-conteudo {
+  max-width: 540px;
 }
 
 
 .sobre-conteudo h2 {
   margin:
-    10px 0 20px;
+    10px 0 22px;
 
   color: #073b7a;
 
-  font-size: 34px;
+  font-size: 36px;
+
+  line-height: 1.2;
 }
 
 
 .sobre-conteudo .lead {
+  margin-bottom: 18px;
+
   color: #505d6d;
 
-  line-height: 1.7;
+  font-size: 15px;
+
+  line-height: 1.75;
 }
 
 
 .sobre-media {
   width: 100%;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
 }
 
 
-.sobre-media img {
+.sobre-imagem-box {
   width: 100%;
 
-  max-width: 620px;
+  padding: 12px;
+
+  background: #f5f7fa;
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 18px 45px
+    rgba(7, 59, 122, 0.12);
+}
+
+
+.sobre-imagem-box img {
+  width: 100%;
 
   height: auto;
 
@@ -951,11 +978,7 @@ html {
 
   object-fit: contain;
 
-  border-radius: 18px;
-
-  box-shadow:
-    0 14px 35px
-    rgba(7, 59, 122, 0.12);
+  border-radius: 14px;
 }
 
 
@@ -1212,6 +1235,8 @@ html {
 ============================================================ */
 
 .mulheres-section {
+  padding: 90px 0;
+
   background: #f4f7fb;
 }
 
@@ -1220,28 +1245,42 @@ html {
   display: grid;
 
   grid-template-columns:
-    1.1fr 0.9fr;
+    minmax(520px, 1.05fr)
+    minmax(430px, 0.95fr);
 
-  gap: 70px;
+  gap: 60px;
 
   align-items: center;
 }
 
 
-.mulheres-conteudo h2 {
+.mulheres-conteudo {
   max-width: 650px;
+}
+
+
+.mulheres-conteudo h2 {
+  max-width: 620px;
 
   margin:
-    10px 0 20px;
+    10px 0 22px;
 
   color: #073b7a;
 
-  font-size: 34px;
+  font-size: 36px;
+
+  line-height: 1.25;
 }
 
 
 .mulheres-conteudo .lead {
+  max-width: 620px;
+
+  margin-bottom: 17px;
+
   color: #505d6d;
+
+  font-size: 15px;
 
   line-height: 1.7;
 }
@@ -1252,30 +1291,39 @@ html {
 
   display: flex;
 
-  justify-content: center;
-
   align-items: center;
+
+  justify-content: center;
 }
 
 
-.mulheres-media img {
-  width: auto;
+.mulheres-imagem-box {
+  width: 100%;
 
-  max-width: 100%;
+  max-width: 500px;
+
+  padding: 12px;
+
+  background: #ffffff;
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 18px 45px
+    rgba(7, 59, 122, 0.13);
+}
+
+
+.mulheres-imagem-box img {
+  width: 100%;
 
   height: auto;
-
-  max-height: 560px;
 
   display: block;
 
   object-fit: contain;
 
-  border-radius: 18px;
-
-  box-shadow:
-    0 16px 38px
-    rgba(7, 59, 122, 0.14);
+  border-radius: 14px;
 }
 
 
@@ -1494,6 +1542,24 @@ html {
 
 
 /* ============================================================
+   NOTEBOOK / TELAS INTERMEDIÁRIAS
+============================================================ */
+
+@media (max-width: 1150px) {
+
+  .sobre-grid,
+  .mulheres-grid {
+    grid-template-columns:
+      1fr 1fr;
+
+    gap: 40px;
+  }
+
+}
+
+
+
+/* ============================================================
    TABLET
 ============================================================ */
 
@@ -1502,7 +1568,8 @@ html {
   .foco-grid,
   .sobre-grid,
   .mulheres-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns:
+      1fr;
 
     gap: 40px;
   }
@@ -1513,13 +1580,25 @@ html {
   }
 
 
-  .sobre-media img {
-    max-width: 700px;
+  .sobre-conteudo,
+  .mulheres-conteudo {
+    max-width: 760px;
   }
 
 
-  .mulheres-media img {
-    max-height: 520px;
+  .sobre-imagem-box {
+    max-width: 760px;
+
+    margin:
+      0 auto;
+  }
+
+
+  .mulheres-imagem-box {
+    max-width: 460px;
+
+    margin:
+      0 auto;
   }
 
 
@@ -1578,9 +1657,16 @@ html {
   }
 
 
+  .sobre-tupa-section,
+  .mulheres-section {
+    padding:
+      60px 0;
+  }
+
+
   .sobre-grid,
   .mulheres-grid {
-    gap: 28px;
+    gap: 30px;
   }
 
 
@@ -1590,19 +1676,25 @@ html {
   }
 
 
-  .sobre-media img {
-    border-radius: 12px;
+  .sobre-conteudo .lead,
+  .mulheres-conteudo .lead {
+    font-size: 15px;
+
+    line-height: 1.65;
   }
 
 
-  .mulheres-media img {
-    max-height: none;
+  .sobre-imagem-box,
+  .mulheres-imagem-box {
+    padding: 7px;
 
-    width: 100%;
+    border-radius: 15px;
+  }
 
-    max-width: 390px;
 
-    border-radius: 12px;
+  .sobre-imagem-box img,
+  .mulheres-imagem-box img {
+    border-radius: 10px;
   }
 
 
