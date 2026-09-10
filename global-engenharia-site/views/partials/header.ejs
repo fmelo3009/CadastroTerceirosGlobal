@@ -2,37 +2,31 @@
 
   <div class="container header-container">
 
-    <!-- ======================================================
-         LOGO / IDENTIFICAÇÃO
-    ======================================================= -->
-
+    <!-- MARCA / LOGO -->
     <a href="/" class="brand">
 
       <img
-        img src="/img/logo-gpe.png"
-        alt="Grupo Global · GPE"
+        src="/img/logo-SJE.png"
+        alt="SJE - São João Energia"
         class="brand-logo"
       />
 
-      <div class="brand-text">
+      <span class="brand-text">
 
         <strong>
           UTE Tupã Fase I
         </strong>
 
         <small>
-          Cadastro de Profissionais e Empresas
+          CADASTRO DE PROFISSIONAIS E EMPRESAS
         </small>
 
-      </div>
+      </span>
 
     </a>
 
 
-    <!-- ======================================================
-         MENU DESKTOP
-    ======================================================= -->
-
+    <!-- MENU DESKTOP -->
     <nav
       class="nav-desktop"
       aria-label="Navegação principal"
@@ -40,13 +34,17 @@
 
       <a
         href="/#cadastro"
-        class="menu-cadastro"
+        class="nav-cadastro"
       >
         Cadastro
       </a>
 
       <a href="/#sobre-tupa">
         Sobre a Tupã
+      </a>
+
+      <a href="/#valores">
+        Valores
       </a>
 
       <a href="/#mulheres-tupa">
@@ -56,10 +54,7 @@
     </nav>
 
 
-    <!-- ======================================================
-         BOTÃO MOBILE
-    ======================================================= -->
-
+    <!-- BOTÃO MOBILE -->
     <button
       class="hamburger"
       type="button"
@@ -74,10 +69,7 @@
   </div>
 
 
-  <!-- ========================================================
-       MENU MOBILE
-  ========================================================= -->
-
+  <!-- MENU MOBILE -->
   <nav
     class="nav-mobile"
     aria-label="Navegação mobile"
@@ -85,13 +77,17 @@
 
     <a
       href="/#cadastro"
-      class="menu-cadastro-mobile"
+      class="mobile-cadastro"
     >
       Cadastro
     </a>
 
     <a href="/#sobre-tupa">
       Sobre a Tupã
+    </a>
+
+    <a href="/#valores">
+      Valores
     </a>
 
     <a href="/#mulheres-tupa">
@@ -105,311 +101,447 @@
 
 <style>
 
-  /* ==========================================================
-     HEADER
-  ========================================================== */
+/* ============================================================
+   HEADER
+============================================================ */
 
-  .site-header {
-    width: 100%;
-    background: #ffffff;
-    border-bottom: 1px solid #e6e6e6;
-  }
+.site-header {
+  position: relative;
 
+  width: 100%;
+
+  background: #ffffff;
+
+  border-bottom:
+    1px solid #e6ebf1;
+
+  z-index: 1000;
+}
+
+
+.header-container {
+  min-height: 82px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 35px;
+}
+
+
+/* ============================================================
+   MARCA
+============================================================ */
+
+.brand {
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  min-width: 0;
+
+  text-decoration: none;
+}
+
+
+.brand-logo {
+  display: block;
+
+  width: auto;
+
+  height: 50px;
+
+  max-width: 170px;
+
+  object-fit: contain;
+
+  flex-shrink: 0;
+}
+
+
+.brand-text {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  min-width: 0;
+
+  line-height: 1;
+}
+
+
+.brand-text strong {
+  color: #073b7a;
+
+  font-size: 21px;
+
+  font-weight: 700;
+
+  line-height: 1.15;
+
+  white-space: nowrap;
+}
+
+
+.brand-text small {
+  margin-top: 5px;
+
+  color: #263a52;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.7px;
+
+  line-height: 1.2;
+
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   MENU DESKTOP
+============================================================ */
+
+.nav-desktop {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  margin-left: auto;
+}
+
+
+.nav-desktop a {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 44px;
+
+  padding:
+    0 17px;
+
+  color: #18344f;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  text-decoration: none;
+
+  border-radius: 6px;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.nav-desktop a:hover {
+  color: #073b7a;
+
+  background: #f4f7fb;
+}
+
+
+/* ============================================================
+   CADASTRO EM DESTAQUE
+============================================================ */
+
+.nav-desktop .nav-cadastro {
+  padding:
+    0 23px;
+
+  background: #073b7a;
+
+  color: #ffffff;
+
+  font-weight: 600;
+}
+
+
+.nav-desktop .nav-cadastro:hover {
+  background: #052f61;
+
+  color: #ffffff;
+}
+
+
+/* ============================================================
+   MENU MOBILE
+============================================================ */
+
+.hamburger {
+  display: none;
+
+  width: 42px;
+  height: 42px;
+
+  padding: 8px;
+
+  background: transparent;
+
+  border: none;
+
+  cursor: pointer;
+}
+
+
+.hamburger span {
+  display: block;
+
+  width: 24px;
+  height: 2px;
+
+  margin: 5px auto;
+
+  background: #073b7a;
+
+  border-radius: 3px;
+}
+
+
+.nav-mobile {
+  display: none;
+
+  padding:
+    10px 20px 20px;
+
+  background: #ffffff;
+
+  border-top:
+    1px solid #edf0f4;
+}
+
+
+.nav-mobile a {
+  display: block;
+
+  padding:
+    13px 15px;
+
+  color: #18344f;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  text-decoration: none;
+
+  border-radius: 6px;
+}
+
+
+.nav-mobile a:hover {
+  background: #f4f7fb;
+
+  color: #073b7a;
+}
+
+
+.nav-mobile .mobile-cadastro {
+  margin-bottom: 5px;
+
+  background: #073b7a;
+
+  color: #ffffff;
+
+  font-weight: 600;
+}
+
+
+.nav-mobile .mobile-cadastro:hover {
+  background: #052f61;
+
+  color: #ffffff;
+}
+
+
+/* ============================================================
+   RESPONSIVIDADE
+============================================================ */
+
+@media (max-width: 1050px) {
 
   .header-container {
-    min-height: 72px;
-
-    display: flex;
-    align-items: center;
-
-    gap: 32px;
-  }
-
-
-  /* ==========================================================
-     LOGO / MARCA
-  ========================================================== */
-
-  .brand {
-    display: flex;
-    align-items: center;
-
-    gap: 14px;
-
-    flex-shrink: 0;
-
-    text-decoration: none;
+    min-height: 76px;
   }
 
 
   .brand-logo {
-    display: block;
+    height: 44px;
 
-    width: auto;
-    height: 38px;
-
-    object-fit: contain;
-  }
-
-
-  .brand-text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    line-height: 1.1;
+    max-width: 145px;
   }
 
 
   .brand-text strong {
-    margin: 0;
-
-    color: #073b7a;
-
     font-size: 18px;
-    font-weight: 700;
   }
 
 
   .brand-text small {
-    margin-top: 4px;
-
-    color: #354052;
-
-    font-size: 10px;
-    font-weight: 500;
-
-    text-transform: uppercase;
-
-    letter-spacing: 0.6px;
-
-    white-space: nowrap;
-  }
-
-
-  /* ==========================================================
-     MENU DESKTOP
-  ========================================================== */
-
-  .nav-desktop {
-    height: 72px;
-
-    display: flex;
-    align-items: center;
-
-    gap: 18px;
-
-    margin-left: auto;
+    font-size: 9px;
   }
 
 
   .nav-desktop a {
-    position: relative;
+    padding:
+      0 11px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 13px;
+  }
 
-    min-height: 42px;
+}
 
-    padding: 0 18px;
 
-    color: #152d4f;
+@media (max-width: 850px) {
 
-    font-size: 14px;
-    font-weight: 500;
-
-    text-align: center;
-    text-decoration: none;
-
-    white-space: nowrap;
-
-    border-radius: 6px;
-
-    transition:
-      color 0.2s ease,
-      background-color 0.2s ease;
+  .header-container {
+    min-height: 72px;
   }
 
 
-  .nav-desktop a:hover {
-    color: #073b7a;
-
-    background: #f5f7fa;
+  .nav-desktop {
+    display: none;
   }
 
-
-  /* ==========================================================
-     CADASTRO - BOTÃO PRINCIPAL
-  ========================================================== */
-
-  .nav-desktop .menu-cadastro {
-    background: #073b7a;
-
-    color: #ffffff;
-
-    font-weight: 600;
-
-    padding-left: 24px;
-    padding-right: 24px;
-  }
-
-
-  .nav-desktop .menu-cadastro:hover {
-    background: #052f61;
-
-    color: #ffffff;
-  }
-
-
-  /* ==========================================================
-     HAMBURGER
-  ========================================================== */
 
   .hamburger {
-    display: none;
-
-    margin-left: auto;
-
-    padding: 8px;
-
-    background: none;
-
-    border: 0;
-
-    cursor: pointer;
-  }
-
-
-  .hamburger span {
     display: block;
 
-    width: 24px;
-    height: 2px;
-
-    margin: 5px 0;
-
-    background: #073b7a;
+    margin-left: auto;
   }
 
 
-  /* ==========================================================
-     MENU MOBILE
-  ========================================================== */
+  .nav-mobile.aberto {
+    display: block;
+  }
 
-  .nav-mobile {
-    display: none;
+}
+
+
+@media (max-width: 520px) {
+
+  .brand {
+    gap: 10px;
   }
 
 
-  /* ==========================================================
-     RESPONSIVIDADE
-  ========================================================== */
+  .brand-logo {
+    height: 38px;
 
-  @media (max-width: 900px) {
-
-    .header-container {
-      min-height: 64px;
-    }
-
-
-    .brand-logo {
-      height: 32px;
-    }
-
-
-    .brand-text strong {
-      font-size: 16px;
-    }
-
-
-    .brand-text small {
-      font-size: 9px;
-    }
-
-
-    .nav-desktop {
-      display: none;
-    }
-
-
-    .hamburger {
-      display: block;
-    }
-
-
-    .nav-mobile {
-      display: none;
-
-      flex-direction: column;
-
-      padding: 12px 20px 18px;
-
-      background: #ffffff;
-
-      border-top: 1px solid #eeeeee;
-    }
-
-
-    .nav-mobile a {
-      display: block;
-
-      padding: 13px 12px;
-
-      color: #152d4f;
-
-      font-size: 14px;
-      font-weight: 500;
-
-      text-decoration: none;
-
-      border-bottom: 1px solid #eeeeee;
-    }
-
-
-    .nav-mobile .menu-cadastro-mobile {
-      margin-bottom: 6px;
-
-      background: #073b7a;
-
-      color: #ffffff;
-
-      border-radius: 6px;
-      border-bottom: none;
-
-      text-align: center;
-
-      font-weight: 600;
-    }
-
+    max-width: 115px;
   }
 
 
-  @media (max-width: 520px) {
-
-    .brand {
-      gap: 9px;
-    }
-
-
-    .brand-logo {
-      height: 29px;
-    }
-
-
-    .brand-text strong {
-      font-size: 14px;
-    }
-
-
-    .brand-text small {
-      max-width: 165px;
-
-      white-space: normal;
-
-      font-size: 8px;
-    }
-
+  .brand-text strong {
+    font-size: 16px;
   }
+
+
+  .brand-text small {
+    max-width: 175px;
+
+    font-size: 8px;
+
+    white-space: normal;
+  }
+
+}
 
 </style>
+
+
+<script>
+
+document.addEventListener(
+  'DOMContentLoaded',
+  function () {
+
+    const botao =
+      document.querySelector(
+        '.hamburger'
+      );
+
+    const menu =
+      document.querySelector(
+        '.nav-mobile'
+      );
+
+
+    if (!botao || !menu) {
+      return;
+    }
+
+
+    botao.addEventListener(
+      'click',
+      function () {
+
+        const aberto =
+          menu.classList.toggle(
+            'aberto'
+          );
+
+
+        botao.setAttribute(
+          'aria-expanded',
+          aberto
+            ? 'true'
+            : 'false'
+        );
+
+      }
+    );
+
+
+    const links =
+      menu.querySelectorAll(
+        'a'
+      );
+
+
+    links.forEach(
+      function (link) {
+
+        link.addEventListener(
+          'click',
+          function () {
+
+            menu.classList.remove(
+              'aberto'
+            );
+
+            botao.setAttribute(
+              'aria-expanded',
+              'false'
+            );
+
+          }
+        );
+
+      }
+    );
+
+  }
+);
+
+</script>
