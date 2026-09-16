@@ -1,37 +1,52 @@
-const {
-  createClient
-} = require(
-  '@supabase/supabase-js'
-);
+const { createClient } = require('@supabase/supabase-js');
+
+
+// ============================================================
+// VARIÁVEIS DE AMBIENTE
+// ============================================================
 
 const supabaseUrl =
   process.env.SUPABASE_URL;
 
-const supabaseServiceKey =
+const supabaseServiceRoleKey =
   process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 
-if (
-  !supabaseUrl ||
-  !supabaseServiceKey
-) {
+// ============================================================
+// VALIDAÇÃO
+// ============================================================
+
+if (!supabaseUrl) {
   throw new Error(
-    'SUPABASE_URL ou SUPABASE_SERVICE_ROLE_KEY não configurada.'
+    'Variável SUPABASE_URL não configurada.'
+  );
+}
+
+if (!supabaseServiceRoleKey) {
+  throw new Error(
+    'Variável SUPABASE_SERVICE_ROLE_KEY não configurada.'
   );
 }
 
 
-const supabase =
-  createClient(
-    supabaseUrl,
-    supabaseServiceKey,
-    {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false
-      }
-    }
-  );
+// ============================================================
+// CLIENTE SUPABASE
+// ============================================================
 
+const supabase = createClient(
+  supabaseUrl,
+  supabaseServiceRoleKey,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false
+    }
+  }
+);
+
+
+// ============================================================
+// EXPORTAÇÃO
+// ============================================================
 
 module.exports = supabase;
