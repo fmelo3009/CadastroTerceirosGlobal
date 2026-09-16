@@ -1347,50 +1347,93 @@ router.post(
       // EXCLUIR ARQUIVOS DO SUPABASE STORAGE
       // ======================================================
 
-      if (
-        caminhos.length > 0
-      ) {
+// ======================================================
+// TENTAR EXCLUIR ARQUIVOS DO SUPABASE STORAGE
+//
+// IMPORTANTE:
+// Uma falha no Storage não impede a exclusão do cadastro.
+// ======================================================
 
-        const {
-          data,
-          error
-        } =
-          await supabase
-            .storage
-            .from('documentos')
-            .remove(
-              caminhos
-            );
+if (caminhos.length > 0) {
 
+  try {
 
-        if (error) {
-
-          console.error(
-            'Erro ao excluir documentos do Supabase Storage:',
-            error
-          );
+    const {
+      data,
+      error
+    } =
+      await supabase
+        .storage
+        .from('documentos')
+        .remove(caminhos);
 
 
-          return res
-            .status(500)
-            .render(
-              'erro',
-              {
-                titulo:
-                  'Não foi possível excluir',
+    if (error) {
 
-                mensagem:
-                  'Não foi possível excluir os documentos associados. O cadastro foi mantido para evitar uma exclusão incompleta.'
-              }
-            );
+      console.error(
+        'Aviso: não foi possível excluir os arquivos do Storage:',
+        error
+      );
 
-        }
+    } else {
+
+      console.log(
+        'Documentos removidos do Supabase Storage:',
+        data
+      );
+
+    }
+
+  } catch (erroStorage) {
+
+    console.error(
+      'Aviso: erro ao tentar excluir arquivos do Storage:',
+      erroStorage
+    );
+
+  }
+
+}
 
 
-        console.log(
-          'Documentos removidos do Supabase Storage:',
-          data
-        );
+// ======================================================
+// EXCLUIR CADASTRO DO BANCO
+// ======================================================
+
+await db.query(
+  `
+    DELETE FROM terceirizados
+    WHERE id = $1
+  `,
+  [
+    terceirizado.id
+  ]
+);
+
+
+console.log(
+  `Cadastro ${terceirizado.id} excluído com sucesso do banco.`
+);
+
+
+// ======================================================
+// REDIRECIONAR
+// ======================================================
+
+if (
+  terceirizado.tipo === 'PJ'
+) {
+
+  return res.redirect(
+    '/interno/pessoas-juridicas'
+  );
+
+}
+
+
+return res.redirect(
+  '/interno/pessoas-fisicas'
+);
 
       }
 
