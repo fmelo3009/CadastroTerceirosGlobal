@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../lib/db');
 const config = require('../config');
 const supabase = require('../lib/supabase');
-const { exigirLogin } = require('../lib/auth');
+const { exigirLogin, exigirAdmin } = require('../lib/auth');
 
 
 // ============================================================
@@ -829,7 +829,7 @@ router.get(
 
 
 // ============================================================
-// ALTERAR SITUAÇÃO
+// ALTERAR SITUAÇÃO INDIVIDUAL DO CADASTRO
 // ============================================================
 
 router.post(
@@ -839,7 +839,9 @@ router.post(
     try {
 
       const situacao =
-        req.body.situacao;
+        String(
+          req.body.situacao || ''
+        ).trim();
 
 
       if (
@@ -871,7 +873,7 @@ router.post(
       );
 
 
-      res.redirect(
+      return res.redirect(
         `/interno/terceirizados/${req.params.id}`
       );
 
@@ -958,7 +960,10 @@ router.get(
           );
 
 
-      if (error) {
+      if (
+        error ||
+        !data
+      ) {
 
         console.error(
           'Erro ao buscar arquivo no Supabase Storage:',
@@ -984,28 +989,8 @@ router.get(
       }
 
 
-      if (!data) {
-
-        return res
-          .status(404)
-          .render(
-            'erro',
-            {
-
-              titulo:
-                'Arquivo não encontrado',
-
-              mensagem:
-                'O documento não foi localizado no armazenamento.'
-
-            }
-          );
-
-      }
-
-
       // ======================================================
-      // CONVERTER ARQUIVO PARA BUFFER
+      // CONVERTER PARA BUFFER
       // ======================================================
 
       const arrayBuffer =
@@ -1019,7 +1004,7 @@ router.get(
 
 
       // ======================================================
-      // NOME ORIGINAL DO ARQUIVO
+      // NOME ORIGINAL
       // ======================================================
 
       const nomeArquivo =
@@ -1028,7 +1013,7 @@ router.get(
 
 
       // ======================================================
-      // CABEÇALHOS DO DOWNLOAD
+      // DOWNLOAD
       // ======================================================
 
       res.setHeader(
@@ -1052,10 +1037,6 @@ router.get(
       );
 
 
-      // ======================================================
-      // ENVIAR ARQUIVO
-      // ======================================================
-
       return res.send(
         buffer
       );
@@ -1075,5 +1056,195 @@ router.get(
   }
 );
 
+
+// ============================================================
+// EXCLUIR CADASTRO
+// SOMENTE ADMINISTRADOR
+// ============================================================
+
+router.post(
+  '/terceirizados/:id/excluir',
+
+  exigirAdmin,
+
+  async (req, res, next) => {
+
+    try {
+
+      // ======================================================
+      // LOCALIZAR CADASTRO
+      // ======================================================
+
+      const terceirizado =
+        await db.get(
+          `
+            SELECT *
+            FROM terceirizados
+            WHERE id = $1
+          `,
+          [
+            req.params.id
+          ]
+        );
+
+
+      if (!terceirizado) {
+
+        return res
+          .status(404)
+          .render(
+            'erro',
+            {
+
+              titulo:
+                'Cadastro não encontrado',
+
+              mensagem:
+                'O cadastro que você tentou excluir não existe.'
+
+            }
+          );
+
+      }
+
+
+      // ======================================================
+      // LOCALIZAR DOCUMENTOS ASSOCIADOS
+      // ======================================================
+
+      const documentos =
+        await db.all(
+          `
+            SELECT
+              id,
+              caminho_arquivo
+
+            FROM documentos
+
+            WHERE terceirizado_id = $1
+          `,
+          [
+            terceirizado.id
+          ]
+        );
+
+
+      // ======================================================
+      // MONTAR LISTA DOS ARQUIVOS DO STORAGE
+      // ======================================================
+
+      const caminhos =
+        documentos
+          .map(
+            documento =>
+              documento.caminho_arquivo
+          )
+          .filter(Boolean);
+
+
+      // ======================================================
+      // EXCLUIR ARQUIVOS DO SUPABASE STORAGE
+      // ======================================================
+
+      if (
+        caminhos.length > 0
+      ) {
+
+        const {
+          error
+        } =
+          await supabase
+            .storage
+            .from('documentos')
+            .remove(
+              caminhos
+            );
+
+
+        if (error) {
+
+          console.error(
+            'Erro ao excluir documentos do Supabase Storage:',
+            error
+          );
+
+
+          return res
+            .status(500)
+            .render(
+              'erro',
+              {
+
+                titulo:
+                  'Não foi possível excluir',
+
+                mensagem:
+                  'Não foi possível excluir os documentos associados. O cadastro foi mantido para evitar uma exclusão incompleta.'
+
+              }
+            );
+
+        }
+
+      }
+
+
+      // ======================================================
+      // EXCLUIR CADASTRO DO POSTGRESQL
+      //
+      // As tabelas relacionadas possuem ON DELETE CASCADE.
+      // Isso remove documentos, experiências, serviços e
+      // seleções relacionados ao cadastro.
+      // ======================================================
+
+      await db.query(
+        `
+          DELETE FROM terceirizados
+          WHERE id = $1
+        `,
+        [
+          terceirizado.id
+        ]
+      );
+
+
+      // ======================================================
+      // REDIRECIONAR PARA A LISTA CORRETA
+      // ======================================================
+
+      if (
+        terceirizado.tipo === 'PJ'
+      ) {
+
+        return res.redirect(
+          '/interno/pessoas-juridicas'
+        );
+
+      }
+
+
+      return res.redirect(
+        '/interno/pessoas-fisicas'
+      );
+
+
+    } catch (erro) {
+
+      console.error(
+        'Erro ao excluir cadastro:',
+        erro
+      );
+
+      next(erro);
+
+    }
+
+  }
+);
+
+
+// ============================================================
+// EXPORTAÇÃO
+// ============================================================
 
 module.exports = router;
