@@ -14,21 +14,16 @@ const { exigirLogin, exigirAdmin } = require('../lib/auth');
 
 router.get('/login', (req, res) => {
 
-  const aviso =
-    req.session.avisoLogin;
+  const aviso = req.session.avisoLogin;
 
   req.session.avisoLogin = null;
 
   res.render(
     'interno/login',
     {
-      titulo:
-        'Área Administrativa',
-
+      titulo: 'Área Administrativa',
       aviso,
-
-      erro:
-        null
+      erro: null
     }
   );
 
@@ -42,17 +37,12 @@ router.post(
     try {
 
       const email =
-        String(
-          req.body.email || ''
-        )
+        String(req.body.email || '')
           .trim()
           .toLowerCase();
 
-
       const senha =
-        String(
-          req.body.senha || ''
-        );
+        String(req.body.senha || '');
 
 
       const usuario =
@@ -82,14 +72,9 @@ router.post(
           .render(
             'interno/login',
             {
-              titulo:
-                'Área Administrativa',
-
-              aviso:
-                null,
-
-              erro:
-                'E-mail ou senha inválidos.'
+              titulo: 'Área Administrativa',
+              aviso: null,
+              erro: 'E-mail ou senha inválidos.'
             }
           );
 
@@ -97,16 +82,9 @@ router.post(
 
 
       req.session.usuario = {
-
-        id:
-          usuario.id,
-
-        nome:
-          usuario.nome,
-
-        papel:
-          usuario.papel
-
+        id: usuario.id,
+        nome: usuario.nome,
+        papel: usuario.papel
       };
 
 
@@ -125,23 +103,16 @@ router.post(
               .render(
                 'interno/login',
                 {
-                  titulo:
-                    'Área Administrativa',
-
-                  aviso:
-                    null,
-
-                  erro:
-                    'Não foi possível iniciar a sessão.'
+                  titulo: 'Área Administrativa',
+                  aviso: null,
+                  erro: 'Não foi possível iniciar a sessão.'
                 }
               );
 
           }
 
 
-          return res.redirect(
-            '/interno'
-          );
+          return res.redirect('/interno');
 
         }
       );
@@ -182,10 +153,7 @@ router.get(
 
         }
 
-
-        res.redirect(
-          '/interno/login'
-        );
+        res.redirect('/interno/login');
 
       }
     );
@@ -234,16 +202,13 @@ router.get(
       res.render(
         'interno/index',
         {
-
-          titulo:
-            'Painel Administrativo',
+          titulo: 'Painel Administrativo',
 
           totalPF:
             pf ? pf.total : 0,
 
           totalPJ:
             pj ? pj.total : 0
-
         }
       );
 
@@ -278,18 +243,15 @@ router.get(
           req.query.busca || ''
         ).trim();
 
-
       const cidade =
         String(
           req.query.cidade || ''
         ).trim();
 
-
       const profissao =
         String(
           req.query.profissao || ''
         ).trim();
-
 
       const situacao =
         String(
@@ -340,7 +302,6 @@ router.get(
           `%${busca}%`
         );
 
-
         sql += `
           AND (
             t.razao_social
@@ -370,7 +331,6 @@ router.get(
           `%${cidade}%`
         );
 
-
         sql += `
           AND t.cidade
           ILIKE $${params.length}
@@ -389,7 +349,6 @@ router.get(
           `%${profissao}%`
         );
 
-
         sql += `
           AND t.profissao
           ILIKE $${params.length}
@@ -407,7 +366,6 @@ router.get(
         params.push(
           situacao
         );
-
 
         sql += `
           AND t.situacao_cadastral
@@ -485,18 +443,15 @@ router.get(
           req.query.busca || ''
         ).trim();
 
-
       const cidade =
         String(
           req.query.cidade || ''
         ).trim();
 
-
       const setor =
         String(
           req.query.setor || ''
         ).trim();
-
 
       const situacao =
         String(
@@ -547,7 +502,6 @@ router.get(
           `%${busca}%`
         );
 
-
         sql += `
           AND (
             t.razao_social
@@ -580,7 +534,6 @@ router.get(
           `%${cidade}%`
         );
 
-
         sql += `
           AND t.cidade
           ILIKE $${params.length}
@@ -599,7 +552,6 @@ router.get(
           `%${setor}%`
         );
 
-
         sql += `
           AND t.setor_atividade
           ILIKE $${params.length}
@@ -617,7 +569,6 @@ router.get(
         params.push(
           situacao
         );
-
 
         sql += `
           AND t.situacao_cadastral
@@ -1129,9 +1080,6 @@ router.post(
 
       // ======================================================
       // NORMALIZAR CAMINHO DO SUPABASE STORAGE
-      //
-      // O Supabase precisa receber somente o caminho interno
-      // do arquivo dentro do bucket "documentos".
       // ======================================================
 
       function normalizarCaminhoStorage(caminho) {
@@ -1150,11 +1098,7 @@ router.post(
         }
 
 
-        // ----------------------------------------------------
-        // CASO 1:
-        // URL completa do Supabase Storage
-        // ----------------------------------------------------
-
+        // URL completa do Supabase
         if (
           caminhoFinal.startsWith('http://') ||
           caminhoFinal.startsWith('https://')
@@ -1205,6 +1149,7 @@ router.post(
 
             }
 
+
           } catch (erroURL) {
 
             console.warn(
@@ -1217,16 +1162,8 @@ router.post(
         }
 
 
-        // ----------------------------------------------------
-        // CASO 2:
-        // caminho contendo "documentos/"
-        //
-        // Exemplo:
-        // documentos/terceirizados/10/curriculo.pdf
-        //
-        // Como o bucket já é "documentos", removemos essa parte.
-        // ----------------------------------------------------
-
+        // Se vier documentos/arquivo.pdf,
+        // remove o nome do bucket.
         const indiceBucket =
           caminhoFinal.indexOf(
             'documentos/'
@@ -1246,11 +1183,7 @@ router.post(
         }
 
 
-        // ----------------------------------------------------
-        // CASO 3:
-        // caminho antigo começando com uploads/
-        // ----------------------------------------------------
-
+        // Caminhos antigos
         if (
           caminhoFinal.startsWith(
             'uploads/'
@@ -1265,10 +1198,7 @@ router.post(
         }
 
 
-        // ----------------------------------------------------
-        // REMOVER BARRAS INICIAIS
-        // ----------------------------------------------------
-
+        // Remove barras iniciais
         caminhoFinal =
           caminhoFinal.replace(
             /^\/+/,
@@ -1276,10 +1206,7 @@ router.post(
           );
 
 
-        // ----------------------------------------------------
-        // PADRONIZAR BARRAS DO WINDOWS
-        // ----------------------------------------------------
-
+        // Converte barras do Windows
         caminhoFinal =
           caminhoFinal.replace(
             /\\/g,
@@ -1287,18 +1214,12 @@ router.post(
           );
 
 
-        // ----------------------------------------------------
-        // REMOVER QUERY STRING CASO EXISTA
-        // ----------------------------------------------------
-
+        // Remove query string
         caminhoFinal =
           caminhoFinal.split('?')[0];
 
 
-        // ----------------------------------------------------
-        // DECODIFICAR URL
-        // ----------------------------------------------------
-
+        // Decodifica caracteres de URL
         try {
 
           caminhoFinal =
@@ -1308,8 +1229,7 @@ router.post(
 
         } catch (erroDecode) {
 
-          // Mantém o caminho original caso não seja
-          // possível decodificar.
+          // Mantém o caminho caso não seja possível decodificar.
 
         }
 
@@ -1344,96 +1264,51 @@ router.post(
 
 
       // ======================================================
-      // EXCLUIR ARQUIVOS DO SUPABASE STORAGE
+      // TENTAR EXCLUIR ARQUIVOS DO SUPABASE STORAGE
+      //
+      // Se o Storage apresentar erro, o cadastro ainda poderá
+      // ser excluído do PostgreSQL.
       // ======================================================
 
-// ======================================================
-// TENTAR EXCLUIR ARQUIVOS DO SUPABASE STORAGE
-//
-// IMPORTANTE:
-// Uma falha no Storage não impede a exclusão do cadastro.
-// ======================================================
+      if (caminhos.length > 0) {
 
-if (caminhos.length > 0) {
+        try {
 
-  try {
-
-    const {
-      data,
-      error
-    } =
-      await supabase
-        .storage
-        .from('documentos')
-        .remove(caminhos);
+          const {
+            data,
+            error
+          } =
+            await supabase
+              .storage
+              .from('documentos')
+              .remove(caminhos);
 
 
-    if (error) {
+          if (error) {
 
-      console.error(
-        'Aviso: não foi possível excluir os arquivos do Storage:',
-        error
-      );
+            console.error(
+              'Aviso: não foi possível excluir os arquivos do Storage:',
+              error
+            );
 
-    } else {
+          } else {
 
-      console.log(
-        'Documentos removidos do Supabase Storage:',
-        data
-      );
+            console.log(
+              'Documentos removidos do Supabase Storage:',
+              data
+            );
 
-    }
-
-  } catch (erroStorage) {
-
-    console.error(
-      'Aviso: erro ao tentar excluir arquivos do Storage:',
-      erroStorage
-    );
-
-  }
-
-}
+          }
 
 
-// ======================================================
-// EXCLUIR CADASTRO DO BANCO
-// ======================================================
+        } catch (erroStorage) {
 
-await db.query(
-  `
-    DELETE FROM terceirizados
-    WHERE id = $1
-  `,
-  [
-    terceirizado.id
-  ]
-);
+          console.error(
+            'Aviso: erro ao tentar excluir arquivos do Storage:',
+            erroStorage
+          );
 
-
-console.log(
-  `Cadastro ${terceirizado.id} excluído com sucesso do banco.`
-);
-
-
-// ======================================================
-// REDIRECIONAR
-// ======================================================
-
-if (
-  terceirizado.tipo === 'PJ'
-) {
-
-  return res.redirect(
-    '/interno/pessoas-juridicas'
-  );
-
-}
-
-
-return res.redirect(
-  '/interno/pessoas-fisicas'
-);
+        }
 
       }
 
@@ -1441,9 +1316,8 @@ return res.redirect(
       // ======================================================
       // EXCLUIR CADASTRO DO POSTGRESQL
       //
-      // As tabelas relacionadas possuem ON DELETE CASCADE.
-      // Isso remove documentos, experiências, serviços e
-      // demais registros vinculados ao cadastro.
+      // As tabelas relacionadas com ON DELETE CASCADE serão
+      // excluídas juntamente com o cadastro principal.
       // ======================================================
 
       await db.query(
@@ -1458,7 +1332,7 @@ return res.redirect(
 
 
       console.log(
-        `Cadastro ${terceirizado.id} excluído com sucesso.`
+        `Cadastro ${terceirizado.id} excluído com sucesso do banco.`
       );
 
 
@@ -1489,7 +1363,6 @@ return res.redirect(
         erro
       );
 
-
       next(erro);
 
     }
@@ -1498,11 +1371,6 @@ return res.redirect(
 );
 
 
-// ============================================================
-// EXPORTAÇÃO
-// ============================================================
-
-module.exports = router;
 // ============================================================
 // EXPORTAÇÃO
 // ============================================================
