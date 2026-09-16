@@ -13,96 +13,72 @@ const { exigirLogin } = require('../lib/auth');
 // ============================================================
 
 router.get('/login', (req, res) => {
-  const aviso = req.session.avisoLogin;
+
+  const aviso =
+    req.session.avisoLogin;
 
   req.session.avisoLogin = null;
 
-  res.render('interno/login', {
-    titulo: 'Área Administrativa',
-    aviso,
-    erro: null
-  });
+  res.render(
+    'interno/login',
+    {
+      titulo:
+        'Área Administrativa',
+
+      aviso,
+
+      erro:
+        null
+    }
+  );
+
 });
 
 
-router.post('/login', async (req, res, next) => {
-  try {
+router.post(
+  '/login',
+  async (req, res, next) => {
 
-    const email = String(
-      req.body.email || ''
-    )
-      .trim()
-      .toLowerCase();
+    try {
 
-    const senha = String(
-      req.body.senha || ''
-    );
-
-
-    const usuario =
-      await db.get(
-        `
-          SELECT *
-          FROM usuarios
-          WHERE LOWER(email) = LOWER($1)
-          AND ativo = TRUE
-        `,
-        [
-          email
-        ]
-      );
+      const email =
+        String(
+          req.body.email || ''
+        )
+          .trim()
+          .toLowerCase();
 
 
-    if (
-      !usuario ||
-      !bcrypt.compareSync(
-        senha,
-        usuario.senha_hash
-      )
-    ) {
-
-      return res
-        .status(401)
-        .render(
-          'interno/login',
-          {
-            titulo:
-              'Área Administrativa',
-
-            aviso:
-              null,
-
-            erro:
-              'E-mail ou senha inválidos.'
-          }
+      const senha =
+        String(
+          req.body.senha || ''
         );
 
-    }
 
-
-    req.session.usuario = {
-      id:
-        usuario.id,
-
-      nome:
-        usuario.nome,
-
-      papel:
-        usuario.papel
-    };
-
-
-    req.session.save((erro) => {
-
-      if (erro) {
-
-        console.error(
-          'Erro ao salvar sessão:',
-          erro
+      const usuario =
+        await db.get(
+          `
+            SELECT *
+            FROM usuarios
+            WHERE LOWER(email) = LOWER($1)
+            AND ativo = TRUE
+          `,
+          [
+            email
+          ]
         );
+
+
+      if (
+        !usuario ||
+        !bcrypt.compareSync(
+          senha,
+          usuario.senha_hash
+        )
+      ) {
 
         return res
-          .status(500)
+          .status(401)
           .render(
             'interno/login',
             {
@@ -113,57 +89,109 @@ router.post('/login', async (req, res, next) => {
                 null,
 
               erro:
-                'Não foi possível iniciar a sessão.'
+                'E-mail ou senha inválidos.'
             }
           );
 
       }
 
 
-      return res.redirect(
-        '/interno'
+      req.session.usuario = {
+
+        id:
+          usuario.id,
+
+        nome:
+          usuario.nome,
+
+        papel:
+          usuario.papel
+
+      };
+
+
+      req.session.save(
+        (erro) => {
+
+          if (erro) {
+
+            console.error(
+              'Erro ao salvar sessão:',
+              erro
+            );
+
+            return res
+              .status(500)
+              .render(
+                'interno/login',
+                {
+                  titulo:
+                    'Área Administrativa',
+
+                  aviso:
+                    null,
+
+                  erro:
+                    'Não foi possível iniciar a sessão.'
+                }
+              );
+
+          }
+
+
+          return res.redirect(
+            '/interno'
+          );
+
+        }
       );
 
-    });
 
+    } catch (erro) {
 
-  } catch (erro) {
+      console.error(
+        'Erro no login:',
+        erro
+      );
 
-    console.error(
-      'Erro no login:',
-      erro
-    );
+      next(erro);
 
-    next(erro);
+    }
 
   }
-});
+);
 
 
 // ============================================================
 // LOGOUT
 // ============================================================
 
-router.get('/logout', (req, res) => {
+router.get(
+  '/logout',
+  (req, res) => {
 
-  req.session.destroy((erro) => {
+    req.session.destroy(
+      (erro) => {
 
-    if (erro) {
+        if (erro) {
 
-      console.error(
-        'Erro ao encerrar sessão:',
-        erro
-      );
+          console.error(
+            'Erro ao encerrar sessão:',
+            erro
+          );
 
-    }
+        }
 
-    res.redirect(
-      '/interno/login'
+
+        res.redirect(
+          '/interno/login'
+        );
+
+      }
     );
 
-  });
-
-});
+  }
+);
 
 
 // ============================================================
@@ -177,57 +205,62 @@ router.use(exigirLogin);
 // PAINEL PRINCIPAL
 // ============================================================
 
-router.get('/', async (req, res, next) => {
+router.get(
+  '/',
+  async (req, res, next) => {
 
-  try {
+    try {
 
-    const pf =
-      await db.get(
-        `
-          SELECT COUNT(*)::int AS total
-          FROM terceirizados
-          WHERE tipo = 'PF'
-        `
+      const pf =
+        await db.get(
+          `
+            SELECT COUNT(*)::int AS total
+            FROM terceirizados
+            WHERE tipo = 'PF'
+          `
+        );
+
+
+      const pj =
+        await db.get(
+          `
+            SELECT COUNT(*)::int AS total
+            FROM terceirizados
+            WHERE tipo = 'PJ'
+          `
+        );
+
+
+      res.render(
+        'interno/index',
+        {
+
+          titulo:
+            'Painel Administrativo',
+
+          totalPF:
+            pf ? pf.total : 0,
+
+          totalPJ:
+            pj ? pj.total : 0
+
+        }
       );
 
 
-    const pj =
-      await db.get(
-        `
-          SELECT COUNT(*)::int AS total
-          FROM terceirizados
-          WHERE tipo = 'PJ'
-        `
+    } catch (erro) {
+
+      console.error(
+        'Erro ao carregar painel administrativo:',
+        erro
       );
 
+      next(erro);
 
-    res.render(
-      'interno/index',
-      {
-        titulo:
-          'Painel Administrativo',
-
-        totalPF:
-          pf ? pf.total : 0,
-
-        totalPJ:
-          pj ? pj.total : 0
-      }
-    );
-
-
-  } catch (erro) {
-
-    console.error(
-      'Erro ao carregar painel administrativo:',
-      erro
-    );
-
-    next(erro);
+    }
 
   }
-
-});
+);
 
 
 // ============================================================
@@ -240,21 +273,28 @@ router.get(
 
     try {
 
-      const busca = String(
-        req.query.busca || ''
-      ).trim();
+      const busca =
+        String(
+          req.query.busca || ''
+        ).trim();
 
-      const cidade = String(
-        req.query.cidade || ''
-      ).trim();
 
-      const profissao = String(
-        req.query.profissao || ''
-      ).trim();
+      const cidade =
+        String(
+          req.query.cidade || ''
+        ).trim();
 
-      const situacao = String(
-        req.query.situacao || ''
-      ).trim();
+
+      const profissao =
+        String(
+          req.query.profissao || ''
+        ).trim();
+
+
+      const situacao =
+        String(
+          req.query.situacao || ''
+        ).trim();
 
 
       let sql = `
@@ -265,11 +305,20 @@ router.get(
           (
             SELECT d.id
             FROM documentos d
-            WHERE d.terceirizado_id = t.id
-            AND d.tipo_documento = 'Currículo'
-            AND d.caminho_arquivo IS NOT NULL
+
+            WHERE
+              d.terceirizado_id = t.id
+
+              AND
+              d.tipo_documento = 'Currículo'
+
+              AND
+              d.caminho_arquivo IS NOT NULL
+
             ORDER BY d.id DESC
+
             LIMIT 1
+
           ) AS documento_id
 
         FROM terceirizados t
@@ -281,9 +330,9 @@ router.get(
       const params = [];
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // BUSCA
-      // --------------------------------------------------------
+      // ======================================================
 
       if (busca) {
 
@@ -291,27 +340,36 @@ router.get(
           `%${busca}%`
         );
 
+
         sql += `
           AND (
-            t.razao_social ILIKE $${params.length}
-            OR t.cpf_cnpj ILIKE $${params.length}
-            OR t.email ILIKE $${params.length}
-            OR t.telefone ILIKE $${params.length}
+            t.razao_social
+              ILIKE $${params.length}
+
+            OR t.cpf_cnpj
+              ILIKE $${params.length}
+
+            OR t.email
+              ILIKE $${params.length}
+
+            OR t.telefone
+              ILIKE $${params.length}
           )
         `;
 
       }
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // CIDADE
-      // --------------------------------------------------------
+      // ======================================================
 
       if (cidade) {
 
         params.push(
           `%${cidade}%`
         );
+
 
         sql += `
           AND t.cidade
@@ -321,15 +379,16 @@ router.get(
       }
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // PROFISSÃO
-      // --------------------------------------------------------
+      // ======================================================
 
       if (profissao) {
 
         params.push(
           `%${profissao}%`
         );
+
 
         sql += `
           AND t.profissao
@@ -339,15 +398,16 @@ router.get(
       }
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // SITUAÇÃO
-      // --------------------------------------------------------
+      // ======================================================
 
       if (situacao) {
 
         params.push(
           situacao
         );
+
 
         sql += `
           AND t.situacao_cadastral
@@ -372,6 +432,7 @@ router.get(
       res.render(
         'interno/pessoas-fisicas',
         {
+
           titulo:
             'Pessoas Físicas',
 
@@ -389,6 +450,7 @@ router.get(
 
           total:
             pessoas.length
+
         }
       );
 
@@ -418,21 +480,28 @@ router.get(
 
     try {
 
-      const busca = String(
-        req.query.busca || ''
-      ).trim();
+      const busca =
+        String(
+          req.query.busca || ''
+        ).trim();
 
-      const cidade = String(
-        req.query.cidade || ''
-      ).trim();
 
-      const setor = String(
-        req.query.setor || ''
-      ).trim();
+      const cidade =
+        String(
+          req.query.cidade || ''
+        ).trim();
 
-      const situacao = String(
-        req.query.situacao || ''
-      ).trim();
+
+      const setor =
+        String(
+          req.query.setor || ''
+        ).trim();
+
+
+      const situacao =
+        String(
+          req.query.situacao || ''
+        ).trim();
 
 
       let sql = `
@@ -443,11 +512,20 @@ router.get(
           (
             SELECT d.id
             FROM documentos d
-            WHERE d.terceirizado_id = t.id
-            AND d.tipo_documento = 'Portfólio'
-            AND d.caminho_arquivo IS NOT NULL
+
+            WHERE
+              d.terceirizado_id = t.id
+
+              AND
+              d.tipo_documento = 'Portfólio'
+
+              AND
+              d.caminho_arquivo IS NOT NULL
+
             ORDER BY d.id DESC
+
             LIMIT 1
+
           ) AS documento_id
 
         FROM terceirizados t
@@ -459,9 +537,9 @@ router.get(
       const params = [];
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // BUSCA
-      // --------------------------------------------------------
+      // ======================================================
 
       if (busca) {
 
@@ -469,28 +547,39 @@ router.get(
           `%${busca}%`
         );
 
+
         sql += `
           AND (
-            t.razao_social ILIKE $${params.length}
-            OR t.nome_fantasia ILIKE $${params.length}
-            OR t.cpf_cnpj ILIKE $${params.length}
-            OR t.email ILIKE $${params.length}
-            OR t.contato_nome ILIKE $${params.length}
+            t.razao_social
+              ILIKE $${params.length}
+
+            OR t.nome_fantasia
+              ILIKE $${params.length}
+
+            OR t.cpf_cnpj
+              ILIKE $${params.length}
+
+            OR t.email
+              ILIKE $${params.length}
+
+            OR t.contato_nome
+              ILIKE $${params.length}
           )
         `;
 
       }
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // CIDADE
-      // --------------------------------------------------------
+      // ======================================================
 
       if (cidade) {
 
         params.push(
           `%${cidade}%`
         );
+
 
         sql += `
           AND t.cidade
@@ -500,15 +589,16 @@ router.get(
       }
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // SETOR
-      // --------------------------------------------------------
+      // ======================================================
 
       if (setor) {
 
         params.push(
           `%${setor}%`
         );
+
 
         sql += `
           AND t.setor_atividade
@@ -518,15 +608,16 @@ router.get(
       }
 
 
-      // --------------------------------------------------------
+      // ======================================================
       // SITUAÇÃO
-      // --------------------------------------------------------
+      // ======================================================
 
       if (situacao) {
 
         params.push(
           situacao
         );
+
 
         sql += `
           AND t.situacao_cadastral
@@ -551,6 +642,7 @@ router.get(
       res.render(
         'interno/pessoas-juridicas',
         {
+
           titulo:
             'Pessoas Jurídicas',
 
@@ -568,6 +660,7 @@ router.get(
 
           total:
             empresas.length
+
         }
       );
 
@@ -617,11 +710,13 @@ router.get(
           .render(
             'erro',
             {
+
               titulo:
                 'Não encontrado',
 
               mensagem:
                 'Cadastro não encontrado.'
+
             }
           );
 
@@ -633,7 +728,9 @@ router.get(
           `
             SELECT *
             FROM documentos
+
             WHERE terceirizado_id = $1
+
             ORDER BY id DESC
           `,
           [
@@ -647,6 +744,7 @@ router.get(
           `
             SELECT *
             FROM experiencias
+
             WHERE terceirizado_id = $1
           `,
           [
@@ -659,6 +757,7 @@ router.get(
         await db.all(
           `
             SELECT
+
               COALESCE(
                 s.nome,
                 ts.servico_outro
@@ -669,7 +768,8 @@ router.get(
             LEFT JOIN servicos s
               ON s.id = ts.servico_id
 
-            WHERE ts.terceirizado_id = $1
+            WHERE
+              ts.terceirizado_id = $1
           `,
           [
             terceirizado.id
@@ -693,6 +793,7 @@ router.get(
       res.render(
         'interno/detalhe',
         {
+
           titulo:
             terceirizado.nome_fantasia ||
             terceirizado.razao_social,
@@ -707,6 +808,7 @@ router.get(
 
           situacoes:
             config.SITUACOES_CADASTRAIS
+
         }
       );
 
@@ -800,9 +902,9 @@ router.get(
 
     try {
 
-      // --------------------------------------------------------
-      // BUSCAR DOCUMENTO NO BANCO
-      // --------------------------------------------------------
+      // ======================================================
+      // LOCALIZAR DOCUMENTO NO BANCO
+      // ======================================================
 
       const documento =
         await db.get(
@@ -827,64 +929,88 @@ router.get(
           .render(
             'erro',
             {
+
               titulo:
                 'Arquivo não encontrado',
 
               mensagem:
                 'Este cadastro não possui arquivo anexado.'
+
             }
           );
 
       }
 
 
-      // --------------------------------------------------------
-      // BUSCAR ARQUIVO NO SUPABASE STORAGE
-      // --------------------------------------------------------
+      // ======================================================
+      // BAIXAR DO BUCKET PRIVADO "documentos"
+      // ======================================================
 
       const {
         data,
         error
       } =
-        await supabase.storage
+        await supabase
+          .storage
           .from('documentos')
           .download(
             documento.caminho_arquivo
           );
 
 
-      if (
-        error ||
-        !data
-      ) {
+      if (error) {
 
         console.error(
-          'Erro no Supabase Storage:',
+          'Erro ao buscar arquivo no Supabase Storage:',
           error
         );
+
 
         return res
           .status(404)
           .render(
             'erro',
             {
+
               titulo:
                 'Arquivo não encontrado',
 
               mensagem:
-                'O arquivo não foi localizado no armazenamento.'
+                'O documento não foi localizado no armazenamento.'
+
             }
           );
 
       }
 
 
-      // --------------------------------------------------------
-      // CONVERTER PARA BUFFER
-      // --------------------------------------------------------
+      if (!data) {
+
+        return res
+          .status(404)
+          .render(
+            'erro',
+            {
+
+              titulo:
+                'Arquivo não encontrado',
+
+              mensagem:
+                'O documento não foi localizado no armazenamento.'
+
+            }
+          );
+
+      }
+
+
+      // ======================================================
+      // CONVERTER ARQUIVO PARA BUFFER
+      // ======================================================
 
       const arrayBuffer =
         await data.arrayBuffer();
+
 
       const buffer =
         Buffer.from(
@@ -892,25 +1018,22 @@ router.get(
         );
 
 
-      // --------------------------------------------------------
-      // DEFINIR NOME DO DOWNLOAD
-      // --------------------------------------------------------
+      // ======================================================
+      // NOME ORIGINAL DO ARQUIVO
+      // ======================================================
 
       const nomeArquivo =
         documento.nome_arquivo_original ||
         'documento';
 
 
-      const nomeArquivoSeguro =
-        nomeArquivo.replace(
-          /["\r\n]/g,
-          '_'
-        );
-
+      // ======================================================
+      // CABEÇALHOS DO DOWNLOAD
+      // ======================================================
 
       res.setHeader(
         'Content-Disposition',
-        `attachment; filename="${nomeArquivoSeguro}"; filename*=UTF-8''${encodeURIComponent(
+        `attachment; filename*=UTF-8''${encodeURIComponent(
           nomeArquivo
         )}`
       );
@@ -928,6 +1051,10 @@ router.get(
         buffer.length
       );
 
+
+      // ======================================================
+      // ENVIAR ARQUIVO
+      // ======================================================
 
       return res.send(
         buffer
