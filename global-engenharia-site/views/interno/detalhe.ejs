@@ -1,109 +1,1160 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><%- include('../partials/head') %></head>
+
+<head>
+  <%- include('../partials/head') %>
+
+  <style>
+
+    /* ========================================================
+       CABEÇALHO DO CADASTRO
+    ======================================================== */
+
+    .admin-detalhe-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .admin-detalhe-head h1 {
+      margin-bottom: 6px;
+    }
+
+    .status-form {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .status-form select {
+      min-width: 190px;
+      height: 42px;
+      padding: 0 12px;
+      border: 1px solid #d7dce2;
+      border-radius: 6px;
+      background: #ffffff;
+      font-size: 13.5px;
+    }
+
+
+    /* ========================================================
+       ÁREA DE EXCLUSÃO
+    ======================================================== */
+
+    .danger-zone {
+      margin-top: 28px;
+      padding: 22px 24px;
+      border: 1px solid #efcaca;
+      border-radius: 10px;
+      background: #fffafa;
+    }
+
+    .danger-zone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .danger-zone-text h3 {
+      margin: 0 0 6px;
+      color: #9f1d1d;
+      font-size: 17px;
+    }
+
+    .danger-zone-text p {
+      margin: 0;
+      color: #666;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    .btn-danger-custom {
+      border: none;
+      border-radius: 6px;
+      background: #b42318;
+      color: #ffffff;
+      padding: 11px 18px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition:
+        background .2s ease,
+        transform .1s ease;
+    }
+
+    .btn-danger-custom:hover {
+      background: #8f1c13;
+    }
+
+    .btn-danger-custom:active {
+      transform: translateY(1px);
+    }
+
+
+    /* ========================================================
+       MODAL DE CONFIRMAÇÃO
+    ======================================================== */
+
+    .modal-exclusao {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+
+      background:
+        rgba(0, 0, 0, 0.52);
+    }
+
+    .modal-exclusao.ativo {
+      display: flex;
+    }
+
+    .modal-exclusao-card {
+      width: 100%;
+      max-width: 480px;
+
+      background: #ffffff;
+
+      border-radius: 12px;
+
+      padding: 28px;
+
+      box-shadow:
+        0 20px 60px
+        rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-exclusao-icone {
+      width: 48px;
+      height: 48px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      margin-bottom: 18px;
+
+      border-radius: 50%;
+
+      background: #fff0ef;
+
+      color: #b42318;
+
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .modal-exclusao-card h2 {
+      margin: 0 0 10px;
+
+      font-size: 21px;
+
+      color: #20252b;
+    }
+
+    .modal-exclusao-card p {
+      margin: 0;
+
+      color: #5e6670;
+
+      font-size: 14px;
+
+      line-height: 1.6;
+    }
+
+    .modal-exclusao-nome {
+      margin-top: 16px;
+
+      padding: 12px 14px;
+
+      border-radius: 7px;
+
+      background: #f5f6f7;
+
+      font-size: 14px;
+
+      color: #333;
+    }
+
+    .modal-exclusao-aviso {
+      margin-top: 16px !important;
+
+      color: #9f1d1d !important;
+
+      font-weight: 600;
+    }
+
+    .modal-exclusao-acoes {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+
+      margin-top: 24px;
+    }
+
+    .btn-cancelar-exclusao {
+      padding: 10px 18px;
+
+      border: 1px solid #ccd1d7;
+
+      border-radius: 6px;
+
+      background: #ffffff;
+
+      color: #333;
+
+      font-size: 13.5px;
+
+      font-weight: 600;
+
+      cursor: pointer;
+    }
+
+    .btn-cancelar-exclusao:hover {
+      background: #f4f5f6;
+    }
+
+
+    /* ========================================================
+       RESPONSIVO
+    ======================================================== */
+
+    @media (max-width: 768px) {
+
+      .admin-detalhe-head {
+        flex-direction: column;
+      }
+
+      .status-form {
+        width: 100%;
+      }
+
+      .status-form select {
+        flex: 1;
+      }
+
+      .danger-zone-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .btn-danger-custom {
+        width: 100%;
+      }
+
+      .modal-exclusao-acoes {
+        flex-direction: column-reverse;
+      }
+
+      .modal-exclusao-acoes button {
+        width: 100%;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
 <body>
+
 <%- include('../partials/interno-topbar') %>
 
+
 <div class="admin-page">
-  <div class="container" style="max-width:960px;">
-    <a href="/interno" class="admin-back">← Voltar para a lista</a>
+
+  <div
+    class="container"
+    style="max-width:960px;"
+  >
+
+
+    <!-- ======================================================
+         VOLTAR
+    ======================================================= -->
+
+    <a
+      href="<%= terceirizado.tipo === 'PF'
+        ? '/interno/pessoas-fisicas'
+        : '/interno/pessoas-juridicas' %>"
+      class="admin-back"
+    >
+      ← Voltar para a lista
+    </a>
+
+
+    <!-- ======================================================
+         CABEÇALHO
+    ======================================================= -->
 
     <div class="admin-detalhe-head">
+
       <div>
-        <h1><%= terceirizado.nome_fantasia || terceirizado.razao_social %></h1>
-        <p style="color:var(--concrete-600);font-size:14px;">
-          <%= terceirizado.tipo %> · <%= terceirizado.cpf_cnpj %> · Cadastrado em <%= new Date(terceirizado.criado_em).toLocaleDateString('pt-BR') %>
+
+        <h1>
+          <%= terceirizado.nome_fantasia || terceirizado.razao_social %>
+        </h1>
+
+        <p
+          style="
+            color:var(--concrete-600);
+            font-size:14px;
+          "
+        >
+
+          <%= terceirizado.tipo %>
+
+          ·
+
+          <%= terceirizado.cpf_cnpj %>
+
+          · Cadastrado em
+
+          <%= new Date(
+            terceirizado.criado_em
+          ).toLocaleDateString(
+            'pt-BR'
+          ) %>
+
         </p>
+
       </div>
-      <form class="status-form" method="POST" action="/interno/terceirizados/<%= terceirizado.id %>/situacao">
-        <select name="situacao">
+
+
+      <!-- ====================================================
+           ALTERAÇÃO INDIVIDUAL DE STATUS
+      ===================================================== -->
+
+      <form
+        class="status-form"
+        method="POST"
+        action="/interno/terceirizados/<%= terceirizado.id %>/situacao"
+      >
+
+        <select
+          name="situacao"
+          aria-label="Situação cadastral"
+        >
+
           <% situacoes.forEach(function(s) { %>
-            <option value="<%= s %>" <%= terceirizado.situacao_cadastral === s ? 'selected' : '' %>><%= s %></option>
+
+            <option
+              value="<%= s %>"
+              <%= terceirizado.situacao_cadastral === s
+                ? 'selected'
+                : '' %>
+            >
+              <%= s %>
+            </option>
+
           <% }) %>
+
         </select>
-        <button type="submit" class="btn btn-primary" style="padding:10px 18px;font-size:13.5px;">Atualizar situação</button>
+
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          style="
+            padding:10px 18px;
+            font-size:13.5px;
+          "
+        >
+          Atualizar situação
+        </button>
+
       </form>
+
     </div>
 
-    <div class="card" style="margin-bottom:24px;">
-      <h3 style="margin-bottom:16px;">Dados cadastrais</h3>
+
+    <!-- ======================================================
+         DADOS CADASTRAIS
+    ======================================================= -->
+
+    <div
+      class="card"
+      style="margin-bottom:24px;"
+    >
+
+      <h3 style="margin-bottom:16px;">
+        Dados cadastrais
+      </h3>
+
+
       <dl class="info-grid">
-        <div><dt>Razão social / Nome</dt><dd><%= terceirizado.razao_social %></dd></div>
-        <div><dt>Nome fantasia</dt><dd><%= terceirizado.nome_fantasia || '—' %></dd></div>
-        <div><dt>Empreendimento</dt><dd><%= terceirizado.empreendimentoNome %></dd></div>
-        <div><dt>CPF/CNPJ</dt><dd><%= terceirizado.cpf_cnpj %></dd></div>
-        <div><dt>Inscrição estadual</dt><dd><%= terceirizado.inscricao_estadual || '—' %></dd></div>
-        <div><dt>Inscrição municipal</dt><dd><%= terceirizado.inscricao_municipal || '—' %></dd></div>
-        <div><dt>Telefone</dt><dd><%= terceirizado.telefone || '—' %></dd></div>
-        <div><dt>Telefone (2ª opção)</dt><dd><%= terceirizado.whatsapp || '—' %></dd></div>
-        <div><dt>E-mail</dt><dd><%= terceirizado.email || '—' %></dd></div>
-        <div><dt>Endereço</dt><dd><%= terceirizado.endereco || '—' %> <%= terceirizado.complemento || '' %></dd></div>
-        <div><dt>CEP</dt><dd><%= terceirizado.cep || '—' %></dd></div>
-        <div><dt>Cidade/UF</dt><dd><%= terceirizado.cidade %>/<%= terceirizado.estado %></dd></div>
-        <div><dt>Contato</dt><dd><%= terceirizado.contato_nome || '—' %> <% if (terceirizado.contato_telefone) { %>· <%= terceirizado.contato_telefone %><% } %></dd></div>
-        <div><dt>Setor da atividade</dt><dd><%= terceirizado.setor_atividade || '—' %></dd></div>
+
+        <div>
+
+          <dt>
+            Razão social / Nome
+          </dt>
+
+          <dd>
+            <%= terceirizado.razao_social %>
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            Nome fantasia
+          </dt>
+
+          <dd>
+            <%= terceirizado.nome_fantasia || '—' %>
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            Empreendimento
+          </dt>
+
+          <dd>
+            <%= terceirizado.empreendimentoNome %>
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            CPF/CNPJ
+          </dt>
+
+          <dd>
+            <%= terceirizado.cpf_cnpj %>
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            Inscrição estadual
+          </dt>
+
+          <dd>
+            <%= terceirizado.inscricao_estadual || '—' %>
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            Inscrição municipal
+          </dt>
+
+          <dd>
+            <%= terceirizado.inscricao_municipal || '—' %>
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            Telefone
+          </dt>
+
+          <dd>
+            <%= terceirizado.telefone || '—' %>
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            Telefone (2ª opção)
+          </dt>
+
+          <dd>
+            <%= terceirizado.telefone_secundario || '—' %>
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            E-mail
+          </dt>
+
+          <dd>
+            <%= terceirizado.email || '—' %>
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            Endereço
+          </dt>
+
+          <dd>
+
+            <%= terceirizado.endereco || '—' %>
+
+            <%= terceirizado.complemento || '' %>
+
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            CEP
+          </dt>
+
+          <dd>
+            <%= terceirizado.cep || '—' %>
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            Cidade/UF
+          </dt>
+
+          <dd>
+
+            <%= terceirizado.cidade || '—' %>
+
+            <% if (terceirizado.estado) { %>
+              /<%= terceirizado.estado %>
+            <% } %>
+
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            Contato
+          </dt>
+
+          <dd>
+
+            <%= terceirizado.contato_nome || '—' %>
+
+            <% if (terceirizado.contato_telefone) { %>
+
+              ·
+
+              <%= terceirizado.contato_telefone %>
+
+            <% } %>
+
+          </dd>
+
+        </div>
+
+
+        <div>
+
+          <dt>
+            Setor da atividade
+          </dt>
+
+          <dd>
+            <%= terceirizado.setor_atividade || '—' %>
+          </dd>
+
+        </div>
+
       </dl>
+
+
       <% if (terceirizado.observacoes) { %>
-        <dl class="info-grid" style="margin-top:12px;">
-          <div style="grid-column:1/-1;"><dt>Observações</dt><dd><%= terceirizado.observacoes %></dd></div>
+
+        <dl
+          class="info-grid"
+          style="margin-top:12px;"
+        >
+
+          <div style="grid-column:1/-1;">
+
+            <dt>
+              Observações
+            </dt>
+
+            <dd>
+              <%= terceirizado.observacoes %>
+            </dd>
+
+          </div>
+
         </dl>
+
       <% } %>
+
     </div>
 
-    <div class="card" style="margin-bottom:24px;">
-      <h3 style="margin-bottom:14px;">Serviços oferecidos</h3>
+
+    <!-- ======================================================
+         SERVIÇOS
+    ======================================================= -->
+
+    <div
+      class="card"
+      style="margin-bottom:24px;"
+    >
+
+      <h3 style="margin-bottom:14px;">
+        Serviços oferecidos
+      </h3>
+
+
       <% if (servicos.length) { %>
+
         <div>
-          <% servicos.forEach(function(nome) { %><span class="chip"><%= nome %></span><% }) %>
+
+          <% servicos.forEach(function(nome) { %>
+
+            <span class="chip">
+              <%= nome %>
+            </span>
+
+          <% }) %>
+
         </div>
+
       <% } else { %>
-        <p style="color:var(--concrete-600);margin:0;">Nenhum serviço informado.</p>
+
+        <p
+          style="
+            color:var(--concrete-600);
+            margin:0;
+          "
+        >
+          Nenhum serviço informado.
+        </p>
+
       <% } %>
+
     </div>
+
+
+    <!-- ======================================================
+         EXPERIÊNCIA
+    ======================================================= -->
 
     <% if (experiencia) { %>
-      <div class="card" style="margin-bottom:24px;">
-        <h3 style="margin-bottom:16px;">Experiência profissional</h3>
+
+      <div
+        class="card"
+        style="margin-bottom:24px;"
+      >
+
+        <h3 style="margin-bottom:16px;">
+          Experiência profissional
+        </h3>
+
+
         <dl class="info-grid">
-          <div><dt>Tempo de experiência</dt><dd><%= experiencia.tempo_experiencia || '—' %></dd></div>
-          <div><dt>Área de atuação</dt><dd><%= experiencia.area_atuacao || '—' %></dd></div>
+
+          <div>
+
+            <dt>
+              Tempo de experiência
+            </dt>
+
+            <dd>
+              <%= experiencia.tempo_experiencia || '—' %>
+            </dd>
+
+          </div>
+
+
+          <div>
+
+            <dt>
+              Área de atuação
+            </dt>
+
+            <dd>
+              <%= experiencia.area_atuacao || '—' %>
+            </dd>
+
+          </div>
+
         </dl>
-        <dl class="info-grid" style="margin-top:12px;">
-          <% if (experiencia.principais_atividades) { %><div style="grid-column:1/-1;"><dt>Principais atividades</dt><dd><%= experiencia.principais_atividades %></dd></div><% } %>
-          <% if (experiencia.empresas_projetos_anteriores) { %><div style="grid-column:1/-1;"><dt>Empresas/projetos anteriores</dt><dd><%= experiencia.empresas_projetos_anteriores %></dd></div><% } %>
-          <% if (experiencia.principais_competencias) { %><div style="grid-column:1/-1;"><dt>Principais competências</dt><dd><%= experiencia.principais_competencias %></dd></div><% } %>
-          <% if (experiencia.certificacoes) { %><div style="grid-column:1/-1;"><dt>Certificações</dt><dd><%= experiencia.certificacoes %></dd></div><% } %>
+
+
+        <dl
+          class="info-grid"
+          style="margin-top:12px;"
+        >
+
+
+          <% if (experiencia.principais_atividades) { %>
+
+            <div style="grid-column:1/-1;">
+
+              <dt>
+                Principais atividades
+              </dt>
+
+              <dd>
+                <%= experiencia.principais_atividades %>
+              </dd>
+
+            </div>
+
+          <% } %>
+
+
+          <% if (experiencia.empresas_projetos_anteriores) { %>
+
+            <div style="grid-column:1/-1;">
+
+              <dt>
+                Empresas/projetos anteriores
+              </dt>
+
+              <dd>
+                <%= experiencia.empresas_projetos_anteriores %>
+              </dd>
+
+            </div>
+
+          <% } %>
+
+
+          <% if (experiencia.principais_competencias) { %>
+
+            <div style="grid-column:1/-1;">
+
+              <dt>
+                Principais competências
+              </dt>
+
+              <dd>
+                <%= experiencia.principais_competencias %>
+              </dd>
+
+            </div>
+
+          <% } %>
+
+
+          <% if (experiencia.certificacoes) { %>
+
+            <div style="grid-column:1/-1;">
+
+              <dt>
+                Certificações
+              </dt>
+
+              <dd>
+                <%= experiencia.certificacoes %>
+              </dd>
+
+            </div>
+
+          <% } %>
+
         </dl>
+
       </div>
+
     <% } %>
 
+
+    <!-- ======================================================
+         DOCUMENTOS
+    ======================================================= -->
+
     <div class="card">
-      <h3 style="margin-bottom:16px;">Documentos</h3>
+
+      <h3 style="margin-bottom:16px;">
+        Documentos
+      </h3>
+
+
       <% if (documentos.length === 0) { %>
-        <p style="color:var(--concrete-600);margin:0;">Nenhum documento registrado.</p>
+
+        <p
+          style="
+            color:var(--concrete-600);
+            margin:0;
+          "
+        >
+          Nenhum documento registrado.
+        </p>
+
+
       <% } else { %>
+
+
         <div class="doc-list">
+
+
           <% documentos.forEach(function(doc) { %>
+
+
             <div class="doc-item">
+
+
               <div>
-                <div class="doc-nome"><%= doc.tipo_documento %></div>
-                <div class="doc-meta">
-                  Status: <%= doc.status %><% if (doc.data_validade) { %> · Validade: <%= doc.data_validade %><% } %>
-                  <% if (doc.nome_arquivo_original) { %> · <%= doc.nome_arquivo_original %><% } %>
+
+                <div class="doc-nome">
+                  <%= doc.tipo_documento %>
                 </div>
+
+
+                <div class="doc-meta">
+
+                  Status:
+                  <%= doc.status %>
+
+
+                  <% if (doc.data_validade) { %>
+
+                    · Validade:
+                    <%= doc.data_validade %>
+
+                  <% } %>
+
+
+                  <% if (doc.nome_arquivo_original) { %>
+
+                    ·
+                    <%= doc.nome_arquivo_original %>
+
+                  <% } %>
+
+                </div>
+
               </div>
+
+
               <% if (doc.caminho_arquivo) { %>
-                <a href="/interno/documentos/<%= doc.id %>/download" class="btn btn-outline-dark" style="padding:8px 16px;font-size:12.5px;">Baixar arquivo</a>
+
+                <a
+                  href="/interno/documentos/<%= doc.id %>/download"
+                  class="btn btn-outline-dark"
+                  style="
+                    padding:8px 16px;
+                    font-size:12.5px;
+                  "
+                >
+                  Baixar arquivo
+                </a>
+
+
               <% } else { %>
-                <span class="chip-mais">Sem arquivo anexado</span>
+
+                <span class="chip-mais">
+                  Sem arquivo anexado
+                </span>
+
               <% } %>
+
+
             </div>
+
+
           <% }) %>
+
+
         </div>
+
+
       <% } %>
+
     </div>
+
+
+    <!-- ======================================================
+         ZONA DE EXCLUSÃO
+         SOMENTE ADMINISTRADOR
+    ======================================================= -->
+
+    <% if (
+      usuarioLogado &&
+      usuarioLogado.papel === 'admin'
+    ) { %>
+
+
+      <div class="danger-zone">
+
+        <div class="danger-zone-header">
+
+
+          <div class="danger-zone-text">
+
+            <h3>
+              Excluir cadastro
+            </h3>
+
+            <p>
+              Remove permanentemente este cadastro e os
+              documentos associados.
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="btn-danger-custom"
+            id="abrirModalExclusao"
+          >
+            Excluir cadastro
+          </button>
+
+
+        </div>
+
+      </div>
+
+
+    <% } %>
+
+
   </div>
+
 </div>
 
+
+
+<!-- ==========================================================
+     MODAL DE CONFIRMAÇÃO
+=========================================================== -->
+
+<% if (
+  usuarioLogado &&
+  usuarioLogado.papel === 'admin'
+) { %>
+
+
+  <div
+    class="modal-exclusao"
+    id="modalExclusao"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="tituloModalExclusao"
+  >
+
+
+    <div class="modal-exclusao-card">
+
+
+      <div class="modal-exclusao-icone">
+        !
+      </div>
+
+
+      <h2 id="tituloModalExclusao">
+        Excluir cadastro?
+      </h2>
+
+
+      <p>
+        Você está prestes a excluir permanentemente
+        este cadastro:
+      </p>
+
+
+      <div class="modal-exclusao-nome">
+
+        <strong>
+          <%= terceirizado.nome_fantasia || terceirizado.razao_social %>
+        </strong>
+
+        <br>
+
+        <span>
+          <%= terceirizado.tipo %>
+          ·
+          <%= terceirizado.cpf_cnpj %>
+        </span>
+
+      </div>
+
+
+      <p class="modal-exclusao-aviso">
+        Esta ação não poderá ser desfeita.
+      </p>
+
+
+      <div class="modal-exclusao-acoes">
+
+
+        <button
+          type="button"
+          class="btn-cancelar-exclusao"
+          id="cancelarExclusao"
+        >
+          Cancelar
+        </button>
+
+
+        <form
+          method="POST"
+          action="/interno/terceirizados/<%= terceirizado.id %>/excluir"
+        >
+
+          <button
+            type="submit"
+            class="btn-danger-custom"
+          >
+            Sim, excluir cadastro
+          </button>
+
+        </form>
+
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+<% } %>
+
+
+
+<!-- ==========================================================
+     SCRIPT DA CONFIRMAÇÃO
+=========================================================== -->
+
+<script>
+
+  const botaoAbrir =
+    document.getElementById(
+      'abrirModalExclusao'
+    );
+
+
+  const modal =
+    document.getElementById(
+      'modalExclusao'
+    );
+
+
+  const botaoCancelar =
+    document.getElementById(
+      'cancelarExclusao'
+    );
+
+
+  if (
+    botaoAbrir &&
+    modal &&
+    botaoCancelar
+  ) {
+
+
+    // ABRIR
+
+    botaoAbrir.addEventListener(
+      'click',
+      function () {
+
+        modal.classList.add(
+          'ativo'
+        );
+
+      }
+    );
+
+
+    // CANCELAR
+
+    botaoCancelar.addEventListener(
+      'click',
+      function () {
+
+        modal.classList.remove(
+          'ativo'
+        );
+
+      }
+    );
+
+
+    // CLICAR FORA DA CAIXA
+
+    modal.addEventListener(
+      'click',
+      function (event) {
+
+        if (
+          event.target === modal
+        ) {
+
+          modal.classList.remove(
+            'ativo'
+          );
+
+        }
+
+      }
+    );
+
+
+    // TECLA ESC
+
+    document.addEventListener(
+      'keydown',
+      function (event) {
+
+        if (
+          event.key === 'Escape'
+        ) {
+
+          modal.classList.remove(
+            'ativo'
+          );
+
+        }
+
+      }
+    );
+
+  }
+
+</script>
+
+
 </body>
+
 </html>
