@@ -1095,13 +1095,11 @@ router.post(
           .render(
             'erro',
             {
-
               titulo:
                 'Cadastro não encontrado',
 
               mensagem:
                 'O cadastro que você tentou excluir não existe.'
-
             }
           );
 
@@ -1130,6 +1128,201 @@ router.post(
 
 
       // ======================================================
+      // NORMALIZAR CAMINHO DO SUPABASE STORAGE
+      //
+      // O Supabase precisa receber somente o caminho interno
+      // do arquivo dentro do bucket "documentos".
+      // ======================================================
+
+      function normalizarCaminhoStorage(caminho) {
+
+        if (!caminho) {
+          return null;
+        }
+
+
+        let caminhoFinal =
+          String(caminho).trim();
+
+
+        if (!caminhoFinal) {
+          return null;
+        }
+
+
+        // ----------------------------------------------------
+        // CASO 1:
+        // URL completa do Supabase Storage
+        // ----------------------------------------------------
+
+        if (
+          caminhoFinal.startsWith('http://') ||
+          caminhoFinal.startsWith('https://')
+        ) {
+
+          try {
+
+            const url =
+              new URL(caminhoFinal);
+
+
+            const marcadores = [
+
+              '/storage/v1/object/public/documentos/',
+
+              '/storage/v1/object/sign/documentos/',
+
+              '/storage/v1/object/authenticated/documentos/',
+
+              '/storage/v1/object/documentos/'
+
+            ];
+
+
+            for (
+              const marcador of marcadores
+            ) {
+
+              const indice =
+                url.pathname.indexOf(
+                  marcador
+                );
+
+
+              if (
+                indice !== -1
+              ) {
+
+                caminhoFinal =
+                  url.pathname.substring(
+                    indice +
+                    marcador.length
+                  );
+
+                break;
+
+              }
+
+            }
+
+          } catch (erroURL) {
+
+            console.warn(
+              'Não foi possível interpretar URL do documento:',
+              caminhoFinal
+            );
+
+          }
+
+        }
+
+
+        // ----------------------------------------------------
+        // CASO 2:
+        // caminho contendo "documentos/"
+        //
+        // Exemplo:
+        // documentos/terceirizados/10/curriculo.pdf
+        //
+        // Como o bucket já é "documentos", removemos essa parte.
+        // ----------------------------------------------------
+
+        const indiceBucket =
+          caminhoFinal.indexOf(
+            'documentos/'
+          );
+
+
+        if (
+          indiceBucket !== -1
+        ) {
+
+          caminhoFinal =
+            caminhoFinal.substring(
+              indiceBucket +
+              'documentos/'.length
+            );
+
+        }
+
+
+        // ----------------------------------------------------
+        // CASO 3:
+        // caminho antigo começando com uploads/
+        // ----------------------------------------------------
+
+        if (
+          caminhoFinal.startsWith(
+            'uploads/'
+          )
+        ) {
+
+          caminhoFinal =
+            caminhoFinal.substring(
+              'uploads/'.length
+            );
+
+        }
+
+
+        // ----------------------------------------------------
+        // REMOVER BARRAS INICIAIS
+        // ----------------------------------------------------
+
+        caminhoFinal =
+          caminhoFinal.replace(
+            /^\/+/,
+            ''
+          );
+
+
+        // ----------------------------------------------------
+        // PADRONIZAR BARRAS DO WINDOWS
+        // ----------------------------------------------------
+
+        caminhoFinal =
+          caminhoFinal.replace(
+            /\\/g,
+            '/'
+          );
+
+
+        // ----------------------------------------------------
+        // REMOVER QUERY STRING CASO EXISTA
+        // ----------------------------------------------------
+
+        caminhoFinal =
+          caminhoFinal.split('?')[0];
+
+
+        // ----------------------------------------------------
+        // DECODIFICAR URL
+        // ----------------------------------------------------
+
+        try {
+
+          caminhoFinal =
+            decodeURIComponent(
+              caminhoFinal
+            );
+
+        } catch (erroDecode) {
+
+          // Mantém o caminho original caso não seja
+          // possível decodificar.
+
+        }
+
+
+        return (
+          caminhoFinal ||
+          null
+        );
+
+      }
+
+
+      // ======================================================
       // MONTAR LISTA DOS ARQUIVOS DO STORAGE
       // ======================================================
 
@@ -1137,9 +1330,17 @@ router.post(
         documentos
           .map(
             documento =>
-              documento.caminho_arquivo
+              normalizarCaminhoStorage(
+                documento.caminho_arquivo
+              )
           )
           .filter(Boolean);
+
+
+      console.log(
+        'Arquivos encontrados para exclusão:',
+        caminhos
+      );
 
 
       // ======================================================
@@ -1151,6 +1352,7 @@ router.post(
       ) {
 
         const {
+          data,
           error
         } =
           await supabase
@@ -1174,17 +1376,21 @@ router.post(
             .render(
               'erro',
               {
-
                 titulo:
                   'Não foi possível excluir',
 
                 mensagem:
                   'Não foi possível excluir os documentos associados. O cadastro foi mantido para evitar uma exclusão incompleta.'
-
               }
             );
 
         }
+
+
+        console.log(
+          'Documentos removidos do Supabase Storage:',
+          data
+        );
 
       }
 
@@ -1194,7 +1400,7 @@ router.post(
       //
       // As tabelas relacionadas possuem ON DELETE CASCADE.
       // Isso remove documentos, experiências, serviços e
-      // seleções relacionados ao cadastro.
+      // demais registros vinculados ao cadastro.
       // ======================================================
 
       await db.query(
@@ -1205,6 +1411,11 @@ router.post(
         [
           terceirizado.id
         ]
+      );
+
+
+      console.log(
+        `Cadastro ${terceirizado.id} excluído com sucesso.`
       );
 
 
@@ -1235,6 +1446,7 @@ router.post(
         erro
       );
 
+
       next(erro);
 
     }
@@ -1243,6 +1455,11 @@ router.post(
 );
 
 
+// ============================================================
+// EXPORTAÇÃO
+// ============================================================
+
+module.exports = router;
 // ============================================================
 // EXPORTAÇÃO
 // ============================================================
