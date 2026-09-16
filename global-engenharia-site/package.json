@@ -1,7 +1,7 @@
 {
   "name": "global-engenharia-site",
   "version": "1.0.0",
-  "description": "Site institucional e plataforma de cadastro de terceirizados - Global Engenharia",
+  "description": "Site institucional e plataforma de cadastro de terceirizados - UTE Tupã Fase I",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,7 +9,7 @@
     "seed": "node lib/seed.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.0.0",
+    "@supabase/supabase-js": "^2.57.4",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
@@ -20,6 +20,6 @@
     "pg": "^8.13.1"
   },
   "engines": {
-    "node": "22.x"
+    "node": "20.x"
   }
 }
