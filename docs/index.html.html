@@ -1,0 +1,2694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UTE Tupã Fase I · SJE - São João Energia</title>
+<meta name="description" content="Portal de cadastro de profissionais e empresas para a UTE Tupã Fase I" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./css/style.css" />
+
+</head>
+
+<body>
+
+<header class="site-header">
+
+  <div class="container header-container">
+
+    <!-- MARCA / LOGO -->
+    <a href="./index.html" class="brand">
+
+      <img
+        src="./img/logo-SJE.png"
+        alt="SJE - São João Energia"
+        class="brand-logo"
+      />
+
+      <span class="brand-text">
+
+        <strong>
+          UTE Tupã Fase I
+        </strong>
+
+        <small>
+          CADASTRO DE PROFISSIONAIS E EMPRESAS
+        </small>
+
+      </span>
+
+    </a>
+
+
+    <!-- MENU DESKTOP -->
+    <nav
+      class="nav-desktop"
+      aria-label="Navegação principal"
+    >
+
+      <a
+        href="#cadastro"
+        class="nav-cadastro"
+      >
+        Cadastro
+      </a>
+
+      <a href="#sobre-tupa">
+        Sobre a Tupã
+      </a>
+
+      <a href="#valores">
+        Valores
+      </a>
+
+      <a href="#mulheres-tupa">
+        Mulheres na Tupã
+      </a>
+
+    </nav>
+
+
+    <!-- BOTÃO MOBILE -->
+    <button
+      class="hamburger"
+      type="button"
+      aria-label="Abrir menu"
+      aria-expanded="false"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+  </div>
+
+
+  <!-- MENU MOBILE -->
+  <nav
+    class="nav-mobile"
+    aria-label="Navegação mobile"
+  >
+
+    <a
+      href="#cadastro"
+      class="mobile-cadastro"
+    >
+      Cadastro
+    </a>
+
+    <a href="#sobre-tupa">
+      Sobre a Tupã
+    </a>
+
+    <a href="#valores">
+      Valores
+    </a>
+
+    <a href="#mulheres-tupa">
+      Mulheres na Tupã
+    </a>
+
+  </nav>
+
+</header>
+
+
+<style>
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.site-header {
+  position: relative;
+
+  width: 100%;
+
+  background: #ffffff;
+
+  border-bottom:
+    1px solid #e6ebf1;
+
+  z-index: 1000;
+}
+
+
+.header-container {
+  min-height: 82px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 35px;
+}
+
+
+/* ============================================================
+   MARCA
+============================================================ */
+
+.brand {
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  min-width: 0;
+
+  text-decoration: none;
+}
+
+
+.brand-logo {
+  display: block;
+
+  width: auto;
+
+  height: 50px;
+
+  max-width: 170px;
+
+  object-fit: contain;
+
+  flex-shrink: 0;
+}
+
+
+.brand-text {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  min-width: 0;
+
+  line-height: 1;
+}
+
+
+.brand-text strong {
+  color: #073b7a;
+
+  font-size: 21px;
+
+  font-weight: 700;
+
+  line-height: 1.15;
+
+  white-space: nowrap;
+}
+
+
+.brand-text small {
+  margin-top: 5px;
+
+  color: #263a52;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.7px;
+
+  line-height: 1.2;
+
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   MENU DESKTOP
+============================================================ */
+
+.nav-desktop {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  margin-left: auto;
+}
+
+
+.nav-desktop a {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 44px;
+
+  padding:
+    0 17px;
+
+  color: #18344f;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  text-decoration: none;
+
+  border-radius: 6px;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.nav-desktop a:hover {
+  color: #073b7a;
+
+  background: #f4f7fb;
+}
+
+
+/* ============================================================
+   CADASTRO EM DESTAQUE
+============================================================ */
+
+.nav-desktop .nav-cadastro {
+  padding:
+    0 23px;
+
+  background: #073b7a;
+
+  color: #ffffff;
+
+  font-weight: 600;
+}
+
+
+.nav-desktop .nav-cadastro:hover {
+  background: #052f61;
+
+  color: #ffffff;
+}
+
+
+/* ============================================================
+   MENU MOBILE
+============================================================ */
+
+.hamburger {
+  display: none;
+
+  width: 42px;
+  height: 42px;
+
+  padding: 8px;
+
+  background: transparent;
+
+  border: none;
+
+  cursor: pointer;
+}
+
+
+.hamburger span {
+  display: block;
+
+  width: 24px;
+  height: 2px;
+
+  margin: 5px auto;
+
+  background: #073b7a;
+
+  border-radius: 3px;
+}
+
+
+.nav-mobile {
+  display: none;
+
+  padding:
+    10px 20px 20px;
+
+  background: #ffffff;
+
+  border-top:
+    1px solid #edf0f4;
+}
+
+
+.nav-mobile a {
+  display: block;
+
+  padding:
+    13px 15px;
+
+  color: #18344f;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  text-decoration: none;
+
+  border-radius: 6px;
+}
+
+
+.nav-mobile a:hover {
+  background: #f4f7fb;
+
+  color: #073b7a;
+}
+
+
+.nav-mobile .mobile-cadastro {
+  margin-bottom: 5px;
+
+  background: #073b7a;
+
+  color: #ffffff;
+
+  font-weight: 600;
+}
+
+
+.nav-mobile .mobile-cadastro:hover {
+  background: #052f61;
+
+  color: #ffffff;
+}
+
+
+/* ============================================================
+   RESPONSIVIDADE
+============================================================ */
+
+@media (max-width: 1050px) {
+
+  .header-container {
+    min-height: 76px;
+  }
+
+
+  .brand-logo {
+    height: 44px;
+
+    max-width: 145px;
+  }
+
+
+  .brand-text strong {
+    font-size: 18px;
+  }
+
+
+  .brand-text small {
+    font-size: 9px;
+  }
+
+
+  .nav-desktop a {
+    padding:
+      0 11px;
+
+    font-size: 13px;
+  }
+
+}
+
+
+@media (max-width: 850px) {
+
+  .header-container {
+    min-height: 72px;
+  }
+
+
+  .nav-desktop {
+    display: none;
+  }
+
+
+  .hamburger {
+    display: block;
+
+    margin-left: auto;
+  }
+
+
+  .nav-mobile.aberto {
+    display: block;
+  }
+
+}
+
+
+@media (max-width: 520px) {
+
+  .brand {
+    gap: 10px;
+  }
+
+
+  .brand-logo {
+    height: 38px;
+
+    max-width: 115px;
+  }
+
+
+  .brand-text strong {
+    font-size: 16px;
+  }
+
+
+  .brand-text small {
+    max-width: 175px;
+
+    font-size: 8px;
+
+    white-space: normal;
+  }
+
+}
+
+</style>
+
+
+<script>
+
+document.addEventListener(
+  'DOMContentLoaded',
+  function () {
+
+    const botao =
+      document.querySelector(
+        '.hamburger'
+      );
+
+    const menu =
+      document.querySelector(
+        '.nav-mobile'
+      );
+
+
+    if (!botao || !menu) {
+      return;
+    }
+
+
+    botao.addEventListener(
+      'click',
+      function () {
+
+        const aberto =
+          menu.classList.toggle(
+            'aberto'
+          );
+
+
+        botao.setAttribute(
+          'aria-expanded',
+          aberto
+            ? 'true'
+            : 'false'
+        );
+
+      }
+    );
+
+
+    const links =
+      menu.querySelectorAll(
+        'a'
+      );
+
+
+    links.forEach(
+      function (link) {
+
+        link.addEventListener(
+          'click',
+          function () {
+
+            menu.classList.remove(
+              'aberto'
+            );
+
+            botao.setAttribute(
+              'aria-expanded',
+              'false'
+            );
+
+          }
+        );
+
+      }
+    );
+
+  }
+);
+
+</script>
+
+
+
+<!-- =========================================================
+     APRESENTAÇÃO PRINCIPAL
+========================================================= -->
+
+<section class="foco-real">
+
+  <div class="container foco-grid">
+
+    <div class="foco-conteudo">
+
+      <div class="eyebrow">
+        UTE Tupã Fase I
+      </div>
+
+      <h1>
+        Faça parte da construção da UTE Tupã Fase I
+      </h1>
+
+      <p>
+        A UTE Tupã Fase I é um empreendimento de geração de energia
+        elétrica da SJE – São João Energia S.A., localizado no município
+        de Macaé, Rio de Janeiro.
+      </p>
+
+      <p>
+        O empreendimento prevê a implantação de uma usina termelétrica
+        com capacidade instalada de aproximadamente
+        <strong>177 MW</strong>, utilizando gás natural para geração de energia.
+      </p>
+
+      <p>
+        Este portal foi criado para formar um cadastro de profissionais
+        e empresas interessados em participar das oportunidades relacionadas
+        à implantação da UTE Tupã Fase I.
+      </p>
+
+      <a
+        href="#cadastro"
+        class="btn btn-primary foco-botao"
+      >
+        Fazer cadastro
+      </a>
+
+    </div>
+
+
+    <div class="foco-list">
+
+      <div class="foco-item">
+
+        <span class="n">
+          01
+        </span>
+
+        <span>
+          Cadastre seu currículo ou sua empresa para oportunidades
+          relacionadas à UTE Tupã Fase I.
+        </span>
+
+      </div>
+
+
+      <div class="foco-item">
+
+        <span class="n">
+          02
+        </span>
+
+        <span>
+          Os cadastros ficarão disponíveis para consulta das equipes
+          responsáveis pelos processos de contratação.
+        </span>
+
+      </div>
+
+
+      <div class="foco-item">
+
+        <span class="n">
+          03
+        </span>
+
+        <span>
+          Profissionais e empresas poderão apresentar suas áreas
+          de atuação, experiências, qualificações e informações
+          de contato.
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CADASTRO
+========================================================= -->
+
+<section
+  class="section section-alt"
+  id="cadastro"
+>
+
+  <div class="container">
+
+    <div class="section-head center">
+
+      <div class="eyebrow eyebrow-center">
+        Faça seu cadastro
+      </div>
+
+      <h2>
+        Como você deseja se cadastrar?
+      </h2>
+
+      <p>
+        Selecione abaixo a opção correspondente ao seu perfil.
+      </p>
+
+    </div>
+
+
+    <div class="tipo-cadastro-grid">
+
+
+      <!-- PESSOA FÍSICA -->
+
+      <a
+        href="./cadastro/pessoa-fisica.html"
+        class="tipo-cadastro-card"
+      >
+
+        <div class="tipo-cadastro-icon">
+          👤
+        </div>
+
+        <h3>
+          Pessoa Física
+        </h3>
+
+        <p>
+          Para profissionais interessados em cadastrar seu currículo,
+          experiência e qualificações para futuras oportunidades
+          relacionadas ao empreendimento.
+        </p>
+
+        <span class="btn btn-primary">
+          Cadastrar currículo
+        </span>
+
+      </a>
+
+
+      <!-- PESSOA JURÍDICA -->
+
+      <a
+        href="./cadastro/pessoa-juridica.html"
+        class="tipo-cadastro-card"
+      >
+
+        <div class="tipo-cadastro-icon">
+          🏢
+        </div>
+
+        <h3>
+          Pessoa Jurídica
+        </h3>
+
+        <p>
+          Para empresas interessadas em apresentar seus serviços,
+          produtos, experiência e portfólio para futuras oportunidades
+          relacionadas ao empreendimento.
+        </p>
+
+        <span class="btn btn-primary">
+          Cadastrar empresa
+        </span>
+
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     MULHERES NA UTE TUPÃ
+========================================================= -->
+
+<section
+  class="section mulheres-section"
+  id="mulheres-tupa"
+>
+
+  <div class="container mulheres-grid">
+
+    <div class="mulheres-conteudo">
+
+      <div class="eyebrow">
+        Mulheres na UTE Tupã
+      </div>
+
+      <h2>
+        Seu talento também faz parte dessa história.
+      </h2>
+
+      <p class="lead">
+        Acreditamos que grandes projetos são construídos por pessoas
+        com diferentes conhecimentos, experiências e perspectivas.
+      </p>
+
+      <p class="lead">
+        Por isso, incentivamos a participação e a contratação de
+        mulheres em todas as áreas e níveis profissionais compatíveis
+        com suas qualificações.
+      </p>
+
+      <p class="lead">
+        A UTE Tupã Fase I quer ampliar oportunidades, promover um
+        ambiente de trabalho diverso, respeitoso e inclusivo e
+        contribuir para que cada profissional possa construir sua
+        própria trajetória.
+      </p>
+
+      <p class="lead">
+        Se você é mulher e busca uma oportunidade para desenvolver
+        sua carreira, cadastre seu currículo e venha fazer parte
+        desse projeto.
+      </p>
+
+      <div class="hero-ctas">
+
+        <a
+          href="./cadastro/pessoa-fisica.html"
+          class="btn btn-primary"
+        >
+          Cadastrar currículo
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <div class="mulheres-media">
+
+      <div class="mulheres-imagem-box">
+
+        <img
+          src="./img/mulheres-tupa.png"
+          alt="Mulheres na UTE Tupã"
+        >
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     SOBRE A UTE TUPÃ
+========================================================= -->
+
+<section
+  class="section sobre-tupa-section"
+  id="sobre-tupa"
+>
+
+  <div class="container sobre-grid">
+
+    <div class="sobre-conteudo">
+
+      <div class="eyebrow">
+        Sobre o empreendimento
+      </div>
+
+      <h2>
+        UTE Tupã Fase I
+      </h2>
+
+      <p class="lead">
+        Localizada no município de Macaé, no Rio de Janeiro,
+        a UTE Tupã Fase I está inserida em um contexto estratégico
+        de fortalecimento da infraestrutura energética nacional.
+      </p>
+
+      <p class="lead">
+        O empreendimento contribuirá para a diversificação da matriz
+        elétrica, para o atendimento à demanda de energia e para
+        o aumento da confiabilidade do sistema.
+      </p>
+
+      <p class="lead">
+        Além da usina termelétrica, o projeto contempla estruturas
+        e sistemas associados necessários à sua implantação e operação,
+        incluindo instalações de conexão ao sistema elétrico e demais
+        infraestruturas de apoio.
+      </p>
+
+      <div class="hero-ctas">
+
+        <a
+          href="https://globalparticipacoesenergia.com.br/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-primary"
+        >
+          Conheça o Grupo Global
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <div class="sobre-media">
+
+      <div class="sobre-imagem-box">
+
+        <img
+          src="./img/sobre-tupa.png"
+          alt="UTE Tupã Fase I"
+        >
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     MODELO 3D DO EMPREENDIMENTO
+========================================================= -->
+
+<section
+  class="section modelo-section"
+  id="modelo-3d"
+>
+
+  <div class="container">
+
+    <div class="section-head center modelo-head">
+
+      <div class="eyebrow eyebrow-center">
+        Empreendimento
+      </div>
+
+      <h2>
+        Conheça a UTE Tupã Fase I
+      </h2>
+
+      <p>
+        Uma visão do modelo tridimensional do empreendimento,
+        contemplando sua implantação e principais estruturas.
+      </p>
+
+    </div>
+
+
+    <div class="modelo-video-box">
+
+      <video
+        class="modelo-video"
+        autoplay
+        muted
+        loop
+        playsinline
+        controls
+        preload="metadata"
+      >
+
+        <source
+          src="/video/modelo-3d-tupa.mp4"
+          type="video/mp4"
+        >
+
+        Seu navegador não suporta reprodução de vídeo.
+
+      </video>
+
+
+      <div class="modelo-legenda">
+        Modelo 3D da UTE Tupã Fase I
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     VALORES
+========================================================= -->
+
+<section
+  id="valores"
+  class="secao-valores"
+>
+
+  <div class="container">
+
+    <div class="valores-cabecalho">
+
+      <span class="secao-tag">
+        Nossa Cultura
+      </span>
+
+      <h2>
+        Nossos Valores
+      </h2>
+
+      <p>
+        Princípios que orientam nossas decisões,
+        nossa forma de trabalhar e nossas relações.
+      </p>
+
+    </div>
+
+
+    <div class="valores-grid">
+
+
+      <article class="valor-card">
+
+        <div class="valor-numero">
+          01
+        </div>
+
+        <h3>
+          Comprometimento
+        </h3>
+
+        <p>
+          Esforço para fazer com que as coisas funcionem.
+        </p>
+
+      </article>
+
+
+      <article class="valor-card">
+
+        <div class="valor-numero">
+          02
+        </div>
+
+        <h3>
+          Foco em resultados
+        </h3>
+
+        <p>
+          Esforço para superar metas.
+        </p>
+
+      </article>
+
+
+      <article class="valor-card">
+
+        <div class="valor-numero">
+          03
+        </div>
+
+        <h3>
+          Humildade
+        </h3>
+
+        <p>
+          Simplicidade, respeito e pés no chão.
+        </p>
+
+      </article>
+
+
+      <article class="valor-card">
+
+        <div class="valor-numero">
+          04
+        </div>
+
+        <h3>
+          Integridade
+        </h3>
+
+        <p>
+          Retidão, imparcialidade e honestidade.
+        </p>
+
+      </article>
+
+
+      <article class="valor-card">
+
+        <div class="valor-numero">
+          05
+        </div>
+
+        <h3>
+          Meritocracia
+        </h3>
+
+        <p>
+          Predomínio do mérito, da dedicação e do trabalho.
+        </p>
+
+      </article>
+
+
+      <article class="valor-card">
+
+        <div class="valor-numero">
+          06
+        </div>
+
+        <h3>
+          Resiliência
+        </h3>
+
+        <p>
+          Capacidade de se adaptar às mudanças.
+        </p>
+
+      </article>
+
+
+      <article class="valor-card valor-destaque">
+
+        <div class="valor-destaque-conteudo">
+
+          <div class="valor-numero">
+            07
+          </div>
+
+          <div>
+
+            <h3>
+              Segurança e meio ambiente
+            </h3>
+
+            <p>
+              A vida como um valor absoluto.
+            </p>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CHAMADA FINAL
+========================================================= -->
+
+<section class="section section-alt">
+
+  <div class="container">
+
+    <div class="chamada-final">
+
+      <div class="eyebrow eyebrow-center">
+        Faça parte desse projeto
+      </div>
+
+      <h2>
+        Energia, oportunidades e desenvolvimento.
+      </h2>
+
+      <p>
+        Mais do que um empreendimento de geração de energia,
+        a UTE Tupã Fase I representa a construção de um novo capítulo
+        para a região e para todos que participarão dessa jornada.
+      </p>
+
+
+      <div class="chamada-botoes">
+
+        <a
+          href="./cadastro/pessoa-fisica.html"
+          class="btn btn-primary"
+        >
+          Sou Pessoa Física
+        </a>
+
+
+        <a
+          href="./cadastro/pessoa-juridica.html"
+          class="btn btn-secondary"
+        >
+          Sou Pessoa Jurídica
+        </a>
+
+      </div>
+
+
+      <p class="frase-final">
+        Juntos, vamos construir um projeto que gera energia,
+        oportunidades e desenvolvimento.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     ESTILOS DA HOME
+========================================================= -->
+
+<style>
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+/* ============================================================
+   AJUSTES GERAIS
+============================================================ */
+
+.eyebrow-center {
+  display: flex;
+  justify-content: center;
+}
+
+.section-head.center {
+  text-align: center;
+}
+
+.section-head.center p {
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+/* ============================================================
+   ABERTURA
+============================================================ */
+
+.foco-real {
+  padding: 70px 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      #073b7a 0%,
+      #0c4c91 100%
+    );
+
+  color: #ffffff;
+}
+
+
+.foco-grid {
+  display: grid;
+
+  grid-template-columns:
+    1.15fr 0.85fr;
+
+  gap: 70px;
+
+  align-items: center;
+}
+
+
+.foco-real .eyebrow {
+  color: #f3aa36;
+}
+
+
+.foco-real h1 {
+  max-width: 650px;
+
+  margin:
+    12px 0 22px;
+
+  color: #ffffff;
+
+  font-size: 42px;
+
+  line-height: 1.15;
+}
+
+
+.foco-real p {
+  max-width: 680px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.88
+    );
+
+  font-size: 16px;
+
+  line-height: 1.7;
+}
+
+
+.foco-botao {
+  margin-top: 12px;
+
+  background: #ffffff !important;
+
+  color: #073b7a !important;
+}
+
+
+.foco-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+
+.foco-item {
+  display: grid;
+
+  grid-template-columns:
+    48px 1fr;
+
+  gap: 16px;
+
+  align-items: center;
+
+  padding: 22px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.15
+    );
+
+  border-radius: 12px;
+}
+
+
+.foco-item .n {
+  color: #f3aa36;
+
+  font-size: 20px;
+
+  font-weight: 700;
+}
+
+
+.foco-item span:last-child {
+  line-height: 1.55;
+}
+
+
+
+/* ============================================================
+   CARDS DE CADASTRO
+============================================================ */
+
+.tipo-cadastro-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 28px;
+
+  max-width: 900px;
+
+  margin:
+    40px auto 0;
+}
+
+
+.tipo-cadastro-card {
+  position: relative;
+
+  background: #ffffff;
+
+  border:
+    1px solid #e2e8f0;
+
+  border-radius: 16px;
+
+  padding:
+    40px 32px;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  color: inherit;
+
+  box-shadow:
+    0 5px 20px
+    rgba(7, 59, 122, 0.05);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+.tipo-cadastro-card::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 4px;
+
+  border-radius:
+    16px 16px 0 0;
+
+  background: #073b7a;
+}
+
+
+.tipo-cadastro-card:hover {
+  transform:
+    translateY(-5px);
+
+  border-color:
+    #ccd7e5;
+
+  box-shadow:
+    0 14px 35px
+    rgba(7, 59, 122, 0.12);
+}
+
+
+.tipo-cadastro-icon {
+  font-size: 46px;
+
+  margin-bottom: 18px;
+}
+
+
+.tipo-cadastro-card h3 {
+  margin-bottom: 12px;
+
+  color: #073b7a;
+
+  font-size: 24px;
+}
+
+
+.tipo-cadastro-card p {
+  margin-bottom: 25px;
+
+  color: #5e6978;
+
+  line-height: 1.65;
+}
+
+
+
+/* ============================================================
+   MULHERES NA TUPÃ
+============================================================ */
+
+.mulheres-section {
+  padding: 90px 0;
+
+  background: #ffffff;
+}
+
+
+.mulheres-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(520px, 1.05fr)
+    minmax(430px, 0.95fr);
+
+  gap: 60px;
+
+  align-items: center;
+}
+
+
+.mulheres-conteudo {
+  max-width: 650px;
+}
+
+
+.mulheres-conteudo h2 {
+  max-width: 620px;
+
+  margin:
+    10px 0 22px;
+
+  color: #073b7a;
+
+  font-size: 36px;
+
+  line-height: 1.25;
+}
+
+
+.mulheres-conteudo .lead {
+  max-width: 620px;
+
+  margin-bottom: 17px;
+
+  color: #505d6d;
+
+  font-size: 15px;
+
+  line-height: 1.7;
+}
+
+
+.mulheres-media {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+.mulheres-imagem-box {
+  width: 100%;
+
+  max-width: 500px;
+
+  padding: 12px;
+
+  background: #ffffff;
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 18px 45px
+    rgba(7, 59, 122, 0.13);
+}
+
+
+.mulheres-imagem-box img {
+  width: 100%;
+
+  height: auto;
+
+  display: block;
+
+  object-fit: contain;
+
+  border-radius: 14px;
+}
+
+
+
+/* ============================================================
+   SOBRE A TUPÃ
+============================================================ */
+
+.sobre-tupa-section {
+  padding: 90px 0;
+
+  background: #f4f7fb;
+}
+
+
+.sobre-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(420px, 0.88fr)
+    minmax(540px, 1.12fr);
+
+  gap: 55px;
+
+  align-items: center;
+}
+
+
+.sobre-conteudo {
+  max-width: 540px;
+}
+
+
+.sobre-conteudo h2 {
+  margin:
+    10px 0 22px;
+
+  color: #073b7a;
+
+  font-size: 36px;
+
+  line-height: 1.2;
+}
+
+
+.sobre-conteudo .lead {
+  margin-bottom: 18px;
+
+  color: #505d6d;
+
+  font-size: 15px;
+
+  line-height: 1.75;
+}
+
+
+.sobre-media {
+  width: 100%;
+}
+
+
+.sobre-imagem-box {
+  width: 100%;
+
+  padding: 12px;
+
+  background: #ffffff;
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 18px 45px
+    rgba(7, 59, 122, 0.12);
+}
+
+
+.sobre-imagem-box img {
+  width: 100%;
+
+  height: auto;
+
+  display: block;
+
+  object-fit: contain;
+
+  border-radius: 14px;
+}
+
+
+
+/* ============================================================
+   MODELO 3D - VÍDEO
+============================================================ */
+
+.modelo-section {
+  padding: 90px 0;
+
+  background: #ffffff;
+}
+
+
+.modelo-head {
+  margin-bottom: 38px;
+}
+
+
+.modelo-head h2 {
+  color: #073b7a;
+
+  font-size: 36px;
+}
+
+
+.modelo-video-box {
+  position: relative;
+
+  width: 100%;
+
+  max-width: 1100px;
+
+  margin:
+    0 auto;
+
+  overflow: hidden;
+
+  background: #071a2d;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 16px 40px
+    rgba(7, 59, 122, 0.16);
+}
+
+
+.modelo-video {
+  width: 100%;
+
+  aspect-ratio:
+    16 / 9;
+
+  display: block;
+
+  object-fit: cover;
+
+  background: #071a2d;
+}
+
+
+.modelo-legenda {
+  position: absolute;
+
+  left: 22px;
+  bottom: 20px;
+
+  z-index: 5;
+
+  padding:
+    8px 14px;
+
+  color: #ffffff;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  pointer-events: none;
+
+  background:
+    rgba(
+      0,
+      31,
+      69,
+      0.72
+    );
+
+  border-radius: 6px;
+
+  backdrop-filter:
+    blur(4px);
+}
+
+
+
+/* ============================================================
+   VALORES
+============================================================ */
+
+.secao-valores {
+  padding: 90px 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f7f9fc 0%,
+      #ffffff 100%
+    );
+}
+
+
+.valores-cabecalho {
+  max-width: 720px;
+
+  margin:
+    0 auto 50px;
+
+  text-align: center;
+}
+
+
+.secao-tag {
+  display: inline-block;
+
+  margin-bottom: 12px;
+
+  color: #e99a22;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1.5px;
+}
+
+
+.valores-cabecalho h2 {
+  margin:
+    0 0 14px;
+
+  color: #073b7a;
+
+  font-size: 36px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
+
+.valores-cabecalho p {
+  max-width: 620px;
+
+  margin:
+    0 auto;
+
+  color: #637083;
+
+  font-size: 16px;
+
+  line-height: 1.65;
+}
+
+
+.valores-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 22px;
+}
+
+
+.valor-card {
+  position: relative;
+
+  min-height: 175px;
+
+  padding: 30px;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border:
+    1px solid #e3e8ef;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 5px 18px
+    rgba(8, 42, 80, 0.05);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+.valor-card:hover {
+  transform:
+    translateY(-5px);
+
+  border-color:
+    #cfd9e7;
+
+  box-shadow:
+    0 12px 28px
+    rgba(8, 42, 80, 0.10);
+}
+
+
+.valor-card::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 4px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #073b7a,
+      #1d579c
+    );
+}
+
+
+.valor-numero {
+  margin-bottom: 18px;
+
+  color: #e99a22;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+}
+
+
+.valor-card h3 {
+  margin:
+    0 0 10px;
+
+  color: #073b7a;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  line-height: 1.25;
+}
+
+
+.valor-card p {
+  margin: 0;
+
+  color: #5f6b7a;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+
+.valor-destaque {
+  grid-column:
+    1 / -1;
+
+  min-height: auto;
+
+  padding:
+    28px 32px;
+
+  background:
+    linear-gradient(
+      120deg,
+      #073b7a,
+      #0d4b8d
+    );
+
+  border: none;
+
+  box-shadow:
+    0 10px 26px
+    rgba(7, 59, 122, 0.18);
+}
+
+
+.valor-destaque::before {
+  background: #e99a22;
+}
+
+
+.valor-destaque-conteudo {
+  display: flex;
+
+  align-items: center;
+
+  gap: 24px;
+}
+
+
+.valor-destaque .valor-numero {
+  margin: 0;
+
+  min-width: 48px;
+
+  color: #f3aa36;
+
+  font-size: 24px;
+}
+
+
+.valor-destaque h3 {
+  color: #ffffff;
+
+  margin-bottom: 5px;
+
+  font-size: 20px;
+}
+
+
+.valor-destaque p {
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.88
+    );
+
+  font-size: 15px;
+}
+
+
+
+/* ============================================================
+   CHAMADA FINAL
+============================================================ */
+
+.chamada-final {
+  max-width: 850px;
+
+  margin:
+    0 auto;
+
+  text-align: center;
+}
+
+
+.chamada-final h2 {
+  margin-top: 12px;
+
+  color: #073b7a;
+}
+
+
+.chamada-final p {
+  max-width: 700px;
+
+  margin-left: auto;
+
+  margin-right: auto;
+
+  line-height: 1.7;
+}
+
+
+.chamada-botoes {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 15px;
+
+  flex-wrap: wrap;
+
+  margin-top: 28px;
+}
+
+
+.frase-final {
+  margin-top: 30px;
+
+  font-weight: 600;
+
+  color: #073b7a;
+}
+
+
+
+/* ============================================================
+   NOTEBOOK / TELAS INTERMEDIÁRIAS
+============================================================ */
+
+@media (max-width: 1150px) {
+
+  .sobre-grid,
+  .mulheres-grid {
+
+    grid-template-columns:
+      1fr 1fr;
+
+    gap: 40px;
+
+  }
+
+}
+
+
+
+/* ============================================================
+   TABLET
+============================================================ */
+
+@media (max-width: 900px) {
+
+  .foco-grid,
+  .sobre-grid,
+  .mulheres-grid {
+
+    grid-template-columns:
+      1fr;
+
+    gap: 40px;
+
+  }
+
+
+  .foco-real h1 {
+    font-size: 36px;
+  }
+
+
+  .sobre-conteudo,
+  .mulheres-conteudo {
+    max-width: 760px;
+  }
+
+
+  .sobre-imagem-box {
+    max-width: 760px;
+
+    margin:
+      0 auto;
+  }
+
+
+  .mulheres-imagem-box {
+    max-width: 460px;
+
+    margin:
+      0 auto;
+  }
+
+
+  .valores-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .modelo-video {
+    aspect-ratio:
+      16 / 9;
+  }
+
+}
+
+
+
+/* ============================================================
+   CELULAR
+============================================================ */
+
+@media (max-width: 600px) {
+
+  .foco-real {
+    padding:
+      50px 0;
+  }
+
+
+  .foco-real h1 {
+    font-size:
+      31px;
+  }
+
+
+  .foco-item {
+    grid-template-columns:
+      38px 1fr;
+
+    padding: 18px;
+  }
+
+
+  .tipo-cadastro-grid {
+    grid-template-columns:
+      1fr;
+
+    gap: 18px;
+  }
+
+
+  .tipo-cadastro-card {
+    padding:
+      30px 22px;
+  }
+
+
+  .sobre-tupa-section,
+  .mulheres-section,
+  .modelo-section {
+
+    padding:
+      60px 0;
+
+  }
+
+
+  .sobre-grid,
+  .mulheres-grid {
+    gap: 30px;
+  }
+
+
+  .sobre-conteudo h2,
+  .mulheres-conteudo h2 {
+
+    font-size: 29px;
+
+  }
+
+
+  .sobre-conteudo .lead,
+  .mulheres-conteudo .lead {
+
+    font-size: 15px;
+
+    line-height: 1.65;
+
+  }
+
+
+  .sobre-imagem-box,
+  .mulheres-imagem-box {
+
+    padding: 7px;
+
+    border-radius: 15px;
+
+  }
+
+
+  .sobre-imagem-box img,
+  .mulheres-imagem-box img {
+
+    border-radius: 10px;
+
+  }
+
+
+  .modelo-head h2 {
+    font-size: 29px;
+  }
+
+
+  .modelo-video-box {
+    border-radius: 12px;
+  }
+
+
+  .modelo-video {
+    aspect-ratio:
+      16 / 9;
+  }
+
+
+  .modelo-legenda {
+
+    left: 12px;
+    bottom: 12px;
+
+    font-size: 10px;
+
+  }
+
+
+  .secao-valores {
+    padding:
+      55px 0;
+  }
+
+
+  .valores-cabecalho {
+
+    margin-bottom:
+      35px;
+
+    text-align: left;
+
+  }
+
+
+  .valores-cabecalho h2 {
+    font-size: 29px;
+  }
+
+
+  .valores-cabecalho p {
+    font-size: 15px;
+  }
+
+
+  .valores-grid {
+
+    grid-template-columns:
+      1fr;
+
+    gap: 16px;
+
+  }
+
+
+  .valor-card {
+
+    min-height: auto;
+
+    padding: 24px;
+
+  }
+
+
+  .valor-destaque-conteudo {
+
+    align-items:
+      flex-start;
+
+    gap: 15px;
+
+  }
+
+
+  .valor-destaque .valor-numero {
+
+    min-width: 34px;
+
+    font-size: 18px;
+
+  }
+
+}
+
+</style>
+
+
+<footer class="site-footer">
+
+  <div class="container">
+
+    <div class="footer-grid">
+
+
+      <!-- ================================================== -->
+      <!-- MARCA -->
+      <!-- ================================================== -->
+
+      <div>
+
+        <div class="footer-brand">
+
+          <span class="footer-brand-mark">
+            SJE
+          </span>
+
+          <span class="footer-brand-text">
+            SJE - São João Energia
+          </span>
+
+        </div>
+
+        <p>
+          Portal de cadastro de profissionais e empresas para oportunidades
+          relacionadas à UTE Tupã Fase I.
+        </p>
+
+      </div>
+
+
+
+      <!-- ================================================== -->
+      <!-- LINKS RÁPIDOS -->
+      <!-- ================================================== -->
+
+      <div>
+
+        <h4>Links rápidos</h4>
+
+        <ul>
+
+          <li>
+            <a href="./index.html">
+              Início
+            </a>
+          </li>
+
+          <li>
+            <a href="#cadastro">
+              Cadastro
+            </a>
+          </li>
+
+          <li>
+            <a href="#sobre-tupa">
+              Sobre a UTE Tupã
+            </a>
+          </li>
+
+          <li>
+            <a href="#valores">
+              Valores
+            </a>
+          </li>
+
+          <li>
+            <a href="#mulheres-tupa">
+              Mulheres na UTE Tupã
+            </a>
+          </li>
+
+        </ul>
+
+      </div>
+
+
+
+      <!-- ================================================== -->
+      <!-- CADASTROS -->
+      <!-- ================================================== -->
+
+      <div>
+
+        <h4>Cadastre-se</h4>
+
+        <ul>
+
+          <li>
+            <a href="./cadastro/pessoa-fisica.html">
+              Pessoa Física
+            </a>
+          </li>
+
+          <li>
+            <a href="./cadastro/pessoa-juridica.html">
+              Pessoa Jurídica
+            </a>
+          </li>
+
+          <li>
+            <a
+              href="https://globalparticipacoesenergia.com.br/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Site do Grupo Global
+            </a>
+          </li>
+
+        </ul>
+
+      </div>
+
+
+
+      <!-- ================================================== -->
+      <!-- INFORMAÇÕES DA UTE -->
+      <!-- ================================================== -->
+
+      <div>
+
+        <h4>UTE Tupã Fase I</h4>
+
+        <ul class="footer-info">
+
+
+          <!-- LOCALIZAÇÃO -->
+
+          <li>
+
+            <svg
+              class="footer-ico"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+
+              <path
+                d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"
+              />
+
+              <circle
+                cx="12"
+                cy="9.5"
+                r="2.5"
+              />
+
+            </svg>
+
+            <span>
+              Macaé - Rio de Janeiro
+            </span>
+
+          </li>
+
+
+
+          <!-- EMPREENDIMENTO -->
+
+          <li>
+
+            <svg
+              class="footer-ico"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+
+              <path d="M3 21h18"/>
+
+              <path
+                d="M5 21V9l7-4 7 4v12"
+              />
+
+              <path
+                d="M9 21v-6h6v6"
+              />
+
+            </svg>
+
+            <span>
+              SJE – São João Energia S.A.
+            </span>
+
+          </li>
+
+
+
+          <!-- CAPACIDADE -->
+
+          <li>
+
+            <svg
+              class="footer-ico"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+
+              <path
+                d="m13 2-9 12h8l-1 8 9-12h-8z"
+              />
+
+            </svg>
+
+            <span>
+              Capacidade instalada aproximada: 177 MW
+            </span>
+
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ==================================================== -->
+    <!-- RODAPÉ INFERIOR -->
+    <!-- ==================================================== -->
+
+    <div class="footer-bottom">
+
+      <span>
+
+        &copy;
+        <span id="anoAtual"></span>
+
+        SJE – São João Energia.
+        Todos os direitos reservados.
+
+      </span>
+
+
+      <div class="footer-bottom-right">
+
+        <span>
+          Portal de Cadastro – UTE Tupã Fase I
+        </span>
+
+
+        <!-- ACESSO ADMINISTRATIVO -->
+
+        <a
+          href="./admin/login.html"
+          class="footer-admin-link"
+          title="Área Administrativa"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            width="15"
+            height="15"
+            aria-hidden="true"
+          >
+
+            <rect
+              x="5"
+              y="11"
+              width="14"
+              height="10"
+              rx="2"
+            />
+
+            <path
+              d="M8 11V7a4 4 0 0 1 8 0v4"
+            />
+
+          </svg>
+
+          Área Administrativa
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+
+<!-- ======================================================== -->
+<!-- ESTILO DO ACESSO ADMINISTRATIVO -->
+<!-- ======================================================== -->
+
+<style>
+
+  .footer-bottom-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 22px;
+
+  }
+
+
+  .footer-admin-link {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: inherit;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    opacity: 0.65;
+
+    transition:
+      opacity .2s ease;
+
+  }
+
+
+  .footer-admin-link:hover {
+
+    opacity: 1;
+
+    text-decoration: underline;
+
+  }
+
+
+  .footer-admin-link svg {
+
+    flex-shrink: 0;
+
+  }
+
+
+  @media (max-width: 768px) {
+
+    .footer-bottom-right {
+
+      flex-direction: column;
+
+      align-items: flex-start;
+
+      gap: 10px;
+
+    }
+
+  }
+
+</style>
+
+
+
+<script src="./js/main.js"></script>
+<script>document.getElementById("anoAtual").textContent = new Date().getFullYear();</script>
+
+
+</body>
+
+</html>
