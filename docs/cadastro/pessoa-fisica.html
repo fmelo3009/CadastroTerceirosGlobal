@@ -2268,47 +2268,243 @@ removerArquivo.addEventListener(
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = 'https://sjyopwvsfzplrbgkfsiu.supabase.co';
-  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_cCElVvFsjiAqYUNllCRTkw_C8neo8y4';
-  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-  const formPF = document.getElementById('form-pf');
-  const mensagem = document.getElementById('mensagem-formulario');
+// MANTENHA A SUA PUBLISHABLE KEY AQUI
+const SUPABASE_PUBLISHABLE_KEY = 'SUA_PUBLISHABLE_KEY_AQUI';
 
-  formPF.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const botao = formPF.querySelector('button[type="submit"]');
-    const arquivo = document.getElementById('curriculo').files[0];
-    if (!arquivo) return;
-    if (arquivo.size > 10 * 1024 * 1024) {
-      mensagem.innerHTML = '<div class="alert alert-error">O currículo deve ter no máximo 10 MB.</div>';
-      return;
+const sb = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+const formPF = document.getElementById('form-pf');
+const mensagem = document.getElementById('mensagem-formulario');
+
+formPF.addEventListener('submit', async function (event) {
+  event.preventDefault();
+
+  const botao = formPF.querySelector('button[type="submit"]');
+  const arquivo = document.getElementById('curriculo').files[0];
+
+  if (!arquivo) {
+    mensagem.innerHTML =
+      '<div class="alert alert-error">Selecione um currículo.</div>';
+    return;
+  }
+
+  // Máximo 10 MB
+  if (arquivo.size > 10 * 1024 * 1024) {
+    mensagem.innerHTML =
+      '<div class="alert alert-error">O currículo deve ter no máximo 10 MB.</div>';
+    return;
+  }
+
+  botao.disabled = true;
+  botao.textContent = 'Enviando...';
+  mensagem.innerHTML = '';
+
+  try {
+
+    // =========================================================
+    // 1. DADOS DO FORMULÁRIO
+    // =========================================================
+
+    const fd = new FormData(formPF);
+
+    const municipioFinal =
+      fd.get('municipio') === 'Outro'
+        ? fd.get('municipio_outro')
+        : fd.get('municipio');
+
+    const profissaoFinal =
+      fd.get('profissao') === 'Outros'
+        ? fd.get('outra_profissao')
+        : fd.get('profissao');
+
+
+    // =========================================================
+    // 2. CADASTRAR PESSOA NO BANCO
+    // =========================================================
+
+    const { data: terceirizado, error: erroCadastro } = await sb
+      .from('terceirizados')
+      .insert({
+        tipo: 'PF',
+        empreendimento_id: 1,
+
+        razao_social: fd.get('nome'),
+        cpf_cnpj: fd.get('cpf'),
+
+        cidade: municipioFinal,
+        estado: fd.get('estado'),
+
+        telefone: fd.get('telefone'),
+        whatsapp: fd.get('telefone_secundario') || null,
+
+        email: fd.get('email'),
+
+        cep: fd.get('cep') || null,
+        endereco: fd.get('endereco') || null,
+        complemento: fd.get('complemento') || null,
+
+        setor_atividade: profissaoFinal,
+
+        observacoes: fd.get('observacoes') || null
+      })
+      .select()
+      .single();
+
+    if (erroCadastro) {
+      console.error('Erro cadastro:', erroCadastro);
+      throw new Error(
+        'Não foi possível salvar os dados do cadastro.'
+      );
     }
-    botao.disabled = true; botao.textContent = 'Enviando...'; mensagem.innerHTML = '';
-    try {
-      const fd = new FormData(formPF);
-      const municipioFinal = fd.get('municipio') === 'Outro' ? fd.get('municipio_outro') : fd.get('municipio');
-      const profissaoFinal = fd.get('profissao') === 'Outros' ? fd.get('outra_profissao') : fd.get('profissao');
-      const { data: id, error: erroCadastro } = await sb.rpc('cadastrar_pessoa_fisica_publico', {
-        p_nome: fd.get('nome'), p_cpf: fd.get('cpf'), p_sexo: fd.get('sexo') || null,
-        p_cep: fd.get('cep') || null, p_endereco: fd.get('endereco') || null, p_complemento: fd.get('complemento') || null,
-        p_telefone: fd.get('telefone'), p_telefone_secundario: fd.get('telefone_secundario') || null,
-        p_email: fd.get('email'), p_cidade: municipioFinal, p_profissao: profissaoFinal,
-        p_observacoes: fd.get('observacoes') || null
+
+
+    // =========================================================
+    // 3. PREPARAR NOME DO CURRÍCULO
+    // =========================================================
+
+    const extensao =
+      arquivo.name.split('.').pop().toLowerCase();
+
+    const nomeArquivo =
+      `curriculo-${Date.now()}.${extensao}`;
+
+    const caminho =
+      `terceirizados/${terceirizado.id}/${nomeArquivo}`;
+
+
+    // =========================================================
+    // 4. ENVIAR CURRÍCULO PARA STORAGE
+    // =========================================================
+
+    const { error: erroUpload } = await sb.storage
+      .from('documentos')
+      .upload(
+        caminho,
+        arquivo,
+        {
+          contentType:
+            arquivo.type || 'application/octet-stream',
+
+          upsert: false
+        }
+      );
+
+    if (erroUpload) {
+      console.error('Erro upload:', erroUpload);
+
+      // Se o upload falhar, remove o cadastro criado
+      await sb
+        .from('terceirizados')
+        .delete()
+        .eq('id', terceirizado.id);
+
+      throw new Error(
+        'Os dados foram recebidos, mas não foi possível enviar o currículo.'
+      );
+    }
+
+
+    // =========================================================
+    // 5. REGISTRAR CURRÍCULO NA TABELA DOCUMENTOS
+    // =========================================================
+
+    const { error: erroDocumento } = await sb
+      .from('documentos')
+      .insert({
+        terceirizado_id: terceirizado.id,
+        tipo_documento: 'Currículo',
+
+        nome_arquivo_original: arquivo.name,
+
+        caminho_arquivo: caminho,
+
+        status: 'Enviado'
       });
-      if (erroCadastro) throw erroCadastro;
-      const ext = arquivo.name.split('.').pop().toLowerCase();
-      const caminho = `terceirizados/${id}/curriculo-${Date.now()}.${ext}`;
-      const { error: erroUpload } = await sb.storage.from('documentos').upload(caminho, arquivo, { contentType: arquivo.type || 'application/octet-stream', upsert: false });
-      if (erroUpload) throw erroUpload;
-      const { error: erroDoc } = await sb.from('documentos').insert({ terceirizado_id: id, tipo_documento: 'Currículo', nome_arquivo_original: arquivo.name, caminho_arquivo: caminho, status: 'Enviado' });
-      if (erroDoc) throw erroDoc;
-      mensagem.innerHTML = '<div style="padding:18px;border-radius:8px;background:#ecfdf3;border:1px solid #86efac;margin-bottom:25px;"><strong>Cadastro realizado com sucesso!</strong></div>';
-      formPF.reset(); arquivoSelecionado.style.display='none'; atualizarMunicipio(); atualizarProfissao(); window.scrollTo({top:0,behavior:'smooth'});
-    } catch (erro) {
-      console.error(erro);
-      mensagem.innerHTML = '<div class="alert alert-error"><strong>Não foi possível concluir o cadastro.</strong> Tente novamente.</div>';
-    } finally { botao.disabled=false; botao.textContent='Enviar cadastro'; }
-  });
+
+    if (erroDocumento) {
+      console.error(
+        'Erro ao registrar documento:',
+        erroDocumento
+      );
+
+      // Remove arquivo que acabou de ser enviado
+      await sb.storage
+        .from('documentos')
+        .remove([caminho]);
+
+      // Remove cadastro incompleto
+      await sb
+        .from('terceirizados')
+        .delete()
+        .eq('id', terceirizado.id);
+
+      throw new Error(
+        'Não foi possível registrar o currículo.'
+      );
+    }
+
+
+    // =========================================================
+    // 6. SUCESSO
+    // =========================================================
+
+    mensagem.innerHTML = `
+      <div
+        style="
+          padding:18px;
+          border-radius:8px;
+          background:#ecfdf3;
+          border:1px solid #86efac;
+          margin-bottom:25px;
+        "
+      >
+        <strong>Cadastro realizado com sucesso!</strong>
+        <br>
+        Seu currículo foi enviado.
+      </div>
+    `;
+
+    formPF.reset();
+
+    if (typeof arquivoSelecionado !== 'undefined') {
+      arquivoSelecionado.style.display = 'none';
+    }
+
+    if (typeof atualizarMunicipio === 'function') {
+      atualizarMunicipio();
+    }
+
+    if (typeof atualizarProfissao === 'function') {
+      atualizarProfissao();
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    mensagem.innerHTML = `
+      <div class="alert alert-error">
+        <strong>Não foi possível concluir o cadastro.</strong>
+        ${erro.message || 'Tente novamente.'}
+      </div>
+    `;
+
+  } finally {
+
+    botao.disabled = false;
+    botao.textContent = 'Enviar cadastro';
+
+  }
+});
 </script>
 
 </body></html>
