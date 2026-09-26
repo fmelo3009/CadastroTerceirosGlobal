@@ -2330,7 +2330,6 @@ formPF.addEventListener('submit', async function (event) {
       .from('terceirizados')
       .insert({
         tipo: 'PF',
-        empreendimento_id: 1,
 
         razao_social: fd.get('nome'),
         cpf_cnpj: fd.get('cpf'),
