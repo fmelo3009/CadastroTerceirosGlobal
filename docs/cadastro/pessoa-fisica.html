@@ -2326,40 +2326,33 @@ formPF.addEventListener('submit', async function (event) {
     // 2. CADASTRAR PESSOA NO BANCO
     // =========================================================
 
-    const { data: terceirizado, error: erroCadastro } = await sb
-      .from('terceirizados')
-      .insert({
-        tipo: 'PF',
+   const { error: erroCadastro } = await sb
+  .from('terceirizados')
+  .insert({
+    tipo: 'PF',
 
-        razao_social: fd.get('nome'),
-        cpf_cnpj: fd.get('cpf'),
+    razao_social: fd.get('nome'),
+    cpf_cnpj: fd.get('cpf'),
 
-        cidade: municipioFinal,
-        estado: fd.get('estado'),
+    cidade: municipioFinal,
+    estado: fd.get('estado'),
 
-        telefone: fd.get('telefone'),
-        telefone_secundario: fd.get('telefone_secundario') || null,
+    telefone: fd.get('telefone'),
+    telefone_secundario: fd.get('telefone_secundario') || null,
 
-        email: fd.get('email'),
+    email: fd.get('email'),
 
-        cep: fd.get('cep') || null,
-        endereco: fd.get('endereco') || null,
-        complemento: fd.get('complemento') || null,
+    cep: fd.get('cep') || null,
+    endereco: fd.get('endereco') || null,
+    complemento: fd.get('complemento') || null
+  });
 
-        setor_atividade: profissaoFinal,
-
-        observacoes: fd.get('observacoes') || null
-      })
-      .select()
-      .single();
-
-    if (erroCadastro) {
-      console.error('Erro cadastro:', erroCadastro);
-      throw new Error(
-        'Não foi possível salvar os dados do cadastro.'
-      );
-    }
-
+if (erroCadastro) {
+  console.error('Erro cadastro:', erroCadastro);
+  throw new Error(
+    'Não foi possível salvar os dados do cadastro.'
+  );
+}
 
     // =========================================================
     // 3. PREPARAR NOME DO CURRÍCULO
