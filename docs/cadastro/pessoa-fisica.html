@@ -1,2502 +1,415 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cadastro de Pessoa Física · SJE - São João Energia</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/style.css">
-</head><body>
-<header class="site-header">
-
-  <div class="container header-container">
-
-    <!-- MARCA / LOGO -->
-    <a href="../index.html" class="brand">
-
-      <img
-        src="../img/logo-SJE.png"
-        alt="SJE - São João Energia"
-        class="brand-logo"
-      />
-
-      <span class="brand-text">
-
-        <strong>
-          UTE Tupã Fase I
-        </strong>
-
-        <small>
-          CADASTRO DE PROFISSIONAIS E EMPRESAS
-        </small>
-
-      </span>
-
-    </a>
-
-
-    <!-- MENU DESKTOP -->
-    <nav
-      class="nav-desktop"
-      aria-label="Navegação principal"
-    >
-
-      <a
-        href="../index.html#cadastro"
-        class="nav-cadastro"
-      >
-        Cadastro
-      </a>
-
-      <a href="../index.html#sobre-tupa">
-        Sobre a Tupã
-      </a>
-
-      <a href="../index.html#valores">
-        Valores
-      </a>
-
-      <a href="../index.html#mulheres-tupa">
-        Mulheres na Tupã
-      </a>
-
-    </nav>
-
-
-    <!-- BOTÃO MOBILE -->
-    <button
-      class="hamburger"
-      type="button"
-      aria-label="Abrir menu"
-      aria-expanded="false"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-  </div>
-
-
-  <!-- MENU MOBILE -->
-  <nav
-    class="nav-mobile"
-    aria-label="Navegação mobile"
-  >
-
-    <a
-      href="../index.html#cadastro"
-      class="mobile-cadastro"
-    >
-      Cadastro
-    </a>
-
-    <a href="../index.html#sobre-tupa">
-      Sobre a Tupã
-    </a>
-
-    <a href="../index.html#valores">
-      Valores
-    </a>
-
-    <a href="../index.html#mulheres-tupa">
-      Mulheres na Tupã
-    </a>
-
-  </nav>
-
-</header>
-
-
-<style>
-
-/* ============================================================
-   HEADER
-============================================================ */
-
-.site-header {
-  position: relative;
-
-  width: 100%;
-
-  background: #ffffff;
-
-  border-bottom:
-    1px solid #e6ebf1;
-
-  z-index: 1000;
-}
-
-
-.header-container {
-  min-height: 82px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  gap: 35px;
-}
-
-
-/* ============================================================
-   MARCA
-============================================================ */
-
-.brand {
-  display: flex;
-
-  align-items: center;
-
-  gap: 16px;
-
-  min-width: 0;
-
-  text-decoration: none;
-}
-
-
-.brand-logo {
-  display: block;
-
-  width: auto;
-
-  height: 50px;
-
-  max-width: 170px;
-
-  object-fit: contain;
-
-  flex-shrink: 0;
-}
-
-
-.brand-text {
-  display: flex;
-
-  flex-direction: column;
-
-  justify-content: center;
-
-  min-width: 0;
-
-  line-height: 1;
-}
-
-
-.brand-text strong {
-  color: #073b7a;
-
-  font-size: 21px;
-
-  font-weight: 700;
-
-  line-height: 1.15;
-
-  white-space: nowrap;
-}
-
-
-.brand-text small {
-  margin-top: 5px;
-
-  color: #263a52;
-
-  font-size: 10px;
-
-  font-weight: 600;
-
-  letter-spacing: 0.7px;
-
-  line-height: 1.2;
-
-  white-space: nowrap;
-}
-
-
-/* ============================================================
-   MENU DESKTOP
-============================================================ */
-
-.nav-desktop {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: flex-end;
-
-  gap: 8px;
-
-  margin-left: auto;
-}
-
-
-.nav-desktop a {
-  position: relative;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  min-height: 44px;
-
-  padding:
-    0 17px;
-
-  color: #18344f;
-
-  font-size: 14px;
-
-  font-weight: 500;
-
-  text-decoration: none;
-
-  border-radius: 6px;
-
-  transition:
-    color 0.2s ease,
-    background 0.2s ease;
-}
-
-
-.nav-desktop a:hover {
-  color: #073b7a;
-
-  background: #f4f7fb;
-}
-
-
-/* ============================================================
-   CADASTRO EM DESTAQUE
-============================================================ */
-
-.nav-desktop .nav-cadastro {
-  padding:
-    0 23px;
-
-  background: #073b7a;
-
-  color: #ffffff;
-
-  font-weight: 600;
-}
-
-
-.nav-desktop .nav-cadastro:hover {
-  background: #052f61;
-
-  color: #ffffff;
-}
-
-
-/* ============================================================
-   MENU MOBILE
-============================================================ */
-
-.hamburger {
-  display: none;
-
-  width: 42px;
-  height: 42px;
-
-  padding: 8px;
-
-  background: transparent;
-
-  border: none;
-
-  cursor: pointer;
-}
-
-
-.hamburger span {
-  display: block;
-
-  width: 24px;
-  height: 2px;
-
-  margin: 5px auto;
-
-  background: #073b7a;
-
-  border-radius: 3px;
-}
-
-
-.nav-mobile {
-  display: none;
-
-  padding:
-    10px 20px 20px;
-
-  background: #ffffff;
-
-  border-top:
-    1px solid #edf0f4;
-}
-
-
-.nav-mobile a {
-  display: block;
-
-  padding:
-    13px 15px;
-
-  color: #18344f;
-
-  font-size: 14px;
-
-  font-weight: 500;
-
-  text-decoration: none;
-
-  border-radius: 6px;
-}
-
-
-.nav-mobile a:hover {
-  background: #f4f7fb;
-
-  color: #073b7a;
-}
-
-
-.nav-mobile .mobile-cadastro {
-  margin-bottom: 5px;
-
-  background: #073b7a;
-
-  color: #ffffff;
-
-  font-weight: 600;
-}
-
-
-.nav-mobile .mobile-cadastro:hover {
-  background: #052f61;
-
-  color: #ffffff;
-}
-
-
-/* ============================================================
-   RESPONSIVIDADE
-============================================================ */
-
-@media (max-width: 1050px) {
-
-  .header-container {
-    min-height: 76px;
-  }
-
-
-  .brand-logo {
-    height: 44px;
-
-    max-width: 145px;
-  }
-
-
-  .brand-text strong {
-    font-size: 18px;
-  }
-
-
-  .brand-text small {
-    font-size: 9px;
-  }
-
-
-  .nav-desktop a {
-    padding:
-      0 11px;
-
-    font-size: 13px;
-  }
-
-}
-
-
-@media (max-width: 850px) {
-
-  .header-container {
-    min-height: 72px;
-  }
-
-
-  .nav-desktop {
-    display: none;
-  }
-
-
-  .hamburger {
-    display: block;
-
-    margin-left: auto;
-  }
-
-
-  .nav-mobile.aberto {
-    display: block;
-  }
-
-}
-
-
-@media (max-width: 520px) {
-
-  .brand {
-    gap: 10px;
-  }
-
-
-  .brand-logo {
-    height: 38px;
-
-    max-width: 115px;
-  }
-
-
-  .brand-text strong {
-    font-size: 16px;
-  }
-
-
-  .brand-text small {
-    max-width: 175px;
-
-    font-size: 8px;
-
-    white-space: normal;
-  }
-
-}
-
-</style>
-
-
-<script>
-
-document.addEventListener(
-  'DOMContentLoaded',
-  function () {
-
-    const botao =
-      document.querySelector(
-        '.hamburger'
-      );
-
-    const menu =
-      document.querySelector(
-        '.nav-mobile'
-      );
-
-
-    if (!botao || !menu) {
-      return;
-    }
-
-
-    botao.addEventListener(
-      'click',
-      function () {
-
-        const aberto =
-          menu.classList.toggle(
-            'aberto'
-          );
-
-
-        botao.setAttribute(
-          'aria-expanded',
-          aberto
-            ? 'true'
-            : 'false'
-        );
-
-      }
-    );
-
-
-    const links =
-      menu.querySelectorAll(
-        'a'
-      );
-
-
-    links.forEach(
-      function (link) {
-
-        link.addEventListener(
-          'click',
-          function () {
-
-            menu.classList.remove(
-              'aberto'
-            );
-
-            botao.setAttribute(
-              'aria-expanded',
-              'false'
-            );
-
-          }
-        );
-
-      }
-    );
-
-  }
-);
-
-</script>
-
-<main class="cadastro-page">
-
-  <!-- ====================================================== -->
-  <!-- CABEÇALHO -->
-  <!-- ====================================================== -->
-
-  <section class="cadastro-hero">
-    <div class="container">
-
-      <span class="cadastro-tag">
-        UTE Tupã Fase I
-      </span>
-
-      <h1>Cadastro de Pessoa Física</h1>
-
-      <p>
-        Cadastre seu currículo para oportunidades profissionais
-        relacionadas à UTE Tupã Fase I.
-      </p>
-
-    </div>
-  </section>
-
-
-  <!-- ====================================================== -->
-  <!-- FORMULÁRIO -->
-  <!-- ====================================================== -->
-
-  <section class="cadastro-section">
-
-    <div class="container">
-
-      <div class="cadastro-box">
-
-        <div class="cadastro-box-header">
-
-          <h2>Dados do profissional</h2>
-
-          <p>
-            Preencha seus dados abaixo. As informações serão utilizadas
-            para composição do banco de profissionais da UTE Tupã Fase I.
-          </p>
-
-        </div>
-
-        <div id="mensagem-formulario"></div>
-
-        <form
-          id="form-pf" action="#"
-          method="POST"
-          enctype="multipart/form-data"
-          class="cadastro-form"
-        >
-
-
-          <!-- ================================================== -->
-          <!-- LOCALIZAÇÃO -->
-          <!-- ================================================== -->
-
-          <div class="form-section">
-
-            <h3>Localização</h3>
-
-            <div class="form-grid">
-
-              <div class="form-group">
-
-                <label for="municipio">
-                  Município *
-                </label>
-
-                <select
-                  id="municipio"
-                  name="municipio"
-                  required
-                >
-
-                  <option value="">
-                    Selecione
-                  </option>
-
-                  <option
-                    value="Macaé"
-                  >
-                    Macaé
-                  </option>
-
-                  <option
-                    value="Rio das Ostras"
-                  >
-                    Rio das Ostras
-                  </option>
-
-                  <option
-                    value="Carapebus"
-                  >
-                    Carapebus
-                  </option>
-
-                  <option
-                    value="Conceição de Macabu"
-                  >
-                    Conceição de Macabu
-                  </option>
-
-                  <option
-                    value="Casimiro de Abreu"
-                  >
-                    Casimiro de Abreu
-                  </option>
-
-                  <option
-                    value="Outro"
-                  >
-                    Outro município
-                  </option>
-
-                </select>
-
-              </div>
-
-
-              <div
-                class="form-group"
-                id="municipio-outro-container"
-                style="display:none;"
-              >
-
-                <label for="municipio_outro">
-                  Informe o município *
-                </label>
-
-                <input
-                  type="text"
-                  id="municipio_outro"
-                  name="municipio_outro"
-                  value=""
-                >
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <!-- ================================================== -->
-          <!-- DADOS PESSOAIS -->
-          <!-- ================================================== -->
-
-          <div class="form-section">
-
-            <h3>Dados pessoais</h3>
-
-            <div class="form-grid">
-
-              <div class="form-group form-group-full">
-
-                <label for="nome">
-                  Nome completo *
-                </label>
-
-                <input
-                  type="text"
-                  id="nome"
-                  name="nome"
-                  value=""
-                  required
-                >
-
-              </div>
-
-
-              <div class="form-group">
-
-                <label for="cpf">
-                  CPF *
-                </label>
-
-                <input
-                  type="text"
-                  id="cpf"
-                  name="cpf"
-                  maxlength="14"
-                  placeholder="000.000.000-00"
-                  value=""
-                  required
-                >
-
-              </div>
-
-
-              <div class="form-group">
-
-                <label for="sexo">
-                  Sexo
-                </label>
-
-                <select
-                  id="sexo"
-                  name="sexo"
-                >
-
-                  <option value="">
-                    Selecione
-                  </option>
-
-                  <option
-                    value="Feminino"
-                  >
-                    Feminino
-                  </option>
-
-                  <option
-                    value="Masculino"
-                  >
-                    Masculino
-                  </option>
-
-                  <option
-                    value="Outro"
-                  >
-                    Outro
-                  </option>
-
-                  <option
-                    value="Prefiro não informar"
-                  >
-                    Prefiro não informar
-                  </option>
-
-                </select>
-
-              </div>
-
-
-              <div class="form-group">
-
-                <label for="cep">
-                  CEP
-                </label>
-
-                <input
-                  type="text"
-                  id="cep"
-                  name="cep"
-                  maxlength="9"
-                  placeholder="00000-000"
-                  value=""
-                >
-
-              </div>
-
-
-              <div class="form-group form-group-full">
-
-                <label for="endereco">
-                  Endereço
-                </label>
-
-                <input
-                  type="text"
-                  id="endereco"
-                  name="endereco"
-                  placeholder="Rua, avenida, número e bairro"
-                  value=""
-                >
-
-              </div>
-
-
-              <div class="form-group form-group-full">
-
-                <label for="complemento">
-                  Complemento
-                </label>
-
-                <input
-                  type="text"
-                  id="complemento"
-                  name="complemento"
-                  placeholder="Apartamento, bloco, referência etc."
-                  value=""
-                >
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <!-- ================================================== -->
-          <!-- CONTATO -->
-          <!-- ================================================== -->
-
-          <div class="form-section">
-
-            <h3>Contato</h3>
-
-            <div class="form-grid">
-
-              <div class="form-group">
-
-                <label for="telefone">
-                  Telefone principal *
-                </label>
-
-                <input
-                  type="tel"
-                  id="telefone"
-                  name="telefone"
-                  placeholder="(00) 00000-0000"
-                  value=""
-                  required
-                >
-
-              </div>
-
-
-              <div class="form-group">
-
-                <label for="telefone_secundario">
-                  Segundo telefone
-                </label>
-
-                <input
-                  type="tel"
-                  id="telefone_secundario"
-                  name="telefone_secundario"
-                  placeholder="(00) 00000-0000"
-                  value=""
-                >
-
-              </div>
-
-
-              <div class="form-group form-group-full">
-
-                <label for="email">
-                  E-mail *
-                </label>
-
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="seuemail@exemplo.com"
-                  value=""
-                  required
-                >
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <!-- ================================================== -->
-          <!-- INFORMAÇÕES PROFISSIONAIS -->
-          <!-- ================================================== -->
-
-          <div class="form-section">
-
-            <h3>Informações profissionais</h3>
-
-            <div class="form-grid">
-
-              <div class="form-group form-group-full">
-
-                <label for="profissao">
-                  Profissão / Área de atuação *
-                </label>
-
-                <select
-                  id="profissao"
-                  name="profissao"
-                  required
-                >
-
-                  <option value="">
-                    Selecione sua profissão
-                  </option>
-
-                  <option>Administrador</option>
-                  <option>Agrimensor</option>
-                  <option>Ajudante</option>
-                  <option>Armador</option>
-                  <option>Arquivista</option>
-                  <option>Assistente Administrativo</option>
-                  <option>Assistente Ambiental</option>
-                  <option>Assistente de Recursos Humanos</option>
-                  <option>Assistente Social</option>
-                  <option>Auxiliar de Almoxarifado</option>
-                  <option>Auxiliar de Serviços Gerais</option>
-                  <option>Biólogo</option>
-                  <option>Geógrafo</option>
-                  <option>Jornalista</option>
-                  <option>Comunicador Social</option>
-                  <option>Caldeireiro</option>
-                  <option>Carpinteiro</option>
-                  <option>Comprador</option>
-                  <option>Contador</option>
-                  <option>Cozinheiro</option>
-                  <option>Economista</option>
-
-                  <option>
-                    Eletricista de Linha de Transmissão
-                  </option>
-
-                  <option>
-                    Eletricista de Subestação
-                  </option>
-
-                  <option>
-                    Eletricista
-                  </option>
-
-                  <option>
-                    Eletrotécnico
-                  </option>
-
-                  <option>
-                    Encanador Industrial
-                  </option>
-
-                  <option>
-                    Encarregado de Obras
-                  </option>
-
-                  <option>
-                    Enfermeiro
-                  </option>
-
-                  <option>
-                    Engenheiro Civil
-                  </option>
-
-                  <option>
-                    Engenheiro de Automação
-                  </option>
-
-                  <option>
-                    Engenheiro de Planejamento
-                  </option>
-
-                  <option>
-                    Engenheiro de Produção
-                  </option>
-
-                  <option>
-                    Engenheiro de Proteção e Controle
-                  </option>
-
-                  <option>
-                    Engenheiro de Qualidade
-                  </option>
-
-                  <option>
-                    Engenheiro de Segurança
-                  </option>
-
-                  <option>
-                    Engenheiro Eletricista
-                  </option>
-
-                  <option>
-                    Engenheiro Mecânico
-                  </option>
-
-                  <option>
-                    Especialista em Comissionamento
-                  </option>
-
-                  <option>
-                    Inspetor de Elétrica
-                  </option>
-
-                  <option>
-                    Inspetor de END
-                  </option>
-
-                  <option>
-                    Inspetor de Instrumentação
-                  </option>
-
-                  <option>
-                    Inspetor de Mecânica
-                  </option>
-
-                  <option>
-                    Inspetor de Qualidade
-                  </option>
-
-                  <option>
-                    Inspetor de Soldagem
-                  </option>
-
-                  <option>
-                    Instrumentista
-                  </option>
-
-                  <option>
-                    Mecânico de Manutenção
-                  </option>
-
-                  <option>
-                    Mecânico Montador
-                  </option>
-
-                  <option>
-                    Mestre de Obras
-                  </option>
-
-                  <option>
-                    Montador de Linha de Transmissão
-                  </option>
-
-                  <option>
-                    Montador Industrial
-                  </option>
-
-                  <option>
-                    Motorista de Caminhão/Carreta
-                  </option>
-
-                  <option>
-                    Motorista
-                  </option>
-
-                  <option>
-                    Operador de Empilhadeira
-                  </option>
-
-                  <option>
-                    Operador de Escavadeira
-                  </option>
-
-                  <option>
-                    Operador de Máquinas Pesadas
-                  </option>
-
-                  <option>
-                    Operador de Pá Carregadeira
-                  </option>
-
-                  <option>
-                    Operador de Retroescavadeira
-                  </option>
-
-                  <option>
-                    Operador de Rolo Compactador
-                  </option>
-
-                  <option>
-                    Operador de Sala de Controle
-                  </option>
-
-                  <option>
-                    Pedreiro
-                  </option>
-
-                  <option>
-                    Pintor
-                  </option>
-
-                  <option>
-                    Psicólogo
-                  </option>
-
-                  <option>
-                    Soldador
-                  </option>
-
-                  <option>
-                    Técnico de Automação
-                  </option>
-
-                  <option>
-                    Técnico de Comissionamento
-                  </option>
-
-                  <option>
-                    Técnico de Concreto
-                  </option>
-
-                  <option>
-                    Técnico de Controle e Automação
-                  </option>
-
-                  <option>
-                    Técnico de Gasoduto
-                  </option>
-
-                  <option>
-                    Técnico de HVAC
-                  </option>
-
-                  <option>
-                    Técnico de Linha de Transmissão
-                  </option>
-
-                  <option>
-                    Técnico de Manutenção
-                  </option>
-
-                  <option>
-                    Técnico de Materiais
-                  </option>
-
-                  <option>
-                    Técnico de Medição
-                  </option>
-
-                  <option>
-                    Técnico de Meio Ambiente
-                  </option>
-
-                  <option>
-                    Técnico de Planejamento
-                  </option>
-
-                  <option>
-                    Técnico de Proteção e Controle
-                  </option>
-
-                  <option>
-                    Técnico de Segurança
-                  </option>
-
-                  <option>
-                    Técnico de Start-up
-                  </option>
-
-                  <option>
-                    Técnico de Subestação
-                  </option>
-
-                  <option>
-                    Técnico em Automação
-                  </option>
-
-                  <option>
-                    Técnico em Edificações
-                  </option>
-
-                  <option>
-                    Técnico em Eletrônica
-                  </option>
-
-                  <option>
-                    Técnico em Instrumentação
-                  </option>
-
-                  <option>
-                    Técnico em Mecânica
-                  </option>
-
-                  <option>
-                    Técnico em Meio Ambiente
-                  </option>
-
-                  <option>
-                    Técnico em Qualidade
-                  </option>
-
-                  <option>
-                    Técnico em Segurança do Trabalho
-                  </option>
-
-                  <option>
-                    Técnico em Topografia
-                  </option>
-
-                  <option>
-                    Topógrafo
-                  </option>
-
-                  <option>
-                    Tubista
-                  </option>
-
-                  <option>
-                    Vigilante
-                  </option>
-
-                  <option value="Outros">
-                    Outros
-                  </option>
-
-                </select>
-
-              </div>
-
-
-              <div
-                class="form-group form-group-full"
-                id="outra-profissao-container"
-                style="display:none;"
-              >
-
-                <label for="outra_profissao">
-                  Informe sua profissão *
-                </label>
-
-                <input
-                  type="text"
-                  id="outra_profissao"
-                  name="outra_profissao"
-                  value=""
-                >
-
-              </div>
-
-
-              <div class="form-group form-group-full">
-
-                <label for="observacoes">
-                  Observações
-                </label>
-
-                <textarea
-                  id="observacoes"
-                  name="observacoes"
-                  rows="5"
-                  placeholder="Informe experiências, qualificações ou outras informações que considere relevantes."
-                ></textarea>
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <!-- ================================================== -->
-          <!-- CURRÍCULO -->
-          <!-- ================================================== -->
-
-          <div class="form-section">
-
-            <h3>Currículo</h3>
-
-            <div class="upload-box">
-
-  <label for="curriculo">
-    Anexe seu currículo *
-  </label>
-
-  <input
-    type="file"
-    id="curriculo"
-    name="curriculo"
-    accept=".pdf,.doc,.docx"
-    required
-  >
-
-  <div
-    id="arquivo-selecionado"
-    class="arquivo-selecionado"
-    style="display:none;"
-  >
-
-    <span id="nome-arquivo"></span>
-
-    <button
-      type="button"
-      id="remover-arquivo"
-      class="btn-remover-arquivo"
-    >
-      Remover arquivo
-    </button>
-
-  </div>
-
-  <small>
-    Formatos aceitos: PDF, DOC ou DOCX.
-    Tamanho máximo: 10 MB.
-  </small>
-
-</div>
-
-          </div>
-
-
-          <!-- ================================================== -->
-          <!-- ENVIO -->
-          <!-- ================================================== -->
-
-          <div class="form-actions">
-
-            <button
-              type="submit"
-              class="btn btn-primary btn-submit"
-            >
-              Enviar cadastro
-            </button>
-
-          </div>
-
-        </form>
-
-      </div>
-
-    </div>
-
-  </section>
-
-</main>
-
-
-<!-- ========================================================== -->
-<!-- ESTILO DA PÁGINA -->
-<!-- ========================================================== -->
-
-<style>
-
-  .cadastro-page {
-    background: #f5f7fa;
-  }
-
-  .cadastro-hero {
-    padding: 64px 0 52px;
-    background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
-  }
-
-  .cadastro-hero h1 {
-    margin: 10px 0 12px;
-    font-size: 42px;
-  }
-
-  .cadastro-hero p {
-    max-width: 700px;
-    font-size: 18px;
-    line-height: 1.6;
-  }
-
-  .cadastro-tag {
-    display: inline-block;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 13px;
-    letter-spacing: 1px;
-  }
-
-  .cadastro-section {
-    padding: 50px 0 80px;
-  }
-
-  .cadastro-box {
-    max-width: 1000px;
-    margin: auto;
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 40px;
-    box-shadow: 0 4px 24px rgba(0,0,0,.06);
-  }
-
-  .cadastro-box-header {
-    margin-bottom: 36px;
-  }
-
-  .cadastro-box-header h2 {
-    margin-bottom: 8px;
-  }
-
-  .cadastro-box-header p {
-    line-height: 1.6;
-  }
-
-  .form-section {
-    padding: 30px 0;
-    border-top: 1px solid #e5e7eb;
-  }
-
-  .form-section:first-of-type {
-    border-top: 0;
-  }
-
-  .form-section h3 {
-    margin-bottom: 22px;
-    font-size: 20px;
-  }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .form-group-full {
-    grid-column: 1 / -1;
-  }
-
-  .form-group label,
-  .upload-box label {
-    font-weight: 600;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 13px 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font: inherit;
-    background: #ffffff;
-  }
-
-  .form-group textarea {
-    resize: vertical;
-  }
-
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    outline: none;
-    border-color: #374151;
-  }
-
-  .upload-box {
-    border: 2px dashed #d1d5db;
-    padding: 25px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .upload-box input {
-    max-width: 500px;
-  }
-
-  .upload-box small {
-    opacity: .7;
-  }
-
-  .form-actions {
-    padding-top: 25px;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .btn-submit {
-    min-width: 220px;
-    padding: 14px 28px;
-    font-size: 16px;
-  }
-
-  .alert-error {
-    margin-bottom: 25px;
-    padding: 18px;
-    border-radius: 8px;
-    background: #fff4f4;
-    border: 1px solid #f1b5b5;
-  }
-
-  .alert-error ul {
-    margin-top: 10px;
-    margin-bottom: 0;
-  }
-
-
-  @media (max-width: 768px) {
-
-    .cadastro-box {
-      padding: 24px;
-    }
-
-    .cadastro-hero {
-      padding: 45px 0 35px;
-    }
-
-    .cadastro-hero h1 {
-      font-size: 32px;
-    }
-
-    .form-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .form-group-full {
-      grid-column: auto;
-    }
-
-    .btn-submit {
-      width: 100%;
-    }
-
-  }
-
-</style>
-
-
-<!-- ========================================================== -->
-<!-- COMPORTAMENTO DOS CAMPOS -->
-<!-- ========================================================== -->
-
-<script>
-
-  // MUNICÍPIO
-
-  const municipio =
-    document.getElementById('municipio');
-
-  const municipioOutroContainer =
-    document.getElementById(
-      'municipio-outro-container'
-    );
-
-  const municipioOutro =
-    document.getElementById(
-      'municipio_outro'
-    );
-
-
-  function atualizarMunicipio() {
-
-    if (
-      municipio.value === 'Outro'
-    ) {
-
-      municipioOutroContainer.style.display =
-        'flex';
-
-      municipioOutro.required =
-        true;
-
-    } else {
-
-      municipioOutroContainer.style.display =
-        'none';
-
-      municipioOutro.required =
-        false;
-
-      municipioOutro.value =
-        '';
-
-    }
-
-  }
-
-
-  municipio.addEventListener(
-    'change',
-    atualizarMunicipio
-  );
-
-
-  atualizarMunicipio();
-
-
-
-  // PROFISSÃO
-
-  const profissao =
-    document.getElementById(
-      'profissao'
-    );
-
-  const outraProfissaoContainer =
-    document.getElementById(
-      'outra-profissao-container'
-    );
-
-  const outraProfissao =
-    document.getElementById(
-      'outra_profissao'
-    );
-
-
-  function atualizarProfissao() {
-
-    if (
-      profissao.value === 'Outros'
-    ) {
-
-      outraProfissaoContainer.style.display =
-        'flex';
-
-      outraProfissao.required =
-        true;
-
-    } else {
-
-      outraProfissaoContainer.style.display =
-        'none';
-
-      outraProfissao.required =
-        false;
-
-      outraProfissao.value =
-        '';
-
-    }
-
-  }
-
-
-  profissao.addEventListener(
-    'change',
-    atualizarProfissao
-  );
-
-
-  atualizarProfissao();
-
-
-
-  // MÁSCARA CPF
-
-  const cpf =
-    document.getElementById('cpf');
-
-
-  cpf.addEventListener(
-    'input',
-    function () {
-
-      let valor =
-        this.value.replace(/\D/g, '');
-
-      valor =
-        valor.substring(0, 11);
-
-      if (valor.length > 9) {
-
-        valor =
-          valor.replace(
-            /(\d{3})(\d{3})(\d{3})(\d{1,2})/,
-            '$1.$2.$3-$4'
-          );
-
-      } else if (
-        valor.length > 6
-      ) {
-
-        valor =
-          valor.replace(
-            /(\d{3})(\d{3})(\d+)/,
-            '$1.$2.$3'
-          );
-
-      } else if (
-        valor.length > 3
-      ) {
-
-        valor =
-          valor.replace(
-            /(\d{3})(\d+)/,
-            '$1.$2'
-          );
-
-      }
-
-      this.value =
-        valor;
-
-    }
-  );
-
-
-
-  // MÁSCARA CEP
-
-  const cep =
-    document.getElementById('cep');
-
-
-  cep.addEventListener(
-    'input',
-    function () {
-
-      let valor =
-        this.value.replace(/\D/g, '');
-
-      valor =
-        valor.substring(0, 8);
-
-      if (
-        valor.length > 5
-      ) {
-
-        valor =
-          valor.replace(
-            /(\d{5})(\d+)/,
-            '$1-$2'
-          );
-
-      }
-
-      this.value =
-        valor;
-
-    }
-  );
-
-
-
-  // MÁSCARA TELEFONE
-
-  function mascaraTelefone(
-    elemento
-  ) {
-
-    elemento.addEventListener(
-      'input',
-      function () {
-
-        let valor =
-          this.value.replace(/\D/g, '');
-
-        valor =
-          valor.substring(0, 11);
-
-        if (
-          valor.length > 10
-        ) {
-
-          valor =
-            valor.replace(
-              /(\d{2})(\d{5})(\d{4})/,
-              '($1) $2-$3'
-            );
-
-        } else if (
-          valor.length > 6
-        ) {
-
-          valor =
-            valor.replace(
-              /(\d{2})(\d{4})(\d{0,4})/,
-              '($1) $2-$3'
-            );
-
-        } else if (
-          valor.length > 2
-        ) {
-
-          valor =
-            valor.replace(
-              /(\d{2})(\d+)/,
-              '($1) $2'
-            );
-
-        }
-
-        this.value =
-          valor;
-
-      }
-    );
-
-  }
-
-
-  mascaraTelefone(
-    document.getElementById(
-      'telefone'
-    )
-  );
-
-
-  mascaraTelefone(
-    document.getElementById(
-      'telefone_secundario'
-    )
-  );
-
-// REMOVER CURRÍCULO SELECIONADO
-
-const curriculo =
-  document.getElementById('curriculo');
-
-const arquivoSelecionado =
-  document.getElementById('arquivo-selecionado');
-
-const nomeArquivo =
-  document.getElementById('nome-arquivo');
-
-const removerArquivo =
-  document.getElementById('remover-arquivo');
-
-
-curriculo.addEventListener(
-  'change',
-  function () {
-
-    if (
-      this.files &&
-      this.files.length > 0
-    ) {
-
-      nomeArquivo.textContent =
-        this.files[0].name;
-
-      arquivoSelecionado.style.display =
-        'flex';
-
-    } else {
-
-      nomeArquivo.textContent =
-        '';
-
-      arquivoSelecionado.style.display =
-        'none';
-
-    }
-
-  }
-);
-
-
-removerArquivo.addEventListener(
-  'click',
-  function () {
-
-    curriculo.value = '';
-
-    nomeArquivo.textContent = '';
-
-    arquivoSelecionado.style.display =
-      'none';
-
-  }
-);
-
-</script>
-<footer class="site-footer">
-
-  <div class="container">
-
-    <div class="footer-grid">
-
-
-      <!-- ================================================== -->
-      <!-- MARCA -->
-      <!-- ================================================== -->
-
-      <div>
-
-        <div class="footer-brand">
-
-          <span class="footer-brand-mark">
-            SJE
-          </span>
-
-          <span class="footer-brand-text">
-            SJE - São João Energia
-          </span>
-
-        </div>
-
-        <p>
-          Portal de cadastro de profissionais e empresas para oportunidades
-          relacionadas à UTE Tupã Fase I.
-        </p>
-
-      </div>
-
-
-
-      <!-- ================================================== -->
-      <!-- LINKS RÁPIDOS -->
-      <!-- ================================================== -->
-
-      <div>
-
-        <h4>Links rápidos</h4>
-
-        <ul>
-
-          <li>
-            <a href="../index.html">
-              Início
-            </a>
-          </li>
-
-          <li>
-            <a href="../index.html#cadastro">
-              Cadastro
-            </a>
-          </li>
-
-          <li>
-            <a href="../index.html#sobre-tupa">
-              Sobre a UTE Tupã
-            </a>
-          </li>
-
-          <li>
-            <a href="../index.html#valores">
-              Valores
-            </a>
-          </li>
-
-          <li>
-            <a href="../index.html#mulheres-tupa">
-              Mulheres na UTE Tupã
-            </a>
-          </li>
-
-        </ul>
-
-      </div>
-
-
-
-      <!-- ================================================== -->
-      <!-- CADASTROS -->
-      <!-- ================================================== -->
-
-      <div>
-
-        <h4>Cadastre-se</h4>
-
-        <ul>
-
-          <li>
-            <a href="./pessoa-fisica.html">
-              Pessoa Física
-            </a>
-          </li>
-
-          <li>
-            <a href="./pessoa-juridica.html">
-              Pessoa Jurídica
-            </a>
-          </li>
-
-          <li>
-            <a
-              href=""
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Site do Grupo Global
-            </a>
-          </li>
-
-        </ul>
-
-      </div>
-
-
-
-      <!-- ================================================== -->
-      <!-- INFORMAÇÕES DA UTE -->
-      <!-- ================================================== -->
-
-      <div>
-
-        <h4>UTE Tupã Fase I</h4>
-
-        <ul class="footer-info">
-
-
-          <!-- LOCALIZAÇÃO -->
-
-          <li>
-
-            <svg
-              class="footer-ico"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-
-              <path
-                d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"
-              />
-
-              <circle
-                cx="12"
-                cy="9.5"
-                r="2.5"
-              />
-
-            </svg>
-
-            <span>
-              Macaé - Rio de Janeiro
-            </span>
-
-          </li>
-
-
-
-          <!-- EMPREENDIMENTO -->
-
-          <li>
-
-            <svg
-              class="footer-ico"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-
-              <path d="M3 21h18"/>
-
-              <path
-                d="M5 21V9l7-4 7 4v12"
-              />
-
-              <path
-                d="M9 21v-6h6v6"
-              />
-
-            </svg>
-
-            <span>
-              SJE – São João Energia S.A.
-            </span>
-
-          </li>
-
-
-
-          <!-- CAPACIDADE -->
-
-          <li>
-
-            <svg
-              class="footer-ico"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-
-              <path
-                d="m13 2-9 12h8l-1 8 9-12h-8z"
-              />
-
-            </svg>
-
-            <span>
-              Capacidade instalada aproximada: 177 MW
-            </span>
-
-          </li>
-
-        </ul>
-
-      </div>
-
-    </div>
-
-
-
-    <!-- ==================================================== -->
-    <!-- RODAPÉ INFERIOR -->
-    <!-- ==================================================== -->
-
-    <div class="footer-bottom">
-
-      <span>
-
-        &copy;
-        2026
-
-        SJE – São João Energia.
-        Todos os direitos reservados.
-
-      </span>
-
-
-      <div class="footer-bottom-right">
-
-        <span>
-          Portal de Cadastro – UTE Tupã Fase I
-        </span>
-
-
-        <!-- ACESSO ADMINISTRATIVO -->
-
-        <a
-          href="../admin/login.html"
-          class="footer-admin-link"
-          title="Área Administrativa"
-        >
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            width="15"
-            height="15"
-            aria-hidden="true"
-          >
-
-            <rect
-              x="5"
-              y="11"
-              width="14"
-              height="10"
-              rx="2"
-            />
-
-            <path
-              d="M8 11V7a4 4 0 0 1 8 0v4"
-            />
-
-          </svg>
-
-          Área Administrativa
-
-        </a>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</footer>
-
-
-
-<!-- ======================================================== -->
-<!-- ESTILO DO ACESSO ADMINISTRATIVO -->
-<!-- ======================================================== -->
-
-<style>
-
-  .footer-bottom-right {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 22px;
-
-  }
-
-
-  .footer-admin-link {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    color: inherit;
-
-    text-decoration: none;
-
-    font-size: 13px;
-
-    opacity: 0.65;
-
-    transition:
-      opacity .2s ease;
-
-  }
-
-
-  .footer-admin-link:hover {
-
-    opacity: 1;
-
-    text-decoration: underline;
-
-  }
-
-
-  .footer-admin-link svg {
-
-    flex-shrink: 0;
-
-  }
-
-
-  @media (max-width: 768px) {
-
-    .footer-bottom-right {
-
-      flex-direction: column;
-
-      align-items: flex-start;
-
-      gap: 10px;
-
-    }
-
-  }
-
-</style>
-
-
-
-<script src="/js/main.js"></script>
-
-<script src="../js/main.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://sjyopwvsfzplrbgkfsiu.supabase.co';
 
-// MANTENHA A SUA PUBLISHABLE KEY AQUI
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_cCElVvFsjiAqYUNllCRTkw_C8neo8y4';
+<script>
+const SUPABASE_URL =
+  'https://sjyopwvsfzplrbgkfsiu.supabase.co';
+
+const SUPABASE_PUBLISHABLE_KEY =
+  'sb_publishable_cCElVvFsjiAqYUNllCRTkw_C8neo8y4';
 
 const sb = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
 
-const formPF = document.getElementById('form-pf');
-const mensagem = document.getElementById('mensagem-formulario');
+const formPF =
+  document.getElementById('form-pf');
 
-formPF.addEventListener('submit', async function (event) {
-  event.preventDefault();
+const mensagem =
+  document.getElementById('mensagem-formulario');
 
-  const botao = formPF.querySelector('button[type="submit"]');
-  const arquivo = document.getElementById('curriculo').files[0];
 
-  if (!arquivo) {
-    mensagem.innerHTML =
-      '<div class="alert alert-error">Selecione um currículo.</div>';
-    return;
-  }
+formPF.addEventListener(
+  'submit',
+  async function (event) {
 
-  // Máximo 10 MB
-  if (arquivo.size > 10 * 1024 * 1024) {
-    mensagem.innerHTML =
-      '<div class="alert alert-error">O currículo deve ter no máximo 10 MB.</div>';
-    return;
-  }
+    event.preventDefault();
 
-  botao.disabled = true;
-  botao.textContent = 'Enviando...';
-  mensagem.innerHTML = '';
+    const botao =
+      formPF.querySelector(
+        'button[type="submit"]'
+      );
 
-  try {
+    const inputCurriculo =
+      document.getElementById('curriculo');
 
-    // =========================================================
-    // 1. DADOS DO FORMULÁRIO
-    // =========================================================
-
-    const fd = new FormData(formPF);
-
-    const municipioFinal =
-      fd.get('municipio') === 'Outro'
-        ? fd.get('municipio_outro')
-        : fd.get('municipio');
-
-    const profissaoFinal =
-      fd.get('profissao') === 'Outros'
-        ? fd.get('outra_profissao')
-        : fd.get('profissao');
+    const arquivo =
+      inputCurriculo.files[0];
 
 
     // =========================================================
-    // 2. CADASTRAR PESSOA NO BANCO
+    // 1. VALIDAR ARQUIVO
     // =========================================================
 
-   const { error: erroCadastro } = await sb
-  .from('terceirizados')
-  .insert({
-    tipo: 'PF',
+    if (!arquivo) {
 
-    razao_social: fd.get('nome'),
-    cpf_cnpj: fd.get('cpf'),
+      mensagem.innerHTML = `
+        <div class="alert alert-error">
+          Selecione um currículo.
+        </div>
+      `;
 
-    cidade: municipioFinal,
-    estado: fd.get('estado'),
+      return;
+    }
 
-    telefone: fd.get('telefone'),
-    telefone_secundario: fd.get('telefone_secundario') || null,
 
-    email: fd.get('email'),
+    // máximo 10 MB
+    if (arquivo.size > 10 * 1024 * 1024) {
 
-    cep: fd.get('cep') || null,
-    endereco: fd.get('endereco') || null,
-    complemento: fd.get('complemento') || null
-  });
+      mensagem.innerHTML = `
+        <div class="alert alert-error">
+          O currículo deve ter no máximo 10 MB.
+        </div>
+      `;
 
-if (erroCadastro) {
-  console.error('Erro cadastro:', erroCadastro);
-  throw new Error(
-    'Não foi possível salvar os dados do cadastro.'
-  );
-}
+      return;
+    }
 
-    // =========================================================
-    // 3. PREPARAR NOME DO CURRÍCULO
-    // =========================================================
+
+    const extensoesPermitidas =
+      ['pdf', 'doc', 'docx'];
 
     const extensao =
-      arquivo.name.split('.').pop().toLowerCase();
-
-    const nomeArquivo =
-      `curriculo-${Date.now()}.${extensao}`;
-
-    const caminho =
-      `terceirizados/${terceirizado.id}/${nomeArquivo}`;
+      arquivo.name
+        .split('.')
+        .pop()
+        .toLowerCase();
 
 
-    // =========================================================
-    // 4. ENVIAR CURRÍCULO PARA STORAGE
-    // =========================================================
+    if (
+      !extensoesPermitidas.includes(extensao)
+    ) {
 
-    const { error: erroUpload } = await sb.storage
-      .from('documentos')
-      .upload(
-        caminho,
-        arquivo,
-        {
-          contentType:
-            arquivo.type || 'application/octet-stream',
+      mensagem.innerHTML = `
+        <div class="alert alert-error">
+          Formato inválido.
+          Envie PDF, DOC ou DOCX.
+        </div>
+      `;
 
-          upsert: false
-        }
-      );
-
-    if (erroUpload) {
-      console.error('Erro upload:', erroUpload);
-
-      // Se o upload falhar, remove o cadastro criado
-      await sb
-        .from('terceirizados')
-        .delete()
-        .eq('id', terceirizado.id);
-
-      throw new Error(
-        'Os dados foram recebidos, mas não foi possível enviar o currículo.'
-      );
+      return;
     }
 
 
-    // =========================================================
-    // 5. REGISTRAR CURRÍCULO NA TABELA DOCUMENTOS
-    // =========================================================
+    botao.disabled = true;
+    botao.textContent = 'Enviando...';
 
-    const { error: erroDocumento } = await sb
-      .from('documentos')
-      .insert({
-        terceirizado_id: terceirizado.id,
-        tipo_documento: 'Currículo',
+    mensagem.innerHTML = '';
 
-        nome_arquivo_original: arquivo.name,
 
-        caminho_arquivo: caminho,
+    try {
 
-        status: 'Enviado'
+      // =======================================================
+      // 2. DADOS DO FORMULÁRIO
+      // =======================================================
+
+      const fd =
+        new FormData(formPF);
+
+
+      const municipioFinal =
+        fd.get('municipio') === 'Outro'
+          ? fd.get('municipio_outro')
+          : fd.get('municipio');
+
+
+      const profissaoFinal =
+        fd.get('profissao') === 'Outros'
+          ? fd.get('outra_profissao')
+          : fd.get('profissao');
+
+
+      if (!municipioFinal) {
+        throw new Error(
+          'Informe o município.'
+        );
+      }
+
+
+      if (!profissaoFinal) {
+        throw new Error(
+          'Informe a profissão.'
+        );
+      }
+
+
+      // =======================================================
+      // 3. GERAR IDENTIFICADOR DO CADASTRO
+      // =======================================================
+
+      /*
+       * Como o navegador não precisa receber o ID interno
+       * da tabela terceirizados, usamos um UUID próprio
+       * para organizar o currículo no Storage.
+       */
+
+      const identificador =
+        crypto.randomUUID();
+
+
+      const nomeArquivo =
+        `curriculo-${Date.now()}.${extensao}`;
+
+
+      const caminho =
+        `terceirizados/${identificador}/${nomeArquivo}`;
+
+
+      // =======================================================
+      // 4. ENVIAR CURRÍCULO PARA O STORAGE
+      // =======================================================
+
+      const {
+        error: erroUpload
+      } = await sb.storage
+        .from('documentos')
+        .upload(
+          caminho,
+          arquivo,
+          {
+            contentType:
+              arquivo.type ||
+              'application/octet-stream',
+
+            upsert: false
+          }
+        );
+
+
+      if (erroUpload) {
+
+        console.error(
+          'Erro no upload:',
+          erroUpload
+        );
+
+        throw new Error(
+          'Não foi possível enviar o currículo: ' +
+          erroUpload.message
+        );
+      }
+
+
+      // =======================================================
+      // 5. CADASTRAR PESSOA
+      // =======================================================
+
+      const {
+        error: erroCadastro
+      } = await sb
+        .from('terceirizados')
+        .insert({
+
+          tipo: 'PF',
+
+          razao_social:
+            fd.get('nome'),
+
+          cpf_cnpj:
+            fd.get('cpf'),
+
+          cidade:
+            municipioFinal,
+
+          telefone:
+            fd.get('telefone'),
+
+          telefone_secundario:
+            fd.get('telefone_secundario') ||
+            null,
+
+          email:
+            fd.get('email'),
+
+          cep:
+            fd.get('cep') ||
+            null,
+
+          endereco:
+            fd.get('endereco') ||
+            null,
+
+          complemento:
+            fd.get('complemento') ||
+            null,
+
+          setor_atividade:
+            profissaoFinal,
+
+          observacoes:
+            fd.get('observacoes') ||
+            null
+
+        });
+
+
+      if (erroCadastro) {
+
+        console.error(
+          'Erro cadastro:',
+          erroCadastro
+        );
+
+
+        // remove currículo se cadastro falhar
+        const {
+          error: erroRemocao
+        } = await sb.storage
+          .from('documentos')
+          .remove([caminho]);
+
+
+        if (erroRemocao) {
+          console.warn(
+            'Não foi possível remover o arquivo após erro:',
+            erroRemocao
+          );
+        }
+
+
+        throw new Error(
+          'Não foi possível salvar os dados: ' +
+          erroCadastro.message
+        );
+      }
+
+
+      // =======================================================
+      // 6. SUCESSO
+      // =======================================================
+
+      mensagem.innerHTML = `
+
+        <div
+          style="
+            padding:22px;
+            border-radius:10px;
+            background:#ecfdf3;
+            border:1px solid #86efac;
+            margin-bottom:25px;
+          "
+        >
+
+          <strong
+            style="
+              display:block;
+              font-size:18px;
+              margin-bottom:5px;
+            "
+          >
+            Cadastro realizado com sucesso!
+          </strong>
+
+          <span>
+            Seus dados e currículo foram enviados.
+          </span>
+
+        </div>
+
+      `;
+
+
+      // =======================================================
+      // 7. LIMPAR FORMULÁRIO
+      // =======================================================
+
+      formPF.reset();
+
+
+      if (
+        typeof arquivoSelecionado !==
+        'undefined'
+      ) {
+
+        arquivoSelecionado.style.display =
+          'none';
+      }
+
+
+      if (
+        typeof nomeArquivo !==
+        'undefined'
+      ) {
+
+        /*
+         * não fazemos nada aqui porque
+         * nomeArquivo também é usado como
+         * variável do arquivo enviado
+         */
+      }
+
+
+      if (
+        typeof atualizarMunicipio ===
+        'function'
+      ) {
+
+        atualizarMunicipio();
+      }
+
+
+      if (
+        typeof atualizarProfissao ===
+        'function'
+      ) {
+
+        atualizarProfissao();
+      }
+
+
+      // =======================================================
+      // 8. LEVAR USUÁRIO PARA MENSAGEM
+      // =======================================================
+
+      mensagem.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
       });
 
-    if (erroDocumento) {
+
+    } catch (erro) {
+
       console.error(
-        'Erro ao registrar documento:',
-        erroDocumento
+        'ERRO NO CADASTRO:',
+        erro
       );
 
-      // Remove arquivo que acabou de ser enviado
-      await sb.storage
-        .from('documentos')
-        .remove([caminho]);
 
-      // Remove cadastro incompleto
-      await sb
-        .from('terceirizados')
-        .delete()
-        .eq('id', terceirizado.id);
+      mensagem.innerHTML = `
 
-      throw new Error(
-        'Não foi possível registrar o currículo.'
-      );
+        <div class="alert alert-error">
+
+          <strong>
+            Não foi possível concluir o cadastro.
+          </strong>
+
+          <br>
+
+          ${
+            erro.message ||
+            'Tente novamente.'
+          }
+
+        </div>
+
+      `;
+
+
+      mensagem.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+
+
+    } finally {
+
+      botao.disabled = false;
+
+      botao.textContent =
+        'Enviar cadastro';
+
     }
-
-
-    // =========================================================
-    // 6. SUCESSO
-    // =========================================================
-
-    mensagem.innerHTML = `
-      <div
-        style="
-          padding:18px;
-          border-radius:8px;
-          background:#ecfdf3;
-          border:1px solid #86efac;
-          margin-bottom:25px;
-        "
-      >
-        <strong>Cadastro realizado com sucesso!</strong>
-        <br>
-        Seu currículo foi enviado.
-      </div>
-    `;
-
-    formPF.reset();
-
-    if (typeof arquivoSelecionado !== 'undefined') {
-      arquivoSelecionado.style.display = 'none';
-    }
-
-    if (typeof atualizarMunicipio === 'function') {
-      atualizarMunicipio();
-    }
-
-    if (typeof atualizarProfissao === 'function') {
-      atualizarProfissao();
-    }
-
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-
-  } catch (erro) {
-
-    console.error(erro);
-
-    mensagem.innerHTML = `
-      <div class="alert alert-error">
-        <strong>Não foi possível concluir o cadastro.</strong>
-        ${erro.message || 'Tente novamente.'}
-      </div>
-    `;
-
-  } finally {
-
-    botao.disabled = false;
-    botao.textContent = 'Enviar cadastro';
 
   }
-});
+);
 </script>
-
-</body></html>
